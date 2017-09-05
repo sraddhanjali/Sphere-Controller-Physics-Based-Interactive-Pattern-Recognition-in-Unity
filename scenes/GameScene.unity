@@ -249,7 +249,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 100, y: 100}
@@ -459,7 +459,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flowField: {fileID: 795288037}
-  btn: {fileID: 1092755356731822, guid: 38b898f8a4ee74df8b3e7db0bd7b1d87, type: 2}
+  c: {fileID: 1873674209014272, guid: 0e56da1afac8343eb8de04e4c0c76fa1, type: 2}
+  worldWidth: 5
+  worldHeight: 5
+  cubeNum: 0
+  spawnSpeed: 0
 --- !u!4 &1414527997
 Transform:
   m_ObjectHideFlags: 0
@@ -484,7 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31675bfcc810b4e899da3546fb6c3c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  btns: []
+  go: []
   lastMousePos: {x: 0, y: 0, z: 0}
 --- !u!1 &1685365582
 GameObject:

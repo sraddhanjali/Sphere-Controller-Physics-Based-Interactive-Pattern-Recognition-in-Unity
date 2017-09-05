@@ -6,17 +6,18 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
-	public List<Button> btns = new List<Button>();
+	public List<GameObject> go = new List<GameObject>();
 
 	Collider2D[] cubeColliders;
 
 	public Vector3 lastMousePos;
 
+	private GUIStyle guiStyle = new GUIStyle(); //create a new variable
+
 	public static int clickNum = 0;
 
 	public void Start(){
-		GetButtons();
-		//AddListeners();
+		GetCubes();
 		cubeColliders = new Collider2D[0];
 	}
 
@@ -25,63 +26,46 @@ public class GameController : MonoBehaviour {
 	public static int moves = 0;
 
 	protected void OnGUI(){
-		GUI.Label (new Rect (25, 25, 100, 500), "Flows:" + flows.ToString() + "\n Moves:" + moves.ToString() + "\n Clicks:" + clickNum.ToString());
+
+		guiStyle.fontSize = 50; //change the font size
+
+		GUILayout.Label ("Flows:" + flows.ToString() + "\n Moves:" + moves.ToString() + "\n Clicks:" + clickNum.ToString(), guiStyle);
 
 	}
 		
-	void GetButtons(){
-		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Flow Button");
-
+	void GetCubes(){
+		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Cube");
 		for (int i = 1; i < objects.Length + 1; i++) {
-			
-			btns.Add(objects[i-1].GetComponent<Button>());
-			Button b = btns [i-1].gameObject.GetComponent<Button> ();
-			b.gameObject.AddComponent<BoxCollider2D> ();
-			b.gameObject.layer = 8;
-			//b.interactable = false;
-
+			go.Add(objects[i-1]);
+			GameObject b = go [i-1];
+			b.layer = 8;
 			if (i == 1 || i == 22) {
-				b.GetComponent<Image> ().color = Color.red;
+				b.GetComponent<Renderer> ().material.color = Color.red;
 			} else if (i == 3 || i == 17) {
-				b.GetComponent<Image> ().color = Color.yellow;
+				b.GetComponent<Renderer>().material.color = Color.yellow;
 			} else if (i == 8 || i == 23) {
-				b.GetComponent<Image> ().color = Color.green;
+				b.GetComponent<Renderer>().material.color = Color.green;
 			} else if (i == 5 || i == 19) {
-				b.GetComponent<Image> ().color = Color.blue;
+				b.GetComponent<Renderer>().material.color = Color.blue;
 			} else if (i == 10 || i == 24) {
-				b.GetComponent<Image> ().color = Color.magenta;
+				b.GetComponent<Renderer>().material.color = Color.magenta;
 			} 
 		}
 	}
-
-	/*void AddListeners(){
-		foreach (Button btn in btns) {
-			btn.onClick.AddListener (() => ClickIndicator ());
-		}
-	}
-
-	public void ClickIndicator(){
-		string name = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
-		Debug.Log ("You clicked a button" + name);
-	}*/
 
 	protected void HighlightCubeOnClick(){
 		if(Input.GetMouseButton(0)){
 			Vector3 pos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			pos.z = -1;
-			//Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask(LayerMask.LayerToName(8)));
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask("Cube"));
-			//Debug.Log (Input.mousePosition);
-			//Debug.Log (lastMousePos);
-			//Debug.Log (Input.mousePosition - lastMousePos);
-			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 400) {
-				Debug.Log ("HI");
+
+			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 9) {
 				foreach (Collider2D c2 in currentFrame) {
 					for (int i = 0; i < cubeColliders.Length; i++) {
 						if (c2 == cubeColliders [i]) {
 							Debug.Log (c2.name);
 							// change the color after the swipe
-							c2.gameObject.GetComponent<Image> ().color = Color.gray;
+							c2.GetComponent<Renderer> ().material.color = Color.gray;
 							clickNum += 1;
 							// disable the collider once a collision has already been detected
 							c2.enabled = false;

@@ -1,22 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 
 
 public class AddButtons : MonoBehaviour {
 
 	[SerializeField]
-	private Transform flowField;
+	public Transform flowField;
 
 	[SerializeField]
-	private GameObject btn;
+	public GameObject c; 
 
-	void Awake(){
-		for (int i = 1; i < 26; i++) {
-			GameObject button = Instantiate (btn);
-			button.name = "" + i;
-			button.transform.SetParent (flowField, false);
+	public int worldWidth  = 5;
+	public int worldHeight  = 5;
+	public int cubeNum = 0;
+
+	void  Awake () {
+		CreateWorld ();
+	}
+
+	void CreateWorld () {
+		int xValue = 0;
+		int yValue = 0;
+		for(int y = 0; y < worldWidth; y++) {
+			for(int x = 0; x < worldHeight; x++) {                
+				GameObject cube = Instantiate(c, new Vector3(-2 + xValue, 2 + yValue, 0), c.transform.rotation) as GameObject;
+				cubeNum += 1;
+				cube.name = "" + cubeNum;
+				xValue += 1;
+			}
+			yValue -= 1;
+			xValue = 0;
 		}
 	}
 }
