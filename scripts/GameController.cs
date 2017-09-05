@@ -39,11 +39,19 @@ public class GameController : MonoBehaviour {
 
 	public static int flows = 0;
 
+	public static int clickNum = 0;
+
 	protected void OnGUI(){
 
 		guiStyle.fontSize = 50; //change the font size
 
-		GUILayout.Label ("Flows:" + flows.ToString(), guiStyle);
+		GUILayout.Label ("Flows:" + flows.ToString() + "\n Click Num:" + clickNum.ToString(), guiStyle);
+
+		if (flows == 5) {
+			guiStyle.fontSize = 100; //change the font size
+			GUILayout.Label ("YOU WON!, guiStyle);
+
+		}
 
 	}
 		
@@ -96,11 +104,12 @@ public class GameController : MonoBehaviour {
 			pos.z = -1;
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask("Cube"));
 
-			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 5) {
+			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 7) {
 				foreach (Collider2D c2 in currentFrame) {
 					for (int i = 0; i < cubeColliders.Length; i++) {
 						if (c2 == cubeColliders [i]) {
 							currentCube = int.Parse (c2.name);
+							clickNum += 1;
 							if (currentPathSize == 0) {
 								switch (currentCube) {
 								case 1:
@@ -129,45 +138,54 @@ public class GameController : MonoBehaviour {
 								}
 							}
 
-							PrintCollection (currentPaths);
+							//PrintCollection (currentPaths);
 
-							Debug.Log ("Current Cube: " + currentCube);
-							Debug.Log ("yellow:" + yellowPaths [currentPathSize]);
-							Debug.Log ("Currentpathsize:" + currentPathSize);
-							Debug.Log ("yellow" + yellow);
+							//Debug.Log ("Current Cube: " + currentCube);
+							//Debug.Log ("yellow:" + yellowPaths [currentPathSize]);
+							//Debug.Log ("Currentpathsize:" + currentPathSize);
+							//Debug.Log ("yellow" + yellow);
 
 							if (currentPaths.Contains (currentCube)) {
 								Debug.Log ("already exists");
-							}
-							else {
-								if (red){
-									Debug.Log ("TRUE");
+							} else {
+								if (red) {
+									//Debug.Log ("TRUE");
 									if (currentCube == redPaths [currentPathSize]) {
 										currentPaths.Add (currentCube);
 										Debug.Log ("Current cube added:" + currentCube);
+										if (checkEqual (redPaths, currentPaths)) {
+											for (int m = 0; m < redPaths.Count; m++) {
+												go [redPaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.red;
+												go [redPaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
+											}
+											flows += 1;
+											Debug.Log ("FALSE");
+											red = false;
+											currentPaths.Clear ();
+										}			
 									} else {
-										if(currentPaths.Contains(currentCube)){
-											Debug.Log("already swiped");
-										}
-										else{
+										if (currentPaths.Contains (currentCube)) {
+											Debug.Log ("already swiped");
+										} else {
 											red = false;
 											currentPaths.Clear ();
 										}
 									}
-									if(checkEqual(redPaths, currentPaths)){
-										for (int m = 0; m < redPaths.Count; m++) {
-											go [redPaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.red;
-											go [redPaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
-										}
-										flows += 1;
-										Debug.Log ("FALSE");
-										red = false;
-										currentPaths.Clear ();
-									}								} 
+								} 
 									
-								if (yellow){
+								if (yellow) {
 									if (currentCube == yellowPaths [currentPathSize]) {
 										currentPaths.Add (currentCube);
+										if (checkEqual (yellowPaths, currentPaths)) {
+											for (int m = 0; m < yellowPaths.Count; m++) {
+												go [yellowPaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
+												go [yellowPaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
+											}
+											flows += 1;
+											Debug.Log ("FALSE");
+											yellow = false;
+											currentPaths.Clear ();
+										}		
 									} else {
 										if (currentPaths.Contains (currentCube)) {
 											Debug.Log ("already swiped");
@@ -176,21 +194,22 @@ public class GameController : MonoBehaviour {
 											currentPaths.Clear ();
 										}
 									}
-									if(checkEqual(yellowPaths, currentPaths)){
-										for (int m = 0; m < yellowPaths.Count; m++) {
-											go [yellowPaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.yellow;
-											go [yellowPaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
-										}
-										flows += 1;
-										Debug.Log ("FALSE");
-										yellow = false;
-										currentPaths.Clear ();
-									}		
+
 								}
 
-								if (green){
+								if (green) {
 									if (currentCube == greenPaths [currentPathSize]) {
 										currentPaths.Add (currentCube);
+										if (checkEqual (greenPaths, currentPaths)) {
+											for (int m = 0; m < greenPaths.Count; m++) {
+												go [greenPaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.green;
+												go [greenPaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
+											}
+											flows += 1;
+											Debug.Log ("FALSE");
+											green = false;
+											currentPaths.Clear ();
+										}
 									} else {
 										if (currentPaths.Contains (currentCube)) {
 											Debug.Log ("already swiped");
@@ -199,20 +218,21 @@ public class GameController : MonoBehaviour {
 											currentPaths.Clear ();
 										}
 									}
-									if(checkEqual(greenPaths, currentPaths)){
-										for (int m = 0; m < greenPaths.Count; m++) {
-											go [greenPaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.green;
-											go [greenPaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
-										}
-										flows += 1;
-										Debug.Log ("FALSE");
-										green = false;
-										currentPaths.Clear ();
-									}										}
+								}
 
-								if (blue){
+								if (blue) {
 									if (currentCube == bluePaths [currentPathSize]) {
 										currentPaths.Add (currentCube);
+										if (checkEqual (bluePaths, currentPaths)) {
+											for (int m = 0; m < bluePaths.Count; m++) {
+												go [bluePaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.blue;
+												go [bluePaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
+											}
+											flows += 1;
+											Debug.Log ("FALSE");
+											blue = false;
+											currentPaths.Clear ();
+										}
 									} else {
 										if (currentPaths.Contains (currentCube)) {
 											Debug.Log ("already swiped");
@@ -221,20 +241,20 @@ public class GameController : MonoBehaviour {
 											currentPaths.Clear ();
 										}
 									}
-									if(checkEqual(bluePaths, currentPaths)){
-										for (int m = 0; m < bluePaths.Count; m++) {
-											go [bluePaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.blue;
-											go [bluePaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
-										}
-										flows += 1;
-										Debug.Log ("FALSE");
-										blue = false;
-										currentPaths.Clear ();
-									}										}
-
-								if (magenta){
+								}
+								if (magenta) {
 									if (currentCube == magentaPaths [currentPathSize]) {
 										currentPaths.Add (currentCube);
+										if (checkEqual (magentaPaths, currentPaths)) {
+											for (int m = 0; m < magentaPaths.Count; m++) {
+												go [magentaPaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.magenta;
+												go [magentaPaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
+											}
+											flows += 1;
+											Debug.Log ("FALSE");
+											magenta = false;
+											currentPaths.Clear ();
+										}	
 									} else {
 										if (currentPaths.Contains (currentCube)) {
 											Debug.Log ("already swiped");
@@ -243,19 +263,7 @@ public class GameController : MonoBehaviour {
 											currentPaths.Clear ();
 										}
 									}
-									if(checkEqual(magentaPaths, currentPaths)){
-										for (int m = 0; m < magentaPaths.Count; m++) {
-											go [magentaPaths [m] - 1].gameObject.GetComponent<Renderer> ().material.color = Color.magenta;
-											go [magentaPaths [m] - 1].gameObject.GetComponent<Collider2D> ().enabled = false;
-										}
-										flows += 1;
-										Debug.Log ("FALSE");
-										magenta = false;
-										currentPaths.Clear ();
-									}										}
-							}
-							if (flows == 5) {
-								flows = 0;
+								}
 							}
 						}
 					}
