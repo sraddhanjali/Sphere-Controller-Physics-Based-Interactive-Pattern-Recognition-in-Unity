@@ -46,13 +46,10 @@ public class GameController : MonoBehaviour {
 		guiStyle.fontSize = 50; //change the font size
 
 		GUILayout.Label ("Flows:" + flows.ToString() + "\n Click Num:" + clickNum.ToString(), guiStyle);
-
 		if (flows == 5) {
-			guiStyle.fontSize = 100; //change the font size
-			GUILayout.Label ("YOU WON!, guiStyle);
-
+			guiStyle.fontSize = 100;
+			GUILayout.Label ("\nYOU WON!!!", guiStyle);
 		}
-
 	}
 		
 	void GetCubes(){
