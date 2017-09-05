@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour {
 
 	public void Start(){
 		GetButtons();
-		AddListeners();
+		//AddListeners();
 		cubeColliders = new Collider2D[0];
 	}
 
@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour {
 	public static int moves = 0;
 
 	protected void OnGUI(){
-		GUI.Label (new Rect (25, 25, 100, 500), "Flows:" + flows.ToString() + "\n Moves:" + moves.ToString());
+		GUI.Label (new Rect (25, 25, 100, 500), "Flows:" + flows.ToString() + "\n Moves:" + moves.ToString() + "\n Clicks:" + clickNum.ToString());
 
 	}
 		
@@ -33,8 +33,13 @@ public class GameController : MonoBehaviour {
 		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Flow Button");
 
 		for (int i = 1; i < objects.Length + 1; i++) {
+			
 			btns.Add(objects[i-1].GetComponent<Button>());
 			Button b = btns [i-1].gameObject.GetComponent<Button> ();
+			b.gameObject.AddComponent<BoxCollider2D> ();
+			b.gameObject.layer = 8;
+			//b.interactable = false;
+
 			if (i == 1 || i == 22) {
 				b.GetComponent<Image> ().color = Color.red;
 			} else if (i == 3 || i == 17) {
@@ -49,7 +54,7 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	void AddListeners(){
+	/*void AddListeners(){
 		foreach (Button btn in btns) {
 			btn.onClick.AddListener (() => ClickIndicator ());
 		}
@@ -58,21 +63,25 @@ public class GameController : MonoBehaviour {
 	public void ClickIndicator(){
 		string name = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
 		Debug.Log ("You clicked a button" + name);
-	}
+	}*/
 
 	protected void HighlightCubeOnClick(){
 		if(Input.GetMouseButton(0)){
 			Vector3 pos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			pos.z = -1;
-			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
-
-			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 10) {
+			//Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask(LayerMask.LayerToName(8)));
+			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask("Cube"));
+			//Debug.Log (Input.mousePosition);
+			//Debug.Log (lastMousePos);
+			//Debug.Log (Input.mousePosition - lastMousePos);
+			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 400) {
+				Debug.Log ("HI");
 				foreach (Collider2D c2 in currentFrame) {
 					for (int i = 0; i < cubeColliders.Length; i++) {
 						if (c2 == cubeColliders [i]) {
 							Debug.Log (c2.name);
 							// change the color after the swipe
-							c2.gameObject.GetComponent<Renderer> ().material.color = new Color (0, 255, 0);
+							c2.gameObject.GetComponent<Image> ().color = Color.gray;
 							clickNum += 1;
 							// disable the collider once a collision has already been detected
 							c2.enabled = false;
@@ -81,7 +90,7 @@ public class GameController : MonoBehaviour {
 				}
 			}
 
-			cubeColliders = currentFrame;
+			cubeColliders = currentFrame; 
 			lastMousePos = Input.mousePosition;
 		}
 	}

@@ -208,7 +208,6 @@ GameObject:
   - component: {fileID: 795288040}
   - component: {fileID: 795288039}
   - component: {fileID: 795288038}
-  - component: {fileID: 795288041}
   m_Layer: 5
   m_Name: Flow Field
   m_TagString: Untagged
@@ -290,19 +289,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 795288036}
---- !u!114 &795288041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 795288036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a40aea97b43f4418a8a528ef02163fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cols: 2
-  rows: 2
 --- !u!1 &1005904228
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,12 +423,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1248460760}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1414527995
 GameObject:
@@ -454,7 +440,6 @@ GameObject:
   - component: {fileID: 1414527997}
   - component: {fileID: 1414527996}
   - component: {fileID: 1414527998}
-  - component: {fileID: 1414527999}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -470,9 +455,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1414527995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7cae0578b00a4188821a554a04d6a6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e69e4b6ec76045ca9a6189697d41ef3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  flowField: {fileID: 795288037}
+  btn: {fileID: 1092755356731822, guid: 38b898f8a4ee74df8b3e7db0bd7b1d87, type: 2}
 --- !u!4 &1414527997
 Transform:
   m_ObjectHideFlags: 0
@@ -484,22 +471,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1414527998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1414527995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e69e4b6ec76045ca9a6189697d41ef3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flowField: {fileID: 795288037}
-  btn: {fileID: 1092755356731822, guid: 38b898f8a4ee74df8b3e7db0bd7b1d87, type: 2}
---- !u!114 &1414527999
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -511,6 +485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   btns: []
+  lastMousePos: {x: 0, y: 0, z: 0}
 --- !u!1 &1685365582
 GameObject:
   m_ObjectHideFlags: 0
