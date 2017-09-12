@@ -156,8 +156,8 @@ Camera:
   m_GameObject: {fileID: 522591878}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.040224906, g: 0.11322566, b: 0.22794116, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -487,13 +487,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31675bfcc810b4e899da3546fb6c3c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  go: []
-  redPaths: 01000000060000000b000000100000001500000016000000
-  yellowPaths: 0300000002000000070000000c00000011000000
-  greenPaths: 080000000d0000001200000017000000
-  bluePaths: 0500000004000000090000000e00000013000000
-  magentaPaths: 0a0000000f000000140000001900000018000000
-  currentPaths: 
   lastMousePos: {x: 0, y: 0, z: 0}
 --- !u!1 &1685365582
 GameObject:
