@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour {
 
 	public float levelStartDelay = 0.1f;
 
-	private static float timeLeft = 10.0f;
+	private static float timeLeft = 10.00f;
 
 	List<GameObject> go = new List<GameObject>();
 
@@ -83,34 +83,20 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	/*[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-	static public void CallbackInitialization()
-	{
-		//register the callback to be called everytime the scene is loaded
-		SceneManager.sceneLoaded += OnSceneLoaded;
-	}
-
-	//This is called each time a scene is loaded.
-	static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-	{
-		instance.level++;
-		instance.SetLevels();
-		instance.GetCubes();
-	}*/
-
 	protected void OnGUI(){
 
-		guiStyle.fontSize = 50; //change the font size
+		guiStyle.fontSize = 35; //change the font size
+		int tLeft = (int)Math.Ceiling(timeLeft);
 
-		GUILayout.Label ("\n Flows: " + flows.ToString() + "\n Points: " + playerPoints.ToString() + "\n Level: " + 
-		                 level.ToString() + "\n Time left: " + timeLeft.ToString() +"\n Points added: "  + pointsAdded.ToString() , guiStyle);
+		GUILayout.Label ("\n Flows: " + flows + " - Points: " + playerPoints + "  - Level: " + 
+		                 level+ " - Time left: " + tLeft + " - Points added: "  + pointsAdded, guiStyle);
+
+		guiStyle.fontSize = 70;
 		if (over){
-			guiStyle.fontSize = 100;
-			GUILayout.Label("\nLOST!!!", guiStyle);
+			
+			GUILayout.Label("\nYOU LOST!!!", guiStyle);
 		}
-		if (win)
-		{
-			guiStyle.fontSize = 100;
+		if (win){
 			GUILayout.Label("\n YOU WON!!!", guiStyle);
 		}
 	}
@@ -481,7 +467,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	protected void Update () {
-		if (timeLeft < 0){
+		if (timeLeft <= 0){
 			GameOver();
 			return;
 		}
