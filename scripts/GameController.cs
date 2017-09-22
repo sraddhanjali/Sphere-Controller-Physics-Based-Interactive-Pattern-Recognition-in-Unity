@@ -110,6 +110,7 @@ public class GameController : MonoBehaviour {
 			b.GetComponent<Renderer>().material.color = Color.grey;
 		}
 	}
+
 	void GetCubes(){
 		doingSetup = true;
 
