@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-
 
 public class AddButtons : MonoBehaviour {
 
@@ -11,9 +8,9 @@ public class AddButtons : MonoBehaviour {
 	[SerializeField]
 	public GameObject c; 
 
-	public int worldWidth  = 5;
-	public int worldHeight  = 5;
-	public int cubeNum = 0;
+	int worldWidth  = 6;
+	int worldHeight  = 3;
+	int cubeNum = 0;
 
 	void  Awake () {
 		CreateWorld ();
@@ -24,7 +21,7 @@ public class AddButtons : MonoBehaviour {
 		int yValue = 0;
 		for(int y = 0; y < worldWidth; y++) {
 			for(int x = 0; x < worldHeight; x++) {                
-				GameObject cube = Instantiate(c, new Vector3(-2 + xValue, 2 + yValue, 0), c.transform.rotation) as GameObject;
+				GameObject cube = Instantiate(c, new Vector3(-1 + xValue,  2 + yValue, 0), c.transform.rotation) as GameObject;
 				cubeNum += 1;
 				cube.name = "" + cubeNum;
 				xValue += 1;
