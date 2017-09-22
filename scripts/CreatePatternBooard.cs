@@ -14,6 +14,7 @@ public class CreatePatternBooard : MonoBehaviour {
 	Vector3 lastMousePos;
 	Collider2D[] cubeColliders;
 
+
 	// current randomly selected pattern
 	string currentPattern;
 
@@ -178,7 +179,7 @@ public class CreatePatternBooard : MonoBehaviour {
 		return false;
 	}
 
-	void ChangePathsColors(List<int> paths, bool setPath, bool pat){
+	void ChangePathsColors(List<int> paths, bool setPath){
 		Color c;
 		if (setPath){
 			c = Color.white;
@@ -191,11 +192,7 @@ public class CreatePatternBooard : MonoBehaviour {
 		int n;
 
 		for (int m = 0; m < paths.Count; m++) {
-			if (pat) {
-				n = pattern [paths [m]] - 1;
-			} else {
-				n = paths [m] - 1;
-			}
+			n = pattern [paths [m]] - 1;
 			go[n].gameObject.GetComponent<Renderer>().material.color = c;
 			go[n].gameObject.GetComponent<Collider2D> ().enabled = setPath;
 		}
@@ -219,9 +216,7 @@ public class CreatePatternBooard : MonoBehaviour {
 
 							if (currentCube > 9) {
 								currentCube = patternRev [currentCube];
-								pat = true;
-							} else {
-								pat = false;
+
 							}
 
 							if (currentPaths.Contains (currentCube)) {
@@ -232,9 +227,9 @@ public class CreatePatternBooard : MonoBehaviour {
 									currentPaths.Add (currentCube);
 									Debug.Log ("Current cube added:" + currentCube);
 									if (CheckEqual (currentPatternList, currentPaths)) {
-										ChangePathsColors (currentPaths, false, pat);
+										ChangePathsColors (currentPaths, false);
 										Debug.Log ("FALSE");
-										ChangePathsColors (currentPaths, true, pat);
+										ChangePathsColors (currentPaths, true);
 										currentPaths.Clear ();
 									} else {
 										if (currentPaths.Contains (currentCube)) {
