@@ -133,7 +133,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 522591878}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!124 &522591880
 Behaviour:
   m_ObjectHideFlags: 0
@@ -484,7 +484,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a08a2375b464dd7b6cf8ebde5aaa2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wordFile: {fileID: 4900000, guid: b5f22eee82b5848f389a0c5571151ff9, type: 3}
+  LINEWIDTH: 0.2
+  restartLevelDelay: 1
+  wordFile: {fileID: 4900000, guid: 977b9eec4bfcf4b1eb6ddf924e50b052, type: 3}
 --- !u!1 &1685365582
 GameObject:
   m_ObjectHideFlags: 0
