@@ -1,11 +1,23 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
-using System.IO;                    // For parsing text file, StringReader
+using System.IO;	// For parsing text file, StringReader
 using System.Collections.Generic;
 
-
 public class CreatePatternBooard : MonoBehaviour {
+
+	//fixed template for first 3*3 grid with key the starting position of the second 3*3 grid
+	Dictionary<int, List<List<int>>> firstGrid = new Dictionary<int, List<List<int>>>() {
+		{1, new List<List<int>>{ new List<int>{1, 4, 7}, new List<int>{3, 5, 6, 8, 7}, new List<int>{6, 5, 7, 8} } }, 
+		{2, new List<List<int>>{ new List<int>{2, 5, 8, 9}, new List<int>{3, 2, 4, 7}, new List<int>{1, 4, 8} }  },
+		{3, new List<List<int>>{ new List<int>{3, 6, 8, 9}, new List<int>{4, 7, 8}, new List<int>{1, 5, 9} } },
+		{4, new List<List<int>>{ new List<int>{1, 4, 7, 10}, new List<int>{3, 5, 8, 11}, new List<int>{4, 5, 6, 8, 11} } },
+		{5, new List<List<int>>{ new List<int>{1, 8, 13}, new List<int>{3, 8, 9, 11}, new List<int>{1, 5, 4, 11} } },
+		{6, new List<List<int>>{ new List<int>{4, 11, 14}, new List<int>{2, 4, 11, 12}, new List<int>{1, 8, 10, 13, 14} } },
+		{7, new List<List<int>>{ new List<int>{1, 2, 3, 5, 9, 11}, new List<int>{4, 8, 9, 12, 15}, new List<int>{7, 8, 4} } },
+		{8, new List<List<int>>{ new List<int>{4, 11, 14}, new List<int>{9, 6, 5, 12, 14, 17}, new List<int>{1, 8, 10, 13} } },
+		{9, new List<List<int>>{ new List<int>{2, 9, 11}, new List<int>{6, 8, 15}, new List<int>{4, 7, 10, 17} } }
+	}; 
 
 	// line width for the pattern lines
 	public float LINEWIDTH = 0.1f;
@@ -50,23 +62,7 @@ public class CreatePatternBooard : MonoBehaviour {
 		GUILayout.Label ("\n Level: " + level, guiStyle);
 	}
 
-	void Awake(){
-		CreateNumCubeMap ();
-	}
 
-	// Use this for initialization
-	void Start () {
-		InitSetup ();
-	}
-
-	void InitSetup(){
-		settingGame = true;
-		GetPatterns();
-		InitialCubesColor ();
-		GetCubePatterns (true);
-		GetCubePatterns (false);
-		settingGame = false;
-	}
 
 	// mapping of 1..9 numbers to our preferred cube area (3*3)		
 	void CreateNumCubeMap(){
@@ -94,22 +90,13 @@ public class CreatePatternBooard : MonoBehaviour {
 		patternRev.Add (18, 9);
 	}
 
-	void GetPatternList(string p){
-		for (int i = 0; i < currentPattern.Length; i++) {
-			//Debug.Log (currentPattern [i]);
-			currentPatternList.Add((int)(currentPattern[i]-'0'));
+	void PrintList(List<int> anyList){
+		Debug.Log ("-------------printing current pattern--------------");
+		for (int i = 0; i < anyList.Count; i++) {
+			Debug.Log(anyList [i]);
 		}
-	}
+		Debug.Log ("-------------------------------------------------");
 
-	// color the cubes for gamescene
-	void InitialCubesColor(){
-		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Cube");
-		for (int i = 0; i < objects.Length; i++) {
-			go.Add (objects [i]);
-			GameObject b = go [i];
-			b.layer = 8;
-			b.GetComponent<Renderer>().material.color = Color.white;
-		}
 	}
 
 	void ColorCubePath(List<GameObject> patternCube){
@@ -146,86 +133,26 @@ public class CreatePatternBooard : MonoBehaviour {
 	}
 
 	void RemoveLines(List<int> p){
-		LineRenderer ln, ln1;
+		LineRenderer ln;
 		for (int i = 0; i < p.Count; i++) {
 			if (i != p.Count - 1) {
-				// second block
-				GameObject g1 = GameObject.Find (String.Format ("{0}", pattern[p [i]]));
-				GameObject g2 = GameObject.Find (String.Format ("{0}", pattern[p [i+1]]));
+				int p1 = p [i];
+				int p2 = p [i + 1];
+				GameObject g1 = GameObject.Find (String.Format ("{0}", p1));
+				GameObject g2 = GameObject.Find (String.Format ("{0}", p2));
 				ln = g1.GetComponent<LineRenderer> ();
 				ln.SetPosition (0, Vector3.zero);
 				ln.SetPosition (1, Vector3.zero);
-
-				// first block
-				GameObject g3 = GameObject.Find (String.Format ("{0}", p[i]));
-				GameObject g4 = GameObject.Find (String.Format ("{0}", p[i+1]));
-				ln1 = g3.GetComponent<LineRenderer> ();
-				ln1.SetPosition (0, Vector3.zero);
-				ln1.SetPosition (1, Vector3.zero);
 			}
 		}
 	}
-		
-	// get the cube numbers which are to be overlayed over the number sequence
-	void GetCubePatterns(Boolean first){
-		// Get Cubes with pattern numbers
-		List<GameObject> patternCube = new List<GameObject>();
-		GameObject g;
-		for (int j = 0; j < currentPatternList.Count; j++) {
-			//Debug.Log (currentPatternList [j]);
-
-			// pattern to copy
-			if (first) {
-				g = GameObject.Find (String.Format ("{0}", currentPatternList [j]));
-			} else { 
-				// overlay to replicate the pattern over 
-				int cubeNumber = pattern [currentPatternList [j]];
-				//Debug.Log (cubeNumber);
-				g = GameObject.Find (String.Format ("{0}", cubeNumber));
-			}
-			patternCube.Add(g);
-		}
-		ColorCubePath (patternCube);
-		DrawLines (patternCube);
-		patternCube.Clear ();
-	}
-
-	// Update is called once per frame
-	void Update () {
-		if (settingGame) {
-			return;
-		} else if (levelChanged) {
-			level += 1;
-			currentPaths.Clear ();
-			currentPatternList.Clear ();
-			lineList.Clear ();
-			go.Clear ();
-			levelChanged = false;
-			InitSetup ();
-		}
-		TouchLogic ();
-	}
-
-
-	// get the pattern sequence from file
-	public void GetPatterns()
-	{
-		// Check if file exists before reading
-		if (wordFile){
-			string line;
-			StringReader textStream = new StringReader(wordFile.text);
-			while((line = textStream.ReadLine()) != null){
-				// Read each line from text file and add into list
-				lineList.Add(line);
-			}
-			textStream.Close();
-		}
-
-		// get the pattern
-		currentPattern = GetRandomLine ();
-		//Debug.Log(currentPattern);
-
-		GetPatternList(currentPattern);
+	// clear game variables
+	void ClearVariables(){
+		RemoveLines (currentPatternList);
+		currentPaths.Clear ();
+		currentPatternList.Clear ();
+		lineList.Clear ();
+		go.Clear ();
 	}
 
 	// get random line from the file as random number sequence
@@ -252,12 +179,91 @@ public class CreatePatternBooard : MonoBehaviour {
 
 	// change the path colors of which the user successfully traversed
 	void ChangePathsColors(List<int> paths){
-		int n;
 		for (int m = 0; m < paths.Count; m++) {
-			n = pattern [paths [m]] - 1;
-			Debug.Log("Changing paths' color");
-			go[n].gameObject.GetComponent<Renderer>().material.color = Color.white;
+			go[paths[m]].gameObject.GetComponent<Renderer>().material.color = Color.white;
 		}
+	}
+
+	// get the pattern sequence from file
+	public void GetPatterns()
+	{
+		// Check if file exists before reading
+		if (wordFile){
+			string line;
+			StringReader textStream = new StringReader(wordFile.text);
+			while((line = textStream.ReadLine()) != null){
+				// Read each line from text file and add into list
+				lineList.Add(line);
+			}
+			textStream.Close();
+		}
+
+		// get the pattern
+		currentPattern = GetRandomLine ();
+		//Debug.Log(currentPattern);
+
+		GetPatternList(currentPattern);
+		AddPatternsBothGrids ();
+	}
+
+	void GetPatternList(string p){
+		currentPatternList.Clear ();
+		for (int i = 0; i < currentPattern.Length; i++) {
+			currentPatternList.Add(pattern[(int)(currentPattern[i]-'0')]);
+		}
+	}
+
+	List<int> GetFirstGrid(){
+		int startCubeNumber = patternRev [currentPatternList [0]];
+		List<int> grid = new List<int>();
+		List<List<int>> firstGridOptions = firstGrid [startCubeNumber];
+		int indexFirstGrid = UnityEngine.Random.Range (0, 3);
+		PrintList(currentPatternList);
+		grid = firstGridOptions [indexFirstGrid];
+		return grid;
+	}
+
+	void AddPatternsBothGrids(){
+		List<int> grid = GetFirstGrid ();
+		PrintList(grid);
+		grid.AddRange (currentPatternList);
+		currentPatternList = new List<int>();
+		currentPatternList = grid;
+	}
+
+	// color the cubes for gamescene
+	void InitialCubesColor(){
+		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Cube");
+		for (int i = 0; i < objects.Length; i++) {
+			go.Add (objects [i]);
+			GameObject b = go [i];
+			b.layer = 8;
+			b.GetComponent<Renderer>().material.color = Color.white;
+		}
+	}
+
+	// get the cube numbers which are to be overlayed over the number sequence
+	void GetCubePatterns(){
+		// Get Cubes with pattern numbers
+		List<GameObject> patternCube = new List<GameObject>();
+		GameObject g;
+		for (int j = 0; j < currentPatternList.Count; j++) {
+			int cubeNumber = currentPatternList [j];
+			g = GameObject.Find (String.Format ("{0}", cubeNumber));
+			patternCube.Add(g);
+		}
+		ColorCubePath (patternCube);
+		DrawLines (patternCube);
+		patternCube.Clear ();
+	}
+
+
+	void InitSetup(){
+		settingGame = true;
+		GetPatterns();
+		InitialCubesColor ();
+		GetCubePatterns ();
+		settingGame = false;
 	}
 
 	// sense the touches and mark the correct one and move to new level
@@ -268,29 +274,29 @@ public class CreatePatternBooard : MonoBehaviour {
 			Vector3 pos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			pos.z = -1;
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
-
-			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 7) {
+			//PrintList (currentPatternList);
+			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 6) {
 				foreach (Collider2D c2 in currentFrame) {
 					for (int i = 0; i < cubeColliders.Length; i++) {
 						if (c2 == cubeColliders [i]) {
 							currentCube = int.Parse (c2.name);
-							Debug.Log (currentCube);
-							if (currentCube > 9) {
-								currentCube = patternRev [currentCube];
-							}
+							//Debug.Log (currentCube);
 							if (currentPaths.Contains (currentCube)) {
-								Debug.Log ("already exists");
+								continue;
+								//Debug.Log ("already exists");
 							} else {
 								if (currentCube == currentPatternList [currentPathSize]) {
 									currentPaths.Add (currentCube);
-									Debug.Log ("Current cube added:" + currentCube);
+									//Debug.Log ("Current cube added:" + currentCube);
 									if (CheckEqual (currentPatternList, currentPaths)) {
-										ChangePathsColors (currentPaths);
-										RemoveLines (currentPaths);
+										ChangePathsColors (currentPatternList);
+										ClearVariables ();
 										levelChanged = true;
+										Debug.Log ("DONEEEEE!!!");
 									} else {
 										if (currentPaths.Contains (currentCube)) {
-											Debug.Log ("already swiped");
+											//Debug.Log ("already swiped");
+											continue;
 										} else {
 											currentPaths.Clear ();
 										}
@@ -305,4 +311,26 @@ public class CreatePatternBooard : MonoBehaviour {
 			lastMousePos = Input.mousePosition;
 		}
 	}
+
+	void Awake(){
+		CreateNumCubeMap ();
+	}
+
+	// Use this for initialization
+	void Start () {
+		InitSetup ();
+	}
+
+	// Update is called once per frame
+	void Update () {
+		if (settingGame) {
+			return;
+		} else if (levelChanged) {
+			level += 1;
+			levelChanged = false;
+			InitSetup ();
+		}
+		TouchLogic ();
+	}
+
 }
