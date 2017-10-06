@@ -202,24 +202,24 @@ public class CreatePatternBooard : MonoBehaviour {
 		currentPattern = GetRandomLine ();
 		//Debug.Log(currentPattern);
 
-		GetPatternList(currentPattern);
+		GetPatternList();
 		AddPatternsBothGrids ();
 	}
 
-	void GetPatternList(string p){
+	void GetPatternList(){
 		currentPatternList.Clear ();
 		for (int i = 0; i < currentPattern.Length; i++) {
+			Debug.Log ((int)(currentPattern [i] - '0'));
 			currentPatternList.Add(pattern[(int)(currentPattern[i]-'0')]);
 		}
 	}
 
 	List<int> GetFirstGrid(){
 		int startCubeNumber = patternRev [currentPatternList [0]];
-		List<int> grid = new List<int>();
 		List<List<int>> firstGridOptions = firstGrid [startCubeNumber];
 		int indexFirstGrid = UnityEngine.Random.Range (0, 3);
-		PrintList(currentPatternList);
-		grid = firstGridOptions [indexFirstGrid];
+		List<int> grid = new List<int> ();
+		grid.AddRange(firstGridOptions [indexFirstGrid]);
 		return grid;
 	}
 
@@ -227,7 +227,6 @@ public class CreatePatternBooard : MonoBehaviour {
 		List<int> grid = GetFirstGrid ();
 		PrintList(grid);
 		grid.AddRange (currentPatternList);
-		currentPatternList = new List<int>();
 		currentPatternList = grid;
 	}
 
@@ -290,8 +289,8 @@ public class CreatePatternBooard : MonoBehaviour {
 									//Debug.Log ("Current cube added:" + currentCube);
 									if (CheckEqual (currentPatternList, currentPaths)) {
 										ChangePathsColors (currentPatternList);
-										ClearVariables ();
 										levelChanged = true;
+										ClearVariables ();
 										Debug.Log ("DONEEEEE!!!");
 									} else {
 										if (currentPaths.Contains (currentCube)) {
