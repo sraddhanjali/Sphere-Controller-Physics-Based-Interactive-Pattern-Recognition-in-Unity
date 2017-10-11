@@ -485,8 +485,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LINEWIDTH: 0.2
-  restartLevelDelay: 1
-  wordFile: {fileID: 4900000, guid: 977b9eec4bfcf4b1eb6ddf924e50b052, type: 3}
+  easyPatt: {fileID: 4900000, guid: 977b9eec4bfcf4b1eb6ddf924e50b052, type: 3}
+  mediumPatt: {fileID: 4900000, guid: a16d7475a52d64ed0b6e13a0bf9fb237, type: 3}
+  hardPatt: {fileID: 4900000, guid: 5e7ee6fb93c9749bfa576a58742b5599, type: 3}
+  randomPatt: {fileID: 4900000, guid: 56836e14268f143f39bd87a65ed27cbb, type: 3}
 --- !u!1 &1685365582
 GameObject:
   m_ObjectHideFlags: 0

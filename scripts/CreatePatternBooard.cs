@@ -13,7 +13,12 @@ public class CreatePatternBooard : MonoBehaviour {
 	// stores the gameobjects
 	List<GameObject> go = new List<GameObject>();
 
-	public TextAsset wordFile;
+	/* different levels file*/
+	public TextAsset easyPatt;
+	public TextAsset mediumPatt;
+	public TextAsset hardPatt;
+	public TextAsset randomPatt;
+
 	private List<string> lineList = new List<string>(); 
 
 	// for touch position and colliders
@@ -211,9 +216,9 @@ public class CreatePatternBooard : MonoBehaviour {
 	public void GetPatterns()
 	{
 		// Check if file exists before reading
-		if (wordFile){
+		if (easyPatt){
 			string line;
-			StringReader textStream = new StringReader(wordFile.text);
+			StringReader textStream = new StringReader(easyPatt.text);
 			while((line = textStream.ReadLine()) != null){
 				// Read each line from text file and add into list
 				lineList.Add(line);
