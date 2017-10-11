@@ -485,7 +485,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LINEWIDTH: 0.2
-  restartLevelDelay: 1
   wordFile: {fileID: 4900000, guid: 977b9eec4bfcf4b1eb6ddf924e50b052, type: 3}
 --- !u!1 &1685365582
 GameObject:

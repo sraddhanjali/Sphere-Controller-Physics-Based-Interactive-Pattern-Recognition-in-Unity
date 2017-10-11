@@ -26,6 +26,13 @@ public class CreatePatternBooard : MonoBehaviour {
 	List<GameObject> go = new List<GameObject>();
 
 	public TextAsset wordFile;
+	/*
+	public TextAsset easyWordFile;
+	public TextAsset mediumWordFile;
+	public TextAsset hardWordFile;
+	public TextAsset randomWordFile;
+	public TextAsset patternWordFile;*/
+
 	private List<string> lineList = new List<string>(); 
 
 	// for touch position and colliders
@@ -61,9 +68,7 @@ public class CreatePatternBooard : MonoBehaviour {
 		guiStyle.fontSize = 40; //change the font size
 		GUILayout.Label ("\n Level: " + level, guiStyle);
 	}
-
-
-
+		
 	// mapping of 1..9 numbers to our preferred cube area (3*3)		
 	void CreateNumCubeMap(){
 
@@ -128,6 +133,11 @@ public class CreatePatternBooard : MonoBehaviour {
 				ln.SetPosition (0, g1.transform.position);
 				ln.SetPosition (1, g2.transform.position);
 				ln.SetWidth(LINEWIDTH, LINEWIDTH); 
+
+				/*TrailRenderer t = g1.GetComponent<TrailRenderer> ();
+				t.startWidth = 0.5f;
+				t.endWidth = 0.5f;
+				t.time = 1000f;*/
 			}
 		}
 	}
@@ -238,6 +248,9 @@ public class CreatePatternBooard : MonoBehaviour {
 			GameObject b = go [i];
 			b.layer = 8;
 			b.GetComponent<Renderer>().material.color = Color.white;
+			/*TrailRenderer t = b.AddComponent<TrailRenderer>();
+			t.enabled = true;
+			t.material.SetColor ("_TintColor", Color.green);*/
 		}
 	}
 
@@ -274,7 +287,7 @@ public class CreatePatternBooard : MonoBehaviour {
 			pos.z = -1;
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 			//PrintList (currentPatternList);
-			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 6) {
+			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 9) {
 				foreach (Collider2D c2 in currentFrame) {
 					for (int i = 0; i < cubeColliders.Length; i++) {
 						if (c2 == cubeColliders [i]) {
@@ -286,6 +299,8 @@ public class CreatePatternBooard : MonoBehaviour {
 							} else {
 								if (currentCube == currentPatternList [currentPathSize]) {
 									currentPaths.Add (currentCube);
+									GameObject a = GameObject.Find (currentCube.ToString ());
+									a.GetComponent<Renderer> ().material.color = Color.red;
 									//Debug.Log ("Current cube added:" + currentCube);
 									if (CheckEqual (currentPatternList, currentPaths)) {
 										ChangePathsColors (currentPatternList);
@@ -311,12 +326,24 @@ public class CreatePatternBooard : MonoBehaviour {
 		}
 	}
 
+	void InitializeFiles(){
+		// word files for levels = easy, medium, hard
+		/*easyWordFile = Resources.Load("easy.txt") as TextAsset;
+		mediumWordFile = Resources.Load("medium.txt") as TextAsset;
+		hardWordFile = Resources.Load("hard.txt") as TextAsset;
+		randomWordFile = Resources.Load ("random.txt") as TextAsset;*/
+
+		wordFile = Resources.Load ("patterns.txt") as TextAsset;
+	}
+
+
 	void Awake(){
 		CreateNumCubeMap ();
 	}
 
 	// Use this for initialization
 	void Start () {
+		//InitializeFiles ();
 		InitSetup ();
 	}
 
@@ -331,5 +358,4 @@ public class CreatePatternBooard : MonoBehaviour {
 		}
 		TouchLogic ();
 	}
-
 }
