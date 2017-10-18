@@ -8,10 +8,10 @@ public class CreatePatternBooard : MonoBehaviour {
 
 	//fixed template for first 3*3 grid with key the starting position of the second 3*3 grid
 	Dictionary<int, List<List<int>>> firstGrid = new Dictionary<int, List<List<int>>>() {
-		{1, new List<List<int>>{ new List<int>{1, 4, 7}, new List<int>{3, 5, 6, 8, 7}, new List<int>{6, 5, 7, 8} } }, 
-		{2, new List<List<int>>{ new List<int>{2, 5, 8, 9}, new List<int>{3, 2, 4, 7}, new List<int>{1, 4, 8} }  },
-		{3, new List<List<int>>{ new List<int>{3, 6, 8, 9}, new List<int>{4, 7, 8}, new List<int>{1, 5, 9} } },
-		{4, new List<List<int>>{ new List<int>{1, 4, 7, 10}, new List<int>{3, 5, 8, 11}, new List<int>{4, 5, 6, 8, 11} } },
+		{1, new List<List<int>>{ new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } }, 
+		{2, new List<List<int>>{ new List<int>{3, 2, 1, 4, 5, 6, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7}, new List<int>{1, 2, 3, 6, 9, 8, 7}, new List<int>{3, 2, 1, 5, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } },
+		{3, new List<List<int>>{ new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } },
+		{4, new List<List<int>>{ new List<int>{3, 2, 1, 4, 5, 6, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7}, new List<int>{1, 2, 3, 6, 9, 8, 7}, new List<int>{3, 2, 1, 5, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} }},
 		{5, new List<List<int>>{ new List<int>{1, 8, 13}, new List<int>{3, 8, 9, 11}, new List<int>{1, 5, 4, 11} } },
 		{6, new List<List<int>>{ new List<int>{4, 11, 14}, new List<int>{2, 4, 11, 12}, new List<int>{1, 8, 10, 13, 14} } },
 		{7, new List<List<int>>{ new List<int>{1, 2, 3, 5, 9, 11}, new List<int>{4, 8, 9, 12, 15}, new List<int>{7, 8, 4} } },
@@ -248,9 +248,6 @@ public class CreatePatternBooard : MonoBehaviour {
 			GameObject b = go [i];
 			b.layer = 8;
 			b.GetComponent<Renderer>().material.color = Color.white;
-			/*TrailRenderer t = b.AddComponent<TrailRenderer>();
-			t.enabled = true;
-			t.material.SetColor ("_TintColor", Color.green);*/
 		}
 	}
 
@@ -282,6 +279,15 @@ public class CreatePatternBooard : MonoBehaviour {
 	void TouchLogic(){
 		int currentPathSize = currentPaths.Count;
 		int currentCube;
+		if (Input.touchCount > 0 &&
+			Input.GetTouch(0).phase == TouchPhase.Began) {
+			gameObject.GetComponent<Renderer>().material.color = Color.white;
+		}
+		if (Input.touchCount > 0 &&
+			Input.GetTouch(0).phase == TouchPhase.Ended) {
+			gameObject.GetComponent<Renderer>().material.color = new Color(204,204,204,0);
+		}
+
 		if (Input.GetMouseButton (0)) {
 			Vector3 pos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			pos.z = -1;
