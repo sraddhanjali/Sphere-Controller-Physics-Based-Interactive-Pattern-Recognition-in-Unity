@@ -268,7 +268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.33823532, g: 0.21637113, b: 0.21637113, a: 0.392}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -459,7 +459,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flowField: {fileID: 795288037}
-  c: {fileID: 1873674209014272, guid: 0e56da1afac8343eb8de04e4c0c76fa1, type: 2}
+  insideCube: {fileID: 1873674209014272, guid: 0e56da1afac8343eb8de04e4c0c76fa1, type: 2}
+  outsideCube: {fileID: 1764990973011180, guid: c78ded33b98c24bab9266a74c4c169d3,
+    type: 2}
+  columns: 16
+  rows: 16
 --- !u!4 &1414527997
 Transform:
   m_ObjectHideFlags: 0
@@ -484,6 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a08a2375b464dd7b6cf8ebde5aaa2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprites: []
   LINEWIDTH: 0.2
   easyPatt: {fileID: 4900000, guid: 977b9eec4bfcf4b1eb6ddf924e50b052, type: 3}
   mediumPatt: {fileID: 4900000, guid: a16d7475a52d64ed0b6e13a0bf9fb237, type: 3}

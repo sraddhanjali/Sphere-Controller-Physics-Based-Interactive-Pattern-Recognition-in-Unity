@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 public class CreatePatternBooard : MonoBehaviour {
 
+	//sprites
+	public Sprite[] sprites;
+
 	// line width for the pattern lines
 	public float LINEWIDTH = 0.1f;
 
@@ -55,7 +58,12 @@ public class CreatePatternBooard : MonoBehaviour {
 		GUILayout.Label ("\n Level: " + level, guiStyle);
 	}
 
+	void LoadSprites(){
+		sprites = Resources.LoadAll<Sprite>("sprites/Scavengers_SpriteSheet");
+	}
+
 	void Awake(){
+		LoadSprites ();
 		CreateNumCubeMap ();
 	}
 
@@ -113,7 +121,8 @@ public class CreatePatternBooard : MonoBehaviour {
 			go.Add (objects [i]);
 			GameObject b = go [i];
 			b.layer = 8;
-			b.GetComponent<Renderer>().material.color = Color.white;
+			//b.GetComponent<Renderer>().material.color = Color.white;
+			b.GetComponent<SpriteRenderer> ().sprite = sprites [6];
 		}
 	}
 
@@ -135,9 +144,14 @@ public class CreatePatternBooard : MonoBehaviour {
 	void DrawLines(List<GameObject> patternCube){
 		LineRenderer ln;
 		for (int i = 0; i < patternCube.Count; i++) {
+			GameObject g1 = patternCube [i];
 			if (i != patternCube.Count - 1) {
-				GameObject g1 = patternCube [i];
-				GameObject g2 = patternCube [i+1];
+				GameObject g2 = patternCube [i + 1];
+				if (i == 0) {
+					g1.GetComponent<SpriteRenderer> ().sprite = sprites [0];
+				} else {
+					g1.GetComponent<SpriteRenderer> ().sprite = sprites [19];
+				}
 				if (g1.GetComponent<LineRenderer> ()) {
 					ln = g1.GetComponent<LineRenderer> ();
 				} else {
@@ -145,25 +159,34 @@ public class CreatePatternBooard : MonoBehaviour {
 				}
 				ln.SetPosition (0, g1.transform.position);
 				ln.SetPosition (1, g2.transform.position);
-				ln.SetWidth(LINEWIDTH, LINEWIDTH); 
+				ln.material.color = Color.white;
+				ln.startWidth = LINEWIDTH;
+				ln.endWidth = LINEWIDTH;
+			} else {
+				if (i == patternCube.Count - 1) {
+					g1.GetComponent<SpriteRenderer> ().sprite = sprites [20];
+				}
 			}
+			g1.AddComponent<TrailRenderer> ();
 		}
 	}
 
-	void RemoveLines(List<int> p){
+	IEnumerator RemoveLines(List<int> p){
+		yield return new WaitForSeconds(1f);
 		LineRenderer ln, ln1;
 		for (int i = 0; i < p.Count; i++) {
+			GameObject g1 = GameObject.Find (String.Format ("{0}", pattern[p [i]]));
+			g1.GetComponent<SpriteRenderer> ().sprite = sprites [6];
+			GameObject g3 = GameObject.Find (String.Format ("{0}", p[i]));
+			g3.GetComponent<SpriteRenderer> ().sprite = sprites [6];
 			if (i != p.Count - 1) {
-				// second block
-				GameObject g1 = GameObject.Find (String.Format ("{0}", pattern[p [i]]));
-				GameObject g2 = GameObject.Find (String.Format ("{0}", pattern[p [i+1]]));
+				//second block
+				//GameObject g2 = GameObject.Find (String.Format ("{0}", pattern[p [i+1]]));
 				ln = g1.GetComponent<LineRenderer> ();
 				ln.SetPosition (0, Vector3.zero);
 				ln.SetPosition (1, Vector3.zero);
-
 				// first block
-				GameObject g3 = GameObject.Find (String.Format ("{0}", p[i]));
-				GameObject g4 = GameObject.Find (String.Format ("{0}", p[i+1]));
+				//GameObject g4 = GameObject.Find (String.Format ("{0}", p[i+1]));
 				ln1 = g3.GetComponent<LineRenderer> ();
 				ln1.SetPosition (0, Vector3.zero);
 				ln1.SetPosition (1, Vector3.zero);
@@ -190,9 +213,25 @@ public class CreatePatternBooard : MonoBehaviour {
 			}
 			patternCube.Add(g);
 		}
-		ColorCubePath (patternCube);
-		DrawLines (patternCube);
+		//ColorCubePath (patternCube);
+		AnimateFood(patternCube);
 		patternCube.Clear ();
+	}
+
+	void AnimateFood(List<GameObject> patternCube){
+		DrawLines (patternCube);
+		StartCoroutine (RemoveLines(currentPatternList));		
+	}
+
+	IEnumerator NewLevelWork(){
+		level += 1;
+		currentPaths.Clear ();
+		currentPatternList.Clear ();
+		lineList.Clear ();
+		go.Clear ();
+		levelChanged = false;
+		yield return new WaitForSeconds (1f);
+		InitSetup ();
 	}
 
 	// Update is called once per frame
@@ -200,15 +239,9 @@ public class CreatePatternBooard : MonoBehaviour {
 		if (settingGame) {
 			return;
 		} else if (levelChanged) {
-			level += 1;
-			currentPaths.Clear ();
-			currentPatternList.Clear ();
-			lineList.Clear ();
-			go.Clear ();
-			levelChanged = false;
-			InitSetup ();
+			StartCoroutine (NewLevelWork());
 		}
-		TouchLogic ();
+		TouchLogic();		
 	}
 
 
@@ -273,7 +306,6 @@ public class CreatePatternBooard : MonoBehaviour {
 			Vector3 pos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			pos.z = -1;
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
-
 			if ((Input.mousePosition - lastMousePos).sqrMagnitude > 7) {
 				foreach (Collider2D c2 in currentFrame) {
 					for (int i = 0; i < cubeColliders.Length; i++) {
@@ -288,6 +320,18 @@ public class CreatePatternBooard : MonoBehaviour {
 							} else {
 								if (currentCube == currentPatternList [currentPathSize]) {
 									currentPaths.Add (currentCube);
+									GameObject g1 = GameObject.Find (String.Format ("{0}", currentCube));
+									GameObject g2 = GameObject.Find (String.Format ("{0}", pattern[currentCube]));
+									if (currentPathSize == 0) {
+										g1.GetComponent<SpriteRenderer> ().sprite = sprites [0];
+										g2.GetComponent<SpriteRenderer> ().sprite = sprites [0];
+									} else if (currentPathSize < currentPatternList.Count - 1) {
+										g1.GetComponent<SpriteRenderer> ().sprite = sprites [19];
+										g2.GetComponent<SpriteRenderer> ().sprite = sprites [19];
+									} else {
+										g1.GetComponent<SpriteRenderer> ().sprite = sprites [20];
+										g2.GetComponent<SpriteRenderer> ().sprite = sprites [20];
+									}
 									Debug.Log ("Current cube added:" + currentCube);
 									if (CheckEqual (currentPatternList, currentPaths)) {
 										ChangePathsColors (currentPaths);
