@@ -279,14 +279,6 @@ public class CreatePatternBooard : MonoBehaviour {
 	void TouchLogic(){
 		int currentPathSize = currentPaths.Count;
 		int currentCube;
-		if (Input.touchCount > 0 &&
-			Input.GetTouch(0).phase == TouchPhase.Began) {
-			gameObject.GetComponent<Renderer>().material.color = Color.white;
-		}
-		if (Input.touchCount > 0 &&
-			Input.GetTouch(0).phase == TouchPhase.Ended) {
-			gameObject.GetComponent<Renderer>().material.color = new Color(204,204,204,0);
-		}
 
 		if (Input.GetMouseButton (0)) {
 			Vector3 pos = Camera.main.ScreenToWorldPoint (Input.mousePosition);

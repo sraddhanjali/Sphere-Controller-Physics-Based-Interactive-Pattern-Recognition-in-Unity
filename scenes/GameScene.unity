@@ -157,7 +157,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.040224906, g: 0.11322566, b: 0.22794116, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -459,7 +459,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flowField: {fileID: 795288037}
-  c: {fileID: 1873674209014272, guid: 0e56da1afac8343eb8de04e4c0c76fa1, type: 2}
+  cube: {fileID: 1873674209014272, guid: 0e56da1afac8343eb8de04e4c0c76fa1, type: 2}
+  outsideCube: {fileID: 1764990973011180, guid: c78ded33b98c24bab9266a74c4c169d3,
+    type: 2}
 --- !u!4 &1414527997
 Transform:
   m_ObjectHideFlags: 0
@@ -484,7 +486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a08a2375b464dd7b6cf8ebde5aaa2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LINEWIDTH: 0.2
+  LINEWIDTH: 0.01
   wordFile: {fileID: 4900000, guid: 977b9eec4bfcf4b1eb6ddf924e50b052, type: 3}
 --- !u!1 &1685365582
 GameObject:

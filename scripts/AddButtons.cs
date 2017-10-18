@@ -6,7 +6,8 @@ public class AddButtons : MonoBehaviour {
 	public Transform flowField;
 
 	[SerializeField]
-	public GameObject c; 
+	public GameObject cube; 
+	public GameObject outsideCube; 
 
 	int worldWidth  = 6;
 	int worldHeight  = 3;
@@ -21,7 +22,12 @@ public class AddButtons : MonoBehaviour {
 		int yValue = 0;
 		for(int y = 0; y < worldWidth; y++) {
 			for(int x = 0; x < worldHeight; x++) {                
-				GameObject cube = Instantiate(c, new Vector3(-1 + xValue,  2 + yValue, 0), c.transform.rotation) as GameObject;
+				GameObject c1 = Instantiate(cube, new Vector3(-1 + xValue,  2 + yValue, 0), cube.transform.rotation) as GameObject;
+				GameObject c2 = Instantiate(outsideCube, new Vector3(-1 + xValue,  2 + yValue, 0), cube.transform.rotation) as GameObject;
+
+				Color color = c1.GetComponent<Renderer> ().material.color;
+				color.a = 0.5f; // 50 % transparent
+				c1.GetComponent<Renderer> ().material.color = color;
 				cubeNum += 1;
 				cube.name = "" + cubeNum;
 				xValue += 1;
