@@ -1,10 +1,15 @@
 fileFormatVersion: 2
 guid: 9e69e4b6ec76045ca9a6189697d41ef3
-timeCreated: 1504554810
+timeCreated: 1508368031
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - flowField: {fileID: 224706662629648042, guid: 38b898f8a4ee74df8b3e7db0bd7b1d87,
+      type: 2}
+  - cube: {fileID: 1873674209014272, guid: 0e56da1afac8343eb8de04e4c0c76fa1, type: 2}
+  - outsideCube: {fileID: 1764990973011180, guid: c78ded33b98c24bab9266a74c4c169d3,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
