@@ -25,7 +25,7 @@ public class CreatePatternBooard : MonoBehaviour {
 	[SerializeField]
 	public float LINEWIDTH = 0.10f;
 
-	public int SWIPETHRESHOLD = 7;
+	public int SWIPETHRESHOLD = 2;
 
 	List<GameObject> go = new List<GameObject>();
 
@@ -97,12 +97,6 @@ public class CreatePatternBooard : MonoBehaviour {
 		for (int i = 0; i < patternCube.Count; i++) {
 			b = patternCube [i];
 			b.layer = 8;
-			/*if (i == 0) {
-				c = Color.red;	
-			} else {
-				c = Color.grey;
-			}
-			b.GetComponent<Renderer>().material.color = c;*/
 		}
 	}
 
@@ -192,7 +186,6 @@ public class CreatePatternBooard : MonoBehaviour {
 	void GetPatternList(){
 		currentPatternList.Clear ();
 		for (int i = 0; i < currentPattern.Length; i++) {
-			//Debug.Log ((int)(currentPattern [i] - '0'));
 			currentPatternList.Add(pattern[(int)(currentPattern[i]-'0')]);
 		}
 	}
@@ -208,7 +201,6 @@ public class CreatePatternBooard : MonoBehaviour {
 
 	void AddPatternsBothGrids(){
 		List<int> grid = GetFirstGrid ();
-		//PrintList(grid);
 		grid.AddRange (currentPatternList);
 		currentPatternList = grid;
 	}
@@ -249,24 +241,11 @@ public class CreatePatternBooard : MonoBehaviour {
 		int currentPathSize = currentPaths.Count;
 		int currentCube;
 
-		// Check if there is a touch
-		/*
-		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began){
-			// Check if finger is over a UI element
-			if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)){
-				Debug.Log("Touched the UI");
-				Debug.Log (EventSystem.current.currentSelectedGameObject.name);
-			}
-		}*/
-
 		foreach (Touch touch in Input.touches) {
 			switch (touch.phase) {
-			case TouchPhase.Began:
-				startPos = touch.position;
-				//Debug.Log ("began");
-				break;
+
 			case TouchPhase.Moved:
-				//Debug.Log ("moved");
+				Debug.Log ("moved");
 				Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 				pos.z = -1;
 				Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
@@ -281,21 +260,21 @@ public class CreatePatternBooard : MonoBehaviour {
 									Debug.Log (currentCube);
 									if (currentPaths.Contains (currentCube)) {
 										continue;
-										//Debug.Log ("already exists");
+										Debug.Log ("already exists");
 									} else {
 										if (currentCube == currentPatternList [currentPathSize]) {
 											currentPaths.Add (currentCube);
 											GameObject a = GameObject.Find (currentCube.ToString ());
 											a.GetComponent<Renderer> ().material.color = Color.red;
-											//Debug.Log ("Current cube added:" + currentCube);
+											Debug.Log ("Current cube added:" + currentCube);
 											if (CheckEqual (currentPatternList, currentPaths)) {
 												ChangePathsColors (currentPatternList);
 												increaseLevel = true;
 												ClearVariables ();
-												//Debug.Log ("DONEEEEE!!!");
+												Debug.Log ("DONEEEEE!!!");
 											} else {
 												if (currentPaths.Contains (currentCube)) {
-													//Debug.Log ("already swiped");
+													Debug.Log ("already swiped");
 													continue;
 												} else {
 													currentPaths.Clear ();
