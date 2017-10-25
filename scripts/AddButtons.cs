@@ -24,14 +24,11 @@ public class AddButtons : MonoBehaviour {
 			for(int x = 0; x < worldHeight; x++) {                
 				GameObject c1 = Instantiate(cube, new Vector3(-1 + xValue,  2 + yValue, 0), cube.transform.rotation) as GameObject;
 				GameObject c2 = Instantiate(outsideCube, new Vector3(-1 + xValue,  2 + yValue, 0), cube.transform.rotation) as GameObject;
-				LineRenderer ln = c1.AddComponent<LineRenderer>();
-				ln.sortingOrder = 1; 
-				ln.sortingLayerName = "LineRenderer";
-				Color color = c1.GetComponent<Renderer> ().material.color;
+				Color color = c2.GetComponent<Renderer> ().material.color;
 				color.a = 0.5f; // 50 % transparent
-				c1.GetComponent<Renderer> ().material.color = color;
+				c2.GetComponent<Renderer> ().material.color = color;
 				cubeNum += 1;
-				cube.name = "" + cubeNum;
+				c1.name = "" + cubeNum;
 				xValue += 1;
 			}
 			yValue -= 1;

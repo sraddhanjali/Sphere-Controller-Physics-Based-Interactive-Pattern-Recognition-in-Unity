@@ -486,7 +486,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a08a2375b464dd7b6cf8ebde5aaa2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LINEWIDTH: 0.58
+  sprites: []
+  LINEWIDTH: 0.11
   SWIPETHRESHOLD: 9
   wordFile: {fileID: 4900000, guid: 977b9eec4bfcf4b1eb6ddf924e50b052, type: 3}
 --- !u!1 &1685365582
