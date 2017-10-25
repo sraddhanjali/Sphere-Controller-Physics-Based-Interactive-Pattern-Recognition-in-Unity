@@ -228,7 +228,6 @@ public class CreatePatternBooard : MonoBehaviour {
 		patternCube.Clear ();
 	}
 
-
 	void InitSetup(){
 		settingGame = true;
 		GetPatterns();
@@ -237,10 +236,47 @@ public class CreatePatternBooard : MonoBehaviour {
 		settingGame = false;
 	}
 
-	void TouchLogic(){
+	void SwipeCube(int currentCube){
 		int currentPathSize = currentPaths.Count;
+		Debug.Log (currentCube);
+		if (currentPaths.Contains (currentCube)) {
+			Debug.Log ("already exists");
+		} else {
+			if (currentCube == currentPatternList [currentPathSize]) {
+				currentPaths.Add (currentCube);
+				GameObject a = GameObject.Find (currentCube.ToString ());
+				a.GetComponent<Renderer> ().material.color = Color.red;
+				Debug.Log ("Current cube added:" + currentCube);
+				if (CheckEqual (currentPatternList, currentPaths)) {
+					ChangePathsColors (currentPatternList);
+					increaseLevel = true;
+					ClearVariables ();
+					Debug.Log ("DONEEEEE!!!");
+				} else {
+					if (currentPaths.Contains (currentCube)) {
+						Debug.Log ("already swiped");
+					} else {
+						currentPaths.Clear ();
+					}
+				}
+			} 
+		}
+	}
+
+	void TouchLogic(){
 		int currentCube;
 
+		Touch touch = Input.GetTouch (0);
+		Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
+		pos.z = -1;
+		Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
+		foreach (Collider2D c2 in currentFrame) {
+			Debug.Log (c2.name);
+			currentCube = int.Parse (c2.name);
+			SwipeCube (currentCube);
+		}
+
+		/*
 		foreach (Touch touch in Input.touches) {
 			switch (touch.phase) {
 
@@ -257,31 +293,7 @@ public class CreatePatternBooard : MonoBehaviour {
 							for (int i = 0; i < cubeColliders.Length; i++) {
 								if (c2 == cubeColliders [i]) {
 									currentCube = int.Parse (c2.name);
-									Debug.Log (currentCube);
-									if (currentPaths.Contains (currentCube)) {
-										continue;
-										Debug.Log ("already exists");
-									} else {
-										if (currentCube == currentPatternList [currentPathSize]) {
-											currentPaths.Add (currentCube);
-											GameObject a = GameObject.Find (currentCube.ToString ());
-											a.GetComponent<Renderer> ().material.color = Color.red;
-											Debug.Log ("Current cube added:" + currentCube);
-											if (CheckEqual (currentPatternList, currentPaths)) {
-												ChangePathsColors (currentPatternList);
-												increaseLevel = true;
-												ClearVariables ();
-												Debug.Log ("DONEEEEE!!!");
-											} else {
-												if (currentPaths.Contains (currentCube)) {
-													Debug.Log ("already swiped");
-													continue;
-												} else {
-													currentPaths.Clear ();
-												}
-											}
-										} 
-									}
+									SwipeCube (currentCube);
 								}
 							}
 						}
@@ -299,7 +311,7 @@ public class CreatePatternBooard : MonoBehaviour {
 				}
 				break;
 			}
-		}
+		}*/
 	}
 
 	void Awake(){
