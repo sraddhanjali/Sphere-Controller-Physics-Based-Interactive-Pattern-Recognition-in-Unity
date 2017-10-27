@@ -1,9 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
-using System.IO;	
+using System.IO;                    // For parsing text file, StringReader
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 
 
 public class CreatePatternBooard : MonoBehaviour {
@@ -23,7 +22,10 @@ public class CreatePatternBooard : MonoBehaviour {
 	public Sprite[] sprites;
 
 	[SerializeField]
-	public float LINEWIDTH = 0.10f;
+	public float LINEWIDTH = 0.5f;
+	public AudioSource chop;
+
+	public Shader shader1;
 
 	public int SWIPETHRESHOLD = 2;
 
@@ -111,6 +113,8 @@ public class CreatePatternBooard : MonoBehaviour {
 				} else {
 					ln = g1.AddComponent<LineRenderer> ();
 				}
+				//g1.GetComponent<Renderer> ().material.shader = shader1;
+				//g2.GetComponent<Renderer> ().material.shader = shader1;
 				ln.SetPosition (0, g1.transform.position);
 				ln.SetPosition (1, g2.transform.position);
 				ln.material.color = Color.white;
@@ -120,7 +124,9 @@ public class CreatePatternBooard : MonoBehaviour {
 		}
 	}
 
-	void RemoveLines(List<int> p){
+	IEnumerator RemoveLines(List<int> p){
+		yield return new WaitForSeconds(3f);
+			
 		LineRenderer ln;
 		for (int i = 0; i < p.Count; i++) {
 			if (i != p.Count - 1) {
@@ -226,6 +232,7 @@ public class CreatePatternBooard : MonoBehaviour {
 		ColorCubePath (patternCube);
 		DrawLines (patternCube);
 		patternCube.Clear ();
+		StartCoroutine (RemoveLines(currentPatternList));	
 	}
 
 	void InitSetup(){
@@ -239,13 +246,14 @@ public class CreatePatternBooard : MonoBehaviour {
 	void SwipeCube(int currentCube){
 		int currentPathSize = currentPaths.Count;
 		Debug.Log (currentCube);
+		GameObject a = GameObject.Find (currentCube.ToString ());
 		if (currentPaths.Contains (currentCube)) {
 			Debug.Log ("already exists");
 		} else {
 			if (currentCube == currentPatternList [currentPathSize]) {
 				currentPaths.Add (currentCube);
-				GameObject a = GameObject.Find (currentCube.ToString ());
-				a.GetComponent<Renderer> ().material.color = Color.red;
+				a.GetComponent<Renderer> ().material.color = Color.red;	
+				chop.Play ();
 				Debug.Log ("Current cube added:" + currentCube);
 				if (CheckEqual (currentPatternList, currentPaths)) {
 					ChangePathsColors (currentPatternList);
@@ -266,14 +274,16 @@ public class CreatePatternBooard : MonoBehaviour {
 	void TouchLogic(){
 		int currentCube;
 
-		Touch touch = Input.GetTouch (0);
-		Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
-		pos.z = -1;
-		Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
-		foreach (Collider2D c2 in currentFrame) {
-			Debug.Log (c2.name);
-			currentCube = int.Parse (c2.name);
-			SwipeCube (currentCube);
+		if (Input.touchCount > 0) {
+			Touch touch = Input.GetTouch (0);
+			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
+			pos.z = -1;
+			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
+			foreach (Collider2D c2 in currentFrame) {
+				Debug.Log (c2.name);
+				currentCube = int.Parse (c2.name);
+				SwipeCube (currentCube);
+			}
 		}
 
 		/*
@@ -317,6 +327,7 @@ public class CreatePatternBooard : MonoBehaviour {
 	void Awake(){
 		LoadSprites ();
 		CreateNumCubeMap ();
+		shader1 = Shader.Find ("Outlined/Silhouetted Diffuse");
 	}
 
 	void LoadSprites(){
@@ -327,13 +338,23 @@ public class CreatePatternBooard : MonoBehaviour {
 		InitSetup ();
 	}
 
+	IEnumerator NewLevelWork(){
+		level += 1;
+		currentPaths.Clear ();
+		currentPatternList.Clear ();
+		lineList.Clear ();
+		go.Clear ();
+		increaseLevel = false;
+		yield return new WaitForSeconds (1f);
+		InitSetup ();
+	}
+
+
 	void Update () {
 		if (settingGame) {
 			return;
 		} else if (increaseLevel) {
-			level += 1;
-			increaseLevel = false;
-			InitSetup ();
+			StartCoroutine (NewLevelWork());
 		}
 		TouchLogic ();
 	}
