@@ -4,15 +4,52 @@ using System.Collections;
 using System.IO;                    // For parsing text file, StringReader
 using System.Collections.Generic;
 
+class Pattern{
+	private List<int> pattern;
+	private Dictionary<int, Vector3> coordMap;
+	private Dictionary<int, String> timeMap;
+
+	public static String GetTimestamp(DateTime value) {
+		return value.ToString("yyyyMMddHHmmssffff");
+	}
+
+	public void SetPattern(int singleP){
+		pattern.Add (singleP);
+	}
+
+	public void SetCoordinates(int singleP, Vector3 coord){
+		coordMap.Add (singleP, coord);
+	}
+
+	public void SetTimestamp(int singleP, DateTime t){
+		timeMap.Add (singleP, GetTimestamp (t));
+	}
+
+	public void PrintAll(){
+		foreach (KeyValuePair<int, Vector3> kvp in coordMap) {
+			int num = kvp.Key;
+			Vector3 v = kvp.Value;
+			String v1 = v.ToString ();
+			String ts = timeMap [num];
+			System.IO.File.WriteAllText("p1.txt", num.ToString());
+			System.IO.File.AppendAllText("p1.txt", v1);
+			System.IO.File.AppendAllText("p1.txt", ts);
+		}
+	}
+}
 
 public class CreatePatternBooard : MonoBehaviour {
+
+	List<Pattern> patC = new List<Pattern>();
+
+	Pattern p;
 
 	Dictionary<int, List<List<int>>> firstGrid = new Dictionary<int, List<List<int>>>() {
 		{1, new List<List<int>>{ new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } }, 
 		{2, new List<List<int>>{ new List<int>{3, 2, 1, 4, 5, 6, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7}, new List<int>{1, 2, 3, 6, 9, 8, 7}, new List<int>{3, 2, 1, 5, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } },
 		{3, new List<List<int>>{ new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } },
 		{4, new List<List<int>>{ new List<int>{3, 2, 1, 4, 5, 6, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7}, new List<int>{1, 2, 3, 6, 9, 8, 7}, new List<int>{3, 2, 1, 5, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} }},
-		{5, new List<List<int>>{ new List<int>{1, 8, 13}, new List<int>{3, 8, 9, 11}, new List<int>{1, 5, 4, 11} } },
+		{5, new List<List<int>>{ new List<int>{1, 8, 13}, new List<int>{3, 8, 9, 11}, new List<int>{1, 5, 4, 11} } },	
 		{6, new List<List<int>>{ new List<int>{4, 11, 14}, new List<int>{2, 4, 11, 12}, new List<int>{1, 8, 10, 13, 14} } },
 		{7, new List<List<int>>{ new List<int>{1, 2, 3, 5, 9, 11}, new List<int>{4, 8, 9, 12, 15}, new List<int>{7, 8, 4} } },
 		{8, new List<List<int>>{ new List<int>{4, 11, 14}, new List<int>{9, 6, 5, 12, 14, 17}, new List<int>{1, 8, 10, 13} } },
@@ -41,6 +78,7 @@ public class CreatePatternBooard : MonoBehaviour {
 
 	private static bool increaseLevel = false;
 	private static bool reloadLevel = false;
+	private static float timeLeft = 10.0f;
 
 	private static int level = 1;
 
@@ -54,13 +92,20 @@ public class CreatePatternBooard : MonoBehaviour {
 	Dictionary<int, int> patternRev = new Dictionary<int, int>();
 
 	bool settingGame = false;
+	bool gameover = false;
+	private int playerPoints = 0;
+	static int pointsAdded = 0 ;
 
 	protected void OnGUI(){
 
-		guiStyle.fontSize = 40; 
-		GUILayout.Label ("\n Level: " + level, guiStyle);
+		guiStyle.fontSize = 50; 
+		if (gameover == false) {
+			GUILayout.Label ("\n Level: " + level + "\n Time:" + (int)timeLeft + "\n Points:" + playerPoints, guiStyle);
+		} else {
+			GUILayout.Label ("GameOver", guiStyle);
+		}
 	}
-		
+
 	void CreateNumCubeMap(){
 
 		pattern.Add (1, 10);
@@ -113,8 +158,8 @@ public class CreatePatternBooard : MonoBehaviour {
 				} else {
 					ln = g1.AddComponent<LineRenderer> ();
 				}
-				//g1.GetComponent<Renderer> ().material.shader = shader1;
-				//g2.GetComponent<Renderer> ().material.shader = shader1;
+				g1.GetComponent<SpriteRenderer> ().material.color = Color.black;
+				g2.GetComponent<SpriteRenderer> ().material.color = Color.black;
 				ln.SetPosition (0, g1.transform.position);
 				ln.SetPosition (1, g2.transform.position);
 				ln.material.color = Color.white;
@@ -125,17 +170,22 @@ public class CreatePatternBooard : MonoBehaviour {
 	}
 
 	IEnumerator RemoveLines(List<int> p){
+	//void RemoveLines(List<int> p){
 		yield return new WaitForSeconds(3f);
 			
-		LineRenderer ln;
+		LineRenderer ln1, ln2;
 		for (int i = 0; i < p.Count; i++) {
 			if (i != p.Count - 1) {
 				int p1 = p [i];
 				int p2 = p [i + 1];
 				GameObject g1 = GameObject.Find (String.Format ("{0}", p1));
-				ln = g1.GetComponent<LineRenderer> ();
-				ln.SetPosition (0, Vector3.zero);
-				ln.SetPosition (1, Vector3.zero);
+				GameObject g2 = GameObject.Find (String.Format ("{0}", p2));
+				ln1 = g1.GetComponent<LineRenderer> ();
+				//ln2 = g2.GetComponent<LineRenderer> ();
+				ln1.SetPosition (0, Vector3.zero);
+				ln1.SetPosition (1, Vector3.zero);
+				//ln2.SetPosition (0, Vector3.zero);
+				//ln2.SetPosition (1, Vector3.zero);
 			}
 		}
 	}
@@ -183,7 +233,7 @@ public class CreatePatternBooard : MonoBehaviour {
 			}
 			textStream.Close();
 		}
-
+		p = new Pattern ();
 		currentPattern = GetRandomLine ();
 		GetPatternList();
 		AddPatternsBothGrids ();
@@ -243,26 +293,37 @@ public class CreatePatternBooard : MonoBehaviour {
 		settingGame = false;
 	}
 
-	void SwipeCube(int currentCube){
+	void SwipeCube(int currentCube, Vector3 pos){
+		int t = (int)timeLeft;
 		int currentPathSize = currentPaths.Count;
-		Debug.Log (currentCube);
+		//Debug.Log (currentCube);
 		GameObject a = GameObject.Find (currentCube.ToString ());
 		if (currentPaths.Contains (currentCube)) {
-			Debug.Log ("already exists");
+			//Debug.Log ("already exists");
 		} else {
 			if (currentCube == currentPatternList [currentPathSize]) {
+				/* storing parameters */
+				p.SetPattern (currentCube);
+				p.SetCoordinates (currentCube, pos);
+				p.SetTimestamp (currentCube, DateTime.Now);
+				/*------------------*/
+
 				currentPaths.Add (currentCube);
 				a.GetComponent<Renderer> ().material.color = Color.red;	
 				chop.Play ();
-				Debug.Log ("Current cube added:" + currentCube);
+
+				//Debug.Log ("Current cube added:" + currentCube);
 				if (CheckEqual (currentPatternList, currentPaths)) {
 					ChangePathsColors (currentPatternList);
 					increaseLevel = true;
+					PlayerPointsLogic (t);
 					ClearVariables ();
-					Debug.Log ("DONEEEEE!!!");
+					patC.Add (p);
+					p.PrintAll ();
+					//Debug.Log ("DONEEEEE!!!");
 				} else {
 					if (currentPaths.Contains (currentCube)) {
-						Debug.Log ("already swiped");
+						//Debug.Log ("already swiped");
 					} else {
 						currentPaths.Clear ();
 					}
@@ -271,57 +332,37 @@ public class CreatePatternBooard : MonoBehaviour {
 		}
 	}
 
+	void PlayerPointsLogic(int left){
+			if (left > 7){
+				playerPoints += 50;
+				pointsAdded = 50;
+			}
+			else if (left > 4){
+				playerPoints += 25;
+				pointsAdded = 25;
+			}
+			else if (left > 0){
+				playerPoints += 10;
+				pointsAdded = 10;
+			}
+			else if (left <= 0){
+				gameover = true;
+			}
+		}
+
 	void TouchLogic(){
 		int currentCube;
-
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 			pos.z = -1;
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 			foreach (Collider2D c2 in currentFrame) {
-				Debug.Log (c2.name);
+				//Debug.Log (c2.name);
 				currentCube = int.Parse (c2.name);
-				SwipeCube (currentCube);
+				SwipeCube (currentCube, pos);
 			}
 		}
-
-		/*
-		foreach (Touch touch in Input.touches) {
-			switch (touch.phase) {
-
-			case TouchPhase.Moved:
-				Debug.Log ("moved");
-				Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
-				pos.z = -1;
-				Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
-				Vector3 offset = pos - startPos;
-				if (offset.sqrMagnitude > SWIPETHRESHOLD) {
-					Debug.Log (offset.ToString ());
-					foreach (Collider2D c2 in currentFrame) {
-						if (cubeColliders.Length != 0) {
-							for (int i = 0; i < cubeColliders.Length; i++) {
-								if (c2 == cubeColliders [i]) {
-									currentCube = int.Parse (c2.name);
-									SwipeCube (currentCube);
-								}
-							}
-						}
-					}
-				}
-				cubeColliders = currentFrame; 
-				startPos = touch.position;
-				break;
-			
-			case TouchPhase.Ended:
-				if (CheckEqual (currentPatternList, currentPaths)) {
-					continue;
-				} else {
-					reloadLevel = true;
-				}
-				break;
-			}
-		}*/
 	}
 
 	void Awake(){
@@ -351,11 +392,18 @@ public class CreatePatternBooard : MonoBehaviour {
 
 
 	void Update () {
-		if (settingGame) {
-			return;
-		} else if (increaseLevel) {
-			StartCoroutine (NewLevelWork());
+		if (gameover == false) {
+			if (settingGame) {
+				return;
+			} else if (increaseLevel) {
+				StartCoroutine (NewLevelWork ());
+				timeLeft = 10.0f;
+				timeLeft -= Time.deltaTime;
+			}
+			TouchLogic ();
+		} else if (gameover == true) {
+			timeLeft = 0;
+			GUILayout.Label ("GameOver", guiStyle);
 		}
-		TouchLogic ();
 	}
 }
