@@ -19,7 +19,6 @@ public class CreatePatternBooard : MonoBehaviour {
 	private int playerPoints = 0;
 	static int pointsAdded = 0 ;
 	List<Pattern> patC = new List<Pattern>();
-	Pattern p;
 	public Sprite[] sprites;
 	public AudioSource chop;
 	List<GameObject> go = new List<GameObject>();
@@ -32,6 +31,11 @@ public class CreatePatternBooard : MonoBehaviour {
 	List<int> currentPatternList = new List<int> ();
 	List<int> currentPaths = new List<int>();
 	Grid outerGrid = new Grid();
+	Helper h = new Helper();
+	Pattern p = new Pattern();
+
+	private string path;
+
 
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
@@ -102,9 +106,7 @@ public class CreatePatternBooard : MonoBehaviour {
 	{
 		return lineList[UnityEngine.Random.Range(0, lineList.Count)];
 	}
-
-
-
+		
 	void ChangePathsColors(List<int> paths){
 		for (int m = 0; m < paths.Count; m++) {
 			go[paths[m]].gameObject.GetComponent<Renderer>().material.color = Color.white;
@@ -121,7 +123,6 @@ public class CreatePatternBooard : MonoBehaviour {
 			}
 			textStream.Close();
 		}
-		p = new Pattern ();
 		currentPattern = GetRandomLine ();
 		GetPatternList();
 		AddPatternsBothGrids ();
@@ -178,14 +179,12 @@ public class CreatePatternBooard : MonoBehaviour {
 		//Debug.Log (currentCube);
 		GameObject a = GameObject.Find (currentCube.ToString ());
 		if (currentPaths.Contains (currentCube)) {
-			Debug.Log ("already exists");
+			//Debug.Log ("already exists");
 		} else {
-			if (currentCube == currentPatternList [currentPathSize]) {
-				Debug.Log ("here");
+				if (currentCube == currentPatternList [currentPathSize]) {
+				//Debug.Log ("here");
 				/* storing parameters */
-				if (currentPathSize == 0) {
-					p = new Pattern ();
-				}
+
 				p.SetPattern (currentCube);
 				p.SetCoordinates (currentCube, pos);
 				p.SetTimestamp (currentCube, DateTime.Now);
@@ -195,23 +194,44 @@ public class CreatePatternBooard : MonoBehaviour {
 				a.GetComponent<Renderer> ().material.color = Color.red;	
 				chop.Play ();
 
-				Debug.Log ("Current cube added:" + currentCube);
-				if (Helper.myHelperInstance.CheckEqual (currentPatternList, currentPaths)) {
+				//Debug.Log ("Current cube added:" + currentCube);
+				if (h.CheckEqual (currentPatternList, currentPaths)) {
 					ChangePathsColors (currentPatternList);
 					increaseLevel = true;
 					PlayerPointsLogic (t);
 					ClearVariables ();
+
+					// save the pattern data object to a list of such objects
 					patC.Add (p);
-					p.SaveTimeCoord ();
-					Debug.Log ("DONEEEEE!!!");
+
+					// save a pattern data object to a file
+					SaveTimeCoord (p);
+
+					//Debug.Log ("DONEEEEE!!!");
 				} else {
 					if (currentPaths.Contains (currentCube)) {
-						Debug.Log ("already swiped");
+						//Debug.Log ("already swiped");
 					} else {
 						currentPaths.Clear ();
 					}
 				}
 			} 
+		}
+	}
+
+	void SaveTimeCoord(Pattern p){
+		if(!File.Exists(path)){
+			Dictionary<int, Vector3> coordMap = p.GetCoordinates ();
+			foreach (KeyValuePair<int, Vector3> kvp in coordMap) {
+				int num = kvp.Key;
+				string nums = num.ToString();
+				Vector3 v = kvp.Value;
+				string v1 = v.ToString ();
+				Dictionary<int, String> timeMap = p.GetTimestamp ();
+				string ts = timeMap[num];
+				string together = nums + " " + v1 + " " +  ts + "\n";
+				File.WriteAllText(path, together);
+			}
 		}
 	}
 
@@ -241,7 +261,6 @@ public class CreatePatternBooard : MonoBehaviour {
 			pos.z = -1;
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 			foreach (Collider2D c2 in currentFrame) {
-				//Debug.Log (c2.name);
 				currentCube = int.Parse (c2.name);
 				SwipeCube (currentCube, pos);
 			}
@@ -252,6 +271,11 @@ public class CreatePatternBooard : MonoBehaviour {
 		LoadSprites ();
 		outerGrid.CreateNumCubeMap ();
 		shader1 = Shader.Find ("Outlined/Silhouetted Diffuse");
+
+		// save each pattern to a file
+		string filePath = Application.persistentDataPath;
+		string fileName = "p1.txt";
+		path = filePath + "/" + fileName;
 	}
 
 	void LoadSprites(){
