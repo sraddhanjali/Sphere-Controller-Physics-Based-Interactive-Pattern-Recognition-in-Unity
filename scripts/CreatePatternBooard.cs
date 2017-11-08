@@ -18,7 +18,7 @@ public class CreatePatternBooard : MonoBehaviour {
 	bool gameover = false;
 	private int playerPoints = 0;
 	static int pointsAdded = 0 ;
-	List<Pattern> patC = new List<Pattern>();
+
 	public Sprite[] sprites;
 	public AudioSource chop;
 	List<GameObject> go = new List<GameObject>();
@@ -35,6 +35,9 @@ public class CreatePatternBooard : MonoBehaviour {
 	Pattern p = new Pattern();
 
 	private string path;
+
+	// the list of patterns to be saved in file
+	List<Pattern> patC = new List<Pattern>();
 
 
 	protected void OnGUI(){
@@ -188,6 +191,9 @@ public class CreatePatternBooard : MonoBehaviour {
 				p.SetPattern (currentCube);
 				p.SetCoordinates (currentCube, pos);
 				p.SetTimestamp (currentCube, DateTime.Now);
+
+				// save the pattern data object to a list of such objects
+				patC.Add (p);
 				/*------------------*/
 
 				currentPaths.Add (currentCube);
@@ -200,13 +206,8 @@ public class CreatePatternBooard : MonoBehaviour {
 					increaseLevel = true;
 					PlayerPointsLogic (t);
 					ClearVariables ();
-
-					// save the pattern data object to a list of such objects
-					patC.Add (p);
-
 					// save a pattern data object to a file
-					SaveTimeCoord (p);
-
+					SaveTimeCoord (patC);
 					//Debug.Log ("DONEEEEE!!!");
 				} else {
 					if (currentPaths.Contains (currentCube)) {
@@ -219,18 +220,19 @@ public class CreatePatternBooard : MonoBehaviour {
 		}
 	}
 
-	void SaveTimeCoord(Pattern p){
-		if(!File.Exists(path)){
+	void SaveTimeCoord(List<Pattern> pattrnList){
+		foreach (Pattern p in pattrnList) { 
 			Dictionary<int, Vector3> coordMap = p.GetCoordinates ();
 			foreach (KeyValuePair<int, Vector3> kvp in coordMap) {
 				int num = kvp.Key;
-				string nums = num.ToString();
+				string nums = num.ToString ();
 				Vector3 v = kvp.Value;
 				string v1 = v.ToString ();
 				Dictionary<int, String> timeMap = p.GetTimestamp ();
-				string ts = timeMap[num];
-				string together = nums + " " + v1 + " " +  ts + "\n";
-				File.WriteAllText(path, together);
+				string ts = timeMap [num];
+				string together = nums + " " + v1 + " " + ts + "\n";
+				Debug.Log (together);
+				File.WriteAllText (path, together);
 			}
 		}
 	}
@@ -274,7 +276,7 @@ public class CreatePatternBooard : MonoBehaviour {
 
 		// save each pattern to a file
 		string filePath = Application.persistentDataPath;
-		string fileName = "p1.txt";
+		string fileName =  string.Format(@"{0}.txt", Guid.NewGuid());
 		path = filePath + "/" + fileName;
 	}
 

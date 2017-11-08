@@ -4,8 +4,6 @@ using System.Collections.Generic; // list, dictionary
 
 class Helper{
 	
-	public static Helper myHelperInstance;
-
 	public bool CheckEqual(List<int> List1, List<int> List2){
 		int list1C = List1.Count;
 		int list2C = List2.Count;
