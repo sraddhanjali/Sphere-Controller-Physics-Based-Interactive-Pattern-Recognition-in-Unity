@@ -32,10 +32,10 @@ public class CreatePatternBooard : MonoBehaviour {
 	List<int> currentPaths = new List<int>();
 	Grid outerGrid = new Grid();
 	Helper h = new Helper();
-	Pattern p = new Pattern();
-
 	private string path;
 
+	// pattern object to store during a gameplay
+	Pattern p = new Pattern();
 	// the list of patterns to be saved in file
 	List<Pattern> patC = new List<Pattern>();
 
@@ -185,15 +185,20 @@ public class CreatePatternBooard : MonoBehaviour {
 			//Debug.Log ("already exists");
 		} else {
 				if (currentCube == currentPatternList [currentPathSize]) {
+
+				string nums = currentCube.ToString ();
+				string v1 = pos.ToString ();
+				string ts = DateTime.Now.ToString ("yyyyMMddHHmmssffff");
+				string together = nums + " " + v1 + " " + ts + "\n";
+				Debug.Log (together);
+				File.AppendAllText (path, together);
+
 				//Debug.Log ("here");
 				/* storing parameters */
+				//p.SetPattern (currentCube);
+				//p.SetCoordinates (currentCube, pos);
+				//p.SetTimestamp (currentCube, DateTime.Now);
 
-				p.SetPattern (currentCube);
-				p.SetCoordinates (currentCube, pos);
-				p.SetTimestamp (currentCube, DateTime.Now);
-
-				// save the pattern data object to a list of such objects
-				patC.Add (p);
 				/*------------------*/
 
 				currentPaths.Add (currentCube);
@@ -206,14 +211,19 @@ public class CreatePatternBooard : MonoBehaviour {
 					increaseLevel = true;
 					PlayerPointsLogic (t);
 					ClearVariables ();
+
+					// save the pattern data object to a list of such objects
+					//patC.Add (p);
+
 					// save a pattern data object to a file
-					SaveTimeCoord (patC);
+					//SaveTimeCoord (patC);
+					//p = new Pattern ();
 					//Debug.Log ("DONEEEEE!!!");
 				} else {
 					if (currentPaths.Contains (currentCube)) {
 						//Debug.Log ("already swiped");
 					} else {
-						currentPaths.Clear ();
+						// Retry currentPaths.Clear ();
 					}
 				}
 			} 
@@ -232,7 +242,7 @@ public class CreatePatternBooard : MonoBehaviour {
 				string ts = timeMap [num];
 				string together = nums + " " + v1 + " " + ts + "\n";
 				Debug.Log (together);
-				File.WriteAllText (path, together);
+				File.AppendAllText (path, together);
 			}
 		}
 	}
@@ -257,6 +267,8 @@ public class CreatePatternBooard : MonoBehaviour {
 
 	void TouchLogic(){
 		int currentCube;
+
+
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
