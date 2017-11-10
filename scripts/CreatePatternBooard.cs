@@ -27,9 +27,10 @@ public class CreatePatternBooard : MonoBehaviour {
 	Vector3 startPos;	
 	Collider2D[] cubeColliders;
 	GUIStyle guiStyle = new GUIStyle();
-	string currentPattern;
+
 	List<int> currentPatternList = new List<int> ();
 	List<int> currentPaths = new List<int>();
+	string currentPattern;
 	Grid outerGrid = new Grid();
 	Helper h = new Helper();
 	private string path;
@@ -105,10 +106,11 @@ public class CreatePatternBooard : MonoBehaviour {
 		go.Clear ();
 	}
 
+	/*
 	public string GetRandomLine()
 	{
 		return lineList[UnityEngine.Random.Range(0, lineList.Count)];
-	}
+	}*/
 		
 	void ChangePathsColors(List<int> paths){
 		for (int m = 0; m < paths.Count; m++) {
@@ -116,6 +118,7 @@ public class CreatePatternBooard : MonoBehaviour {
 		}
 	}
 
+	/*
 	public void GetPatterns()
 	{
 		if (wordFile){
@@ -142,7 +145,7 @@ public class CreatePatternBooard : MonoBehaviour {
 		List<int> grid = outerGrid.GetFirstGrid (currentPatternList[0]);
 		grid.AddRange (currentPatternList);
 		currentPatternList = grid;
-	}
+	}*/
 
 	void InitialCubesColor(){
 		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Cube");
@@ -170,10 +173,28 @@ public class CreatePatternBooard : MonoBehaviour {
 
 	void InitSetup(){
 		settingGame = true;
-		GetPatterns();
+		outerGrid.GetPatterns();
 		InitialCubesColor ();
 		GetCubePatterns ();
 		settingGame = false;
+	}
+
+	void TouchLogic(){
+		int currentCube;
+		if (Input.touchCount > 0) {
+			Touch touch = Input.GetTouch (0);
+
+			//Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
+			/*         Vector3 p = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane)); */
+			Vector3 pos = Camera.main.ViewportToWorldPoint(touch.position);
+			Debug.Log (pos.ToString ());
+			pos.z = -1;
+			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
+			foreach (Collider2D c2 in currentFrame) {
+				currentCube = int.Parse (c2.name);
+				SwipeCube (currentCube, pos);
+			}
+		}
 	}
 
 	void SwipeCube(int currentCube, Vector3 pos){
@@ -185,8 +206,9 @@ public class CreatePatternBooard : MonoBehaviour {
 			//Debug.Log ("already exists");
 		} else {
 				if (currentCube == currentPatternList [currentPathSize]) {
-
+				
 				string nums = currentCube.ToString ();
+				pos = Camera.main.WorldToScreenPoint(pos);
 				string v1 = pos.ToString ();
 				string ts = DateTime.Now.ToString ("yyyyMMddHHmmssffff");
 				string together = nums + " " + v1 + " " + ts + "\n";
@@ -194,27 +216,17 @@ public class CreatePatternBooard : MonoBehaviour {
 				File.AppendAllText (path, together);
 
 				//Debug.Log ("here");
-				/* storing parameters */
-				//p.SetPattern (currentCube);
-				//p.SetCoordinates (currentCube, pos);
-				//p.SetTimestamp (currentCube, DateTime.Now);
-
-				/*------------------*/
-
 				currentPaths.Add (currentCube);
 				a.GetComponent<Renderer> ().material.color = Color.red;	
 				chop.Play ();
-
 				//Debug.Log ("Current cube added:" + currentCube);
 				if (h.CheckEqual (currentPatternList, currentPaths)) {
 					ChangePathsColors (currentPatternList);
 					increaseLevel = true;
 					PlayerPointsLogic (t);
 					ClearVariables ();
-
 					// save the pattern data object to a list of such objects
 					//patC.Add (p);
-
 					// save a pattern data object to a file
 					//SaveTimeCoord (patC);
 					//p = new Pattern ();
@@ -227,23 +239,6 @@ public class CreatePatternBooard : MonoBehaviour {
 					}
 				}
 			} 
-		}
-	}
-
-	void SaveTimeCoord(List<Pattern> pattrnList){
-		foreach (Pattern p in pattrnList) { 
-			Dictionary<int, Vector3> coordMap = p.GetCoordinates ();
-			foreach (KeyValuePair<int, Vector3> kvp in coordMap) {
-				int num = kvp.Key;
-				string nums = num.ToString ();
-				Vector3 v = kvp.Value;
-				string v1 = v.ToString ();
-				Dictionary<int, String> timeMap = p.GetTimestamp ();
-				string ts = timeMap [num];
-				string together = nums + " " + v1 + " " + ts + "\n";
-				Debug.Log (together);
-				File.AppendAllText (path, together);
-			}
 		}
 	}
 
@@ -265,23 +260,7 @@ public class CreatePatternBooard : MonoBehaviour {
 			}
 		}
 
-	void TouchLogic(){
-		int currentCube;
-
-
-		if (Input.touchCount > 0) {
-			Touch touch = Input.GetTouch (0);
-			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
-			pos.z = -1;
-			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
-			foreach (Collider2D c2 in currentFrame) {
-				currentCube = int.Parse (c2.name);
-				SwipeCube (currentCube, pos);
-			}
-		}
-	}
-
-	void Awake(){
+		void Awake(){
 		LoadSprites ();
 		outerGrid.CreateNumCubeMap ();
 		shader1 = Shader.Find ("Outlined/Silhouetted Diffuse");

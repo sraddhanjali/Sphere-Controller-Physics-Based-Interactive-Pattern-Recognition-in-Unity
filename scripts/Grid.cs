@@ -1,8 +1,18 @@
 ﻿using System; // string
+using System.IO;
 using UnityEngine; // vector3
+using System.Collections;
 using System.Collections.Generic; // list, dictionary
 
 class Grid{
+
+	public TextAsset wordFile;
+	private List<string> lineList = new List<string>(); 
+
+	Grid outerGrid = new Grid();
+	Helper h = new Helper();
+	string currentPattern;
+	List<int> currentPatternList = new List<int> ();
 
 	public Dictionary<int, int> pattern = new Dictionary<int, int>();
 	public Dictionary<int, int> patternRev = new Dictionary<int, int>();
@@ -51,4 +61,38 @@ class Grid{
 		grid.AddRange(firstGridOptions [indexFirstGrid]);
 		return grid;
 	}
+
+	public string GetRandomLine()
+	{
+		return lineList[UnityEngine.Random.Range(0, lineList.Count)];
+	}
+
+	void GetPatternList(){
+		currentPatternList.Clear ();
+		for (int i = 0; i < currentPattern.Length; i++) {
+			currentPatternList.Add(pattern[(int)(currentPattern[i]-'0')]);
+		}
+	}
+
+	void AddPatternsBothGrids(){
+		List<int> grid = GetFirstGrid (currentPatternList[0]);
+		grid.AddRange (currentPatternList);
+		currentPatternList = grid;
+	}
+
+	public void GetPatterns()
+	{
+		if (wordFile){
+			string line;
+			StringReader textStream = new StringReader(wordFile.text);
+			while((line = textStream.ReadLine()) != null){
+				lineList.Add(line);
+			}
+			textStream.Close();
+		}
+		currentPattern = GetRandomLine ();
+		GetPatternList();
+		AddPatternsBothGrids ();
+	}
+
 }
