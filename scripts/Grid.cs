@@ -1,13 +1,19 @@
 ﻿using System; // string
+using System.IO; // file
 using UnityEngine; // vector3
+using System.Collections;
 using System.Collections.Generic; // list, dictionary
 
 class Grid{
 
-	public Dictionary<int, int> pattern = new Dictionary<int, int>();
-	public Dictionary<int, int> patternRev = new Dictionary<int, int>();
+	public TextAsset wordFile; // pattern file
+	public Dictionary<int, int> pattern = new Dictionary<int, int>(); // map of combined grid indices -> android grid indices
+	public Dictionary<int, int> patternRev = new Dictionary<int, int>(); // map of android grid indices -> combined grid indices
+	Helper h = new Helper();
+	GridDecorate gd = new GridDecorate (); 
 
-	public Dictionary<int, List<List<int>>> firstGrid = new Dictionary<int, List<List<int>>>() {
+	/* first grid */
+	public Dictionary<int, List<List<int>>> firstGrid = new Dictionary<int, List<List<int>>>() { // static patterns
 		{1, new List<List<int>>{ new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } }, 
 		{2, new List<List<int>>{ new List<int>{3, 2, 1, 4, 5, 6, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7}, new List<int>{1, 2, 3, 6, 9, 8, 7}, new List<int>{3, 2, 1, 5, 9, 8, 7}, new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } },
 		{3, new List<List<int>>{ new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } },
@@ -19,7 +25,17 @@ class Grid{
 		{9, new List<List<int>>{ new List<int>{2, 9, 11}, new List<int>{6, 8, 15}, new List<int>{4, 7, 10, 17} } }
 	}; 
 
-	public void CreateNumCubeMap(){
+	public List<int> GetFirstGrid(int start){ // get first 3X3 grid
+		int startCubeNumber = patternRev [start];
+		List<List<int>> firstGridOptions = firstGrid [startCubeNumber];
+		int indexFirstGrid = UnityEngine.Random.Range (0, 3);
+		List<int> grid = new List<int> ();
+		grid.AddRange(firstGridOptions [indexFirstGrid]);
+		return grid;
+	}
+
+	/* second grid */
+	public void CreateNumCubeMap(){ // mapping of second grid in the scheme of 9X3 grid
 		
 		pattern.Add (1, 10);
 		pattern.Add (2, 11);
@@ -42,13 +58,69 @@ class Grid{
 		patternRev.Add (18, 9);
 	}
 
+	public List<string> ReadPatternFileIntoList(){ // read the pattern file and add each pattern strings into a list
+		List<string> patternStringLists = new List<string>();
 
-	public List<int> GetFirstGrid(int start){
-		int startCubeNumber = patternRev [start];
-		List<List<int>> firstGridOptions = firstGrid [startCubeNumber];
-		int indexFirstGrid = UnityEngine.Random.Range (0, 3);
-		List<int> grid = new List<int> ();
-		grid.AddRange(firstGridOptions [indexFirstGrid]);
-		return grid;
+		if (wordFile){
+			string line;
+			StringReader textStream = new StringReader(wordFile.text);
+			while((line = textStream.ReadLine()) != null){
+				patternStringLists.Add(line);
+			}
+			textStream.Close();
+		}
+		return patternStringLists;
+	}
+
+	public string GetRandomPatternLine(List<string> patternList){ // get random line from the pattern string list
+		return patternList[UnityEngine.Random.Range(0, patternList.Count)];
+	}
+		
+
+	public List<int> ChangePatternStringToList(string selectedPattern, List<int> selectedPatternList){ // turns numeric string to list of ints
+		for (int i = 0; i < selectedPattern.Length; i++) {
+			selectedPatternList.Add(pattern[(int)(selectedPattern[i]-'0')]);
+		}
+		return selectedPatternList;
+	}
+
+	public List<int> CombineGrids(List<int> grid, List<int> selectedPatternList){ // combination of first and second grids
+		grid.AddRange (selectedPatternList);
+		selectedPatternList = new List<int> ();
+		selectedPatternList = grid;
+		return selectedPatternList;
+	}
+
+	public List<GameObject> GetPatternGameobjects(List<int> selectedPatternList){
+		List<GameObject> patternCube = new List<GameObject>();
+		int cubeNumber;
+		GameObject g;
+		for (int j = 0; j < selectedPatternList.Count; j++) {
+			cubeNumber = selectedPatternList [j];
+			g = GameObject.Find (String.Format ("{0}", cubeNumber));
+			patternCube.Add(g);
+		}
+		return patternCube;
+
+		gd.ColorCubePath (patternCube);
+		gd.DrawLines (patternCube);
+		patternCube.Clear ();
+		StartCoroutine (gd.RemoveLines(selectedPatternList));	
+	}
+
+	public void Main(){
+		
+		/* get second grid */
+		List<string> patternStringLists = ReadPatternFileIntoList ();
+		List<int> selectedPatternList = ChangePatternStringToList();
+		string selectedPattern = GetRandomPatternLine (selectedPatternList);
+
+		/* get first grid */
+		List<int> grid = GetFirstGrid (selectedPatternList[0]);
+
+		/* combine grids */
+		List<int> combinedGrid = CombineGrids (selectedPattern, selectedPatternList);
+
+		/* get list of pattern gameobjects */
 	}
 }
