@@ -8,15 +8,28 @@ public class Main : MonoBehaviour
 	public Shader shader1;
 	public Sprite[] sprites;
 	private string path;
-	private bool settingGame = false;
-	private bool gameover = false;
-	private bool increaseLevel = false;
 	List<GameObject> go;
-	PatternGrid g = new PatternGrid();
-	GridDecorate gd = new GridDecorate();
 	private static int level = 1;
 	private static float timeLeft = 10.0f;
+	PatternGrid g = new PatternGrid();
+	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
+	GUIStyle guiStyle = new GUIStyle();
+
+	/* game state variables */
+	private bool settingGame = false;
+	public static bool gameover = false;
+	public static bool increaseLevel = false;
+	public static bool cleardata = false;
+
+	protected void OnGUI(){
+		guiStyle.fontSize = 50; 
+		if (gameover == false) {
+			GUILayout.Label ("\n Level: " + level + "\n Time:" + (int)timeLeft + "\n Points:" + gl.playerPoints, guiStyle);
+		} else {
+			GUILayout.Label ("GameOver", guiStyle);
+		}
+	}
 
 	void LoadSprites(){
 		sprites = Resources.LoadAll<Sprite>("sprites/Scavengers_SpriteSheet");
@@ -26,6 +39,8 @@ public class Main : MonoBehaviour
 	void InitSetup(){
 		settingGame = true;
 		go = g.GetPatterns();
+		gl.SetCurrentPattern (g.GetCurrentSelPattern());
+		gd.DecorateCube (go);
 		settingGame = false;
 	}
 
@@ -40,12 +55,13 @@ public class Main : MonoBehaviour
 		InitSetup ();
 	}
 
+	void ClearVariables(){
+		go.Clear ();
+	}
+
 	IEnumerator NewLevelWork(){
 		level += 1;
 		go.Clear ();
-		/*currentPaths.Clear ();
-		currentPatternList.Clear ();
-		lineList.Clear ();*/
 		increaseLevel = false;
 		yield return new WaitForSeconds (1f);
 		InitSetup ();
@@ -56,11 +72,12 @@ public class Main : MonoBehaviour
 			if (settingGame) {
 				return;
 			} else if (increaseLevel) {
+				ClearVariables ();
 				StartCoroutine (NewLevelWork ());
 				timeLeft = 10.0f;
 				timeLeft -= Time.deltaTime;
-			}
-			gl.TouchLogic ();
+				gl.TouchLogic ();
+			} 
 		} else if (gameover == true) {
 			timeLeft = 0;
 			GUILayout.Label ("GameOver", guiStyle);

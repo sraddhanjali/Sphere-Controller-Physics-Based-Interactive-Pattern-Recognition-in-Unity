@@ -10,6 +10,7 @@ class PatternGrid{
 	public Dictionary<int, int> pattern = new Dictionary<int, int>(); // map of combined grid indices -> android grid indices
 	public Dictionary<int, int> patternRev = new Dictionary<int, int>(); // map of android grid indices -> combined grid indices
 	Helper h = new Helper();
+	List<int> currentSelPattern = new List<int>();
 
 	/* first static grid */
 	public Dictionary<int, List<List<int>>> firstGrid = new Dictionary<int, List<List<int>>>() {
@@ -76,10 +77,12 @@ class PatternGrid{
 	}
 		
 
-	List<int> ChangePatternStringToList(string selectedPattern, List<int> selectedPatternList){ // turns numeric string to list of ints
+	List<int> ChangePatternStringToList(string selectedPattern){ // turns numeric string to list of ints
+		List<int> selectedPatternList = new List<int>();
 		for (int i = 0; i < selectedPattern.Length; i++) {
 			selectedPatternList.Add(pattern[(int)(selectedPattern[i]-'0')]);
 		}
+		SetCurrentSelPattern (selectedPatternList);
 		return selectedPatternList;
 	}
 
@@ -102,18 +105,26 @@ class PatternGrid{
 		return patternCube;
 	}
 
+	void SetCurrentSelPattern(List<int> curr){
+		currentSelPattern = curr;
+	}
+
+	public List<int> GetCurrentSelPattern(){
+		return currentSelPattern;
+	}
+
 	public List<GameObject> GetPatterns(){
 		
 		/* get second grid */
 		List<string> patternStringLists = ReadPatternFileIntoList ();
-		List<int> selectedPatternList = ChangePatternStringToList();
-		string selectedPattern = GetRandomPatternLine (selectedPatternList);
+		string selectedPattern = GetRandomPatternLine (patternStringLists);
+		List<int> selectedPatternList = ChangePatternStringToList(selectedPattern);
 
 		/* get first grid */
 		List<int> grid = GetFirstGrid (selectedPatternList[0]);
 
 		/* combine grids */
-		List<int> combinedGrid = CombineGrids (selectedPattern, selectedPatternList);
+		List<int> combinedGrid = CombineGrids (grid, selectedPatternList);
 
 		/* get list of pattern gameobjects */
 		return GetPatternGameobjects (selectedPatternList);
