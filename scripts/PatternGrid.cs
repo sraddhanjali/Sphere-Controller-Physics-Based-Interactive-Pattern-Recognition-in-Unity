@@ -90,7 +90,7 @@ class PatternGrid{
 		return selectedPatternList;
 	}
 
-	List<GameObject> GetPatternGameobjects(List<int> selectedPatternList){
+	List<GameObject> GetPatternGameobjects(List<int> selectedPatternList){ // get gameobject for selected pattern
 		List<GameObject> patternCube = new List<GameObject>();
 		int cubeNumber;
 		GameObject g;
