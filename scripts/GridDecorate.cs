@@ -40,16 +40,16 @@ public class GridDecorate{
 		}
 	}
 
-	IEnumerator RemoveLines(List<int> p){
-		yield return new WaitForSeconds(3f);
+	//IEnumerator RemoveLines(List<GameObject> patternCube){
+	void RemoveLines(List<GameObject> patternCube){
+	//	yield return new WaitForSeconds(3f);
 
 		LineRenderer ln1;
-		for (int i = 0; i < p.Count; i++) {
-			if (i != p.Count - 1) {
-				int p1 = p [i];
-				int p2 = p [i + 1];
-				GameObject g1 = GameObject.Find (String.Format ("{0}", p1));
-				ln1 = g1.GetComponent<LineRenderer> ();
+		for (int i = 0; i < patternCube.Count; i++) {
+			if (i != patternCube.Count - 1) {
+				GameObject p1 = patternCube [i];
+				GameObject p2 = patternCube [i + 1];
+				ln1 = p1.GetComponent<LineRenderer> ();
 				ln1.SetPosition (0, Vector3.zero);
 				ln1.SetPosition (1, Vector3.zero);
 			}
@@ -62,13 +62,19 @@ public class GridDecorate{
 		}
 	}
 
-	void InitialCubesColor(List<GameObject> go){
+	/*void InitialCubesColor(List<GameObject> patternCube){
 		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Cube");
 		for (int i = 0; i < objects.Length; i++) {
-			go.Add (objects [i]);
-			GameObject b = go [i];
+			patternCube.Add (objects [i]);
+			GameObject b = patternCube [i];
 			b.layer = 8;
 			b.GetComponent<Renderer>().material.color = Color.white;
 		}
+	}*/
+
+	public void DecorateCube(List<GameObject> patternCubeObject){
+		DrawLines (patternCubeObject);
+		//StartCoroutine (RemoveLines(patternCube));	
+		RemoveLines(patternCubeObject);
 	}
 }
