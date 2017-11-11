@@ -19,7 +19,7 @@ public class PatternBoard : MonoBehaviour {
 	private int playerPoints = 0;
 	static int pointsAdded = 0 ;
 
-	public Sprite[] sprites;
+
 	public AudioSource chop;
 	List<GameObject> go = new List<GameObject>();
 	public TextAsset wordFile;
@@ -31,7 +31,7 @@ public class PatternBoard : MonoBehaviour {
 	List<int> currentPatternList = new List<int> ();
 	List<int> currentPaths = new List<int>();
 	string currentPattern;
-	Grid outerGrid = new Grid();
+	PatternGrid outerGrid = new PatternGrid();
 	Helper h = new Helper();
 	private string path;
 
@@ -50,6 +50,7 @@ public class PatternBoard : MonoBehaviour {
 		}
 	}
 
+	/*
 	void ColorCubePath(List<GameObject> patternCube){
 		Color c = Color.grey;
 		GameObject b;
@@ -96,7 +97,7 @@ public class PatternBoard : MonoBehaviour {
 				ln1.SetPosition (1, Vector3.zero);
 			}
 		}
-	}
+	}*/
 
 	void ClearVariables(){
 		RemoveLines (currentPatternList);
@@ -170,6 +171,16 @@ public class PatternBoard : MonoBehaviour {
 		patternCube.Clear ();
 		StartCoroutine (RemoveLines(currentPatternList));	
 	}
+
+	/*void InitialCubesColor(){
+		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Cube");
+		for (int i = 0; i < objects.Length; i++) {
+			go.Add (objects [i]);
+			GameObject b = go [i];
+			b.layer = 8;
+			b.GetComponent<Renderer>().material.color = Color.white;
+		}
+	}*/
 
 	void InitSetup(){
 		settingGame = true;
@@ -260,7 +271,7 @@ public class PatternBoard : MonoBehaviour {
 			}
 		}
 
-		void Awake(){
+	void Awake(){
 		LoadSprites ();
 		outerGrid.CreateNumCubeMap ();
 		shader1 = Shader.Find ("Outlined/Silhouetted Diffuse");
