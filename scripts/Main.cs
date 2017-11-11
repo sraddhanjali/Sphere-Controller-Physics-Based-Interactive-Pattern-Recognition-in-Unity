@@ -3,14 +3,17 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Main : MonoBehaviour
-{
+public class Main : MonoBehaviour{
+
+	public static TextAsset wordFile; // pattern file
 	public Shader shader1;
 	public Sprite[] sprites;
 	private string path;
 	List<GameObject> go;
+
 	private static int level = 1;
 	private static float timeLeft = 10.0f;
+
 	PatternGrid g = new PatternGrid();
 	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
@@ -20,7 +23,6 @@ public class Main : MonoBehaviour
 	private bool settingGame = false;
 	public static bool gameover = false;
 	public static bool increaseLevel = false;
-	public static bool cleardata = false;
 
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
@@ -29,6 +31,10 @@ public class Main : MonoBehaviour
 		} else {
 			GUILayout.Label ("GameOver", guiStyle);
 		}
+	}
+
+	void LoadFile(){
+		wordFile = Resources.Load("Resources/easy.txt") as TextAsset; 
 	}
 
 	void LoadSprites(){
@@ -46,9 +52,12 @@ public class Main : MonoBehaviour
 
 	void Awake(){
 		LoadSprites ();
+		LoadFile ();
+		/*  to save the data
 		string filePath = Application.persistentDataPath;
 		string fileName =  string.Format(@"{0}.txt", Guid.NewGuid());
 		path = filePath + "/" + fileName;
+		*/
 	}
 
 	void Start () {
@@ -76,11 +85,10 @@ public class Main : MonoBehaviour
 				StartCoroutine (NewLevelWork ());
 				timeLeft = 10.0f;
 				timeLeft -= Time.deltaTime;
-				gl.TouchLogic ();
 			} 
+			gl.TouchLogic ();
 		} else if (gameover == true) {
 			timeLeft = 0;
-			GUILayout.Label ("GameOver", guiStyle);
 		}
 	}
 }

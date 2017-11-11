@@ -5,8 +5,6 @@ using System.Collections;
 using System.Collections.Generic; // list, dictionary
 
 class PatternGrid{
-
-	public TextAsset wordFile; // pattern file
 	public Dictionary<int, int> pattern = new Dictionary<int, int>(); // map of combined grid indices -> android grid indices
 	public Dictionary<int, int> patternRev = new Dictionary<int, int>(); // map of android grid indices -> combined grid indices
 	Helper h = new Helper();
@@ -60,7 +58,7 @@ class PatternGrid{
 
 	List<string> ReadPatternFileIntoList(){ // read the pattern file and add each pattern strings into a list
 		List<string> patternStringLists = new List<string>();
-
+		TextAsset wordFile = Resources.Load("easy") as TextAsset; 
 		if (wordFile){
 			string line;
 			StringReader textStream = new StringReader(wordFile.text);
@@ -75,7 +73,6 @@ class PatternGrid{
 	string GetRandomPatternLine(List<string> patternList){ // get random line from the pattern string list
 		return patternList[UnityEngine.Random.Range(0, patternList.Count)];
 	}
-		
 
 	List<int> ChangePatternStringToList(string selectedPattern){ // turns numeric string to list of ints
 		List<int> selectedPatternList = new List<int>();
