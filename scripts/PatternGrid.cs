@@ -10,6 +10,10 @@ class PatternGrid{
 	Helper h = new Helper();
 	List<int> currentSelPattern = new List<int>();
 
+	public PatternGrid(){
+		CreateNumCubeMap ();
+	}
+
 	/* first static grid */
 	public Dictionary<int, List<List<int>>> firstGrid = new Dictionary<int, List<List<int>>>() {
 		{1, new List<List<int>>{ new List<int>{1, 2, 3, 5, 7, 8, 9}, new List<int>{3, 5, 6, 8}, new List<int>{7, 4, 1, 2, 3, 5, 9}, new List<int>{1, 4, 7, 5, 3, 6, 9}, new List<int>{3, 2, 1, 4, 7, 8, 9}, new List<int>{7, 4, 1, 2, 3, 6, 9} } }, 
@@ -76,8 +80,11 @@ class PatternGrid{
 
 	List<int> ChangePatternStringToList(string selectedPattern){ // turns numeric string to list of ints
 		List<int> selectedPatternList = new List<int>();
+		Debug.Log (selectedPattern);
 		for (int i = 0; i < selectedPattern.Length; i++) {
-			selectedPatternList.Add(pattern[(int)(selectedPattern[i]-'0')]);
+			int s = (int)(selectedPattern[i] - '0');
+			Debug.Log (s);
+			selectedPatternList.Add(pattern[s]);
 		}
 		SetCurrentSelPattern (selectedPatternList);
 		return selectedPatternList;

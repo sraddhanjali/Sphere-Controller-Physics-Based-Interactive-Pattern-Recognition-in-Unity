@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Main : MonoBehaviour{
 
-	public static TextAsset wordFile; // pattern file
+	//public static TextAsset wordFile; // pattern file
 	public Shader shader1;
 	public Sprite[] sprites;
 	private string path;
@@ -33,9 +33,10 @@ public class Main : MonoBehaviour{
 		}
 	}
 
+	/*
 	void LoadFile(){
-		wordFile = Resources.Load("Resources/easy.txt") as TextAsset; 
-	}
+		wordFile = Resources.Load("easy") as TextAsset; 
+	}*/
 
 	void LoadSprites(){
 		sprites = Resources.LoadAll<Sprite>("sprites/Scavengers_SpriteSheet");
@@ -52,11 +53,12 @@ public class Main : MonoBehaviour{
 
 	void Awake(){
 		LoadSprites ();
-		LoadFile ();
+		// LoadFile ();
+
 		/*  to save the data
-		string filePath = Application.persistentDataPath;
-		string fileName =  string.Format(@"{0}.txt", Guid.NewGuid());
-		path = filePath + "/" + fileName;
+			string filePath = Application.persistentDataPath;
+			string fileName =  string.Format(@"{0}.txt", Guid.NewGuid());
+			path = filePath + "/" + fileName;
 		*/
 	}
 
