@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class Main : MonoBehaviour{
 
-	//public static TextAsset wordFile; // pattern file
 	public Shader shader1;
 	public Sprite[] sprites;
 	private string path;
@@ -14,7 +13,7 @@ public class Main : MonoBehaviour{
 	private static int level = 1;
 	private static float timeLeft = 10.0f;
 
-	PatternGrid g = new PatternGrid();
+	PatternGrid pg = new PatternGrid();
 	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
 	GUIStyle guiStyle = new GUIStyle();
@@ -33,21 +32,21 @@ public class Main : MonoBehaviour{
 		}
 	}
 
-	/*
-	void LoadFile(){
-		wordFile = Resources.Load("easy") as TextAsset; 
-	}*/
-
 	void LoadSprites(){
 		sprites = Resources.LoadAll<Sprite>("sprites/Scavengers_SpriteSheet");
 		shader1 = Shader.Find ("Outlined/Silhouetted Diffuse");
 	}
 
+	void DecorateCube(List<GameObject> patternCubeObject){
+		gd.DrawLines (patternCubeObject);
+		StartCoroutine (gd.RemoveLines(patternCubeObject));	
+	}
+
 	void InitSetup(){
 		settingGame = true;
-		go = g.GetPatterns();
-		gl.SetCurrentPattern (g.GetCurrentSelPattern());
-		gd.DecorateCube (go);
+		go = pg.GetPatterns();
+		DecorateCube (go);
+		gl.SetCurrentPattern (pg.GetCurrentSelPattern());
 		settingGame = false;
 	}
 

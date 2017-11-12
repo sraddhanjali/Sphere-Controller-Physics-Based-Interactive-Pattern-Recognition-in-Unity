@@ -6,7 +6,7 @@ using System.Collections.Generic; // list, dictionary
 	
 class Pattern{
 	public enum Difficulty {simple, median, complex};
-	public Difficulty currentSel; 
+//	public Difficulty currentSel; 
 	public List<int> pa = new List<int>();
 	public Dictionary<int, Vector3> coordMap = new Dictionary<int, Vector3>();
 	public Dictionary<int, String> timeMap = new Dictionary<int, String>();

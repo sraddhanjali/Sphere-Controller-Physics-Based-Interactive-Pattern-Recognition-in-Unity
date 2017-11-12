@@ -7,7 +7,7 @@ using System.Collections.Generic; // list, dictionary
 class PatternGrid{
 	public Dictionary<int, int> pattern = new Dictionary<int, int>(); // map of combined grid indices -> android grid indices
 	public Dictionary<int, int> patternRev = new Dictionary<int, int>(); // map of android grid indices -> combined grid indices
-	Helper h = new Helper();
+	//Helper h = new Helper();
 	List<int> currentSelPattern = new List<int>();
 
 	public PatternGrid(){
@@ -86,7 +86,6 @@ class PatternGrid{
 			Debug.Log (s);
 			selectedPatternList.Add(pattern[s]);
 		}
-		SetCurrentSelPattern (selectedPatternList);
 		return selectedPatternList;
 	}
 
@@ -130,7 +129,10 @@ class PatternGrid{
 		/* combine grids */
 		List<int> combinedGrid = CombineGrids (grid, selectedPatternList);
 
+		/* set total grid to current selected pattern */
+		SetCurrentSelPattern (combinedGrid);
+
 		/* get list of pattern gameobjects */
-		return GetPatternGameobjects (selectedPatternList);
+		return GetPatternGameobjects (combinedGrid);
 	}
 }

@@ -1,14 +1,13 @@
 ﻿using System;
+using System.IO;
 using UnityEngine;
 using System.Collections;
-using System.IO;
 using System.Collections.Generic;
 
 public class GameLogic{
 	public AudioSource chop;
 	Helper h = new Helper();
 	private static float timeLeft = 10.0f;
-	private string path;
 	public GridDecorate gd = new GridDecorate();
 	List<int> currentPaths = new List<int>();
 	List<int> currentSelPattern = new List<int>();
@@ -53,14 +52,13 @@ public class GameLogic{
 			//Debug.Log ("already exists");
 		} else {
 			if (currentCube == currentSelPattern [currentPathSize]) {
-
 				string nums = currentCube.ToString ();
 				pos = Camera.main.WorldToScreenPoint(pos);
 				string v1 = pos.ToString ();
 				string ts = DateTime.Now.ToString ("yyyyMMddHHmmssffff");
 				string together = nums + " " + v1 + " " + ts + "\n";
 				Debug.Log (together);
-				File.AppendAllText (path, together);
+				//File.AppendAllText (path, together);
 
 				//Debug.Log ("here");
 				currentPaths.Add (currentCube);
@@ -100,6 +98,4 @@ public class GameLogic{
 			Main.gameover = true;
 		}
 	}
-		
-
 }
