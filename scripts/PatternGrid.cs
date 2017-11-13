@@ -27,15 +27,6 @@ class PatternGrid{
 		{9, new List<List<int>>{ new List<int>{2, 9, 11}, new List<int>{6, 8, 15}, new List<int>{4, 7, 10, 17} } }
 	}; 
 
-	List<int> GetFirstGrid(int start){ // get first 3X3 grid
-		int startCubeNumber = patternRev [start];
-		List<List<int>> firstGridOptions = firstGrid [startCubeNumber];
-		int indexFirstGrid = UnityEngine.Random.Range (0, 3);
-		List<int> grid = new List<int> ();
-		grid.AddRange(firstGridOptions [indexFirstGrid]);
-		return grid;
-	}
-
 	/* second grid */
 	public void CreateNumCubeMap(){ // mapping of second grid in the scheme of 9X3 grid
 		
@@ -60,6 +51,15 @@ class PatternGrid{
 		patternRev.Add (18, 9);
 	}
 
+	List<int> GetFirstGrid(int start){ // get first 3X3 grid
+		int startCubeNumber = patternRev [start];
+		List<List<int>> firstGridOptions = firstGrid [startCubeNumber];
+		int indexFirstGrid = UnityEngine.Random.Range (0, 3);
+		List<int> grid = new List<int> ();
+		grid.AddRange(firstGridOptions [indexFirstGrid]);
+		return grid;
+	}
+
 	List<string> ReadPatternFileIntoList(){ // read the pattern file and add each pattern strings into a list
 		List<string> patternStringLists = new List<string>();
 		TextAsset wordFile = Resources.Load("easy") as TextAsset; 
@@ -80,10 +80,8 @@ class PatternGrid{
 
 	List<int> ChangePatternStringToList(string selectedPattern){ // turns numeric string to list of ints
 		List<int> selectedPatternList = new List<int>();
-		Debug.Log (selectedPattern);
 		for (int i = 0; i < selectedPattern.Length; i++) {
 			int s = (int)(selectedPattern[i] - '0');
-			Debug.Log (s);
 			selectedPatternList.Add(pattern[s]);
 		}
 		return selectedPatternList;
@@ -129,6 +127,30 @@ class PatternGrid{
 		/* combine grids */
 		List<int> combinedGrid = CombineGrids (grid, selectedPatternList);
 
+		/* set total grid to current selected pattern */
+		SetCurrentSelPattern (combinedGrid);
+
+		/* get list of pattern gameobjects */
+		return GetPatternGameobjects (combinedGrid);
+	}
+
+	public List<GameObject> GetSimplePatterns(){
+		List<List<int>> combinedGridList = new List<List<int>> () {
+			new List<int>() {4, 8, 6, 7, 10, 13, 14, 11},
+			new List<int>() {4, 8, 6, 7, 11, 13, 14, 12},
+			new List<int>() {4, 8, 6, 7, 14, 15, 17, 18},
+			new List<int>() {4, 8, 6, 7, 11, 13, 17, 15, 14},
+			new List<int>() {4, 8, 6, 7, 10, 14, 15, 11, 13},
+			new List<int>() {4, 8, 6, 7, 10, 14, 12, 17, 13},
+			new List<int>() {4, 8, 6, 7, 10, 15, 18, 14, 12},
+			new List<int>() {4, 8, 6, 7, 10, 13, 18, 17, 12},
+			new List<int>() {4, 3, 5, 8, 11, 14, 10, 14, 18},
+			new List<int>() {4, 3, 5, 8, 13, 14, 12, 11, 14, 17},
+			new List<int>() {1, 2, 5, 8, 9, 10, 17, 14, 11, 12},
+			new List<int>() {5, 6, 8, 7, 10, 11, 14, 16, 17}
+		};
+
+		List<int> combinedGrid = combinedGridList[UnityEngine.Random.Range(0, combinedGridList.Count)];
 		/* set total grid to current selected pattern */
 		SetCurrentSelPattern (combinedGrid);
 

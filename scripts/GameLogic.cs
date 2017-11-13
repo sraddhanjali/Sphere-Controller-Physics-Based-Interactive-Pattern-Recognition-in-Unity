@@ -25,23 +25,38 @@ public class GameLogic{
 		return currentSelPattern;
 	}
 
+	void SaveToFile(int currentCube, Vector3 pos, bool space=false){
+		string cn = currentCube.ToString ();
+		pos = Camera.main.WorldToScreenPoint(pos);
+		string co = pos.ToString ();
+		string ts = DateTime.Now.ToString ("yyyyMMddHHmmssffff");
+		string together = cn + " " + co + " " + ts + "\n";
+		//Debug.Log (together);
+		if (space) {
+			File.AppendAllText (Main.path, "\n");
+		}
+		File.AppendAllText (Main.path, together);
+	}
+
 	public void TouchLogic(){
 		int currentCube;
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
-
+			/*
+			Vector3 pos = Camera.main.ViewportToWorldPoint(touch.position);
+			*/
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
-			/*         Vector3 p = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane)); */
-			//Vector3 pos = Camera.main.ViewportToWorldPoint(touch.position);
-			Debug.Log (pos.ToString ());
 			pos.z = -1;
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 			foreach (Collider2D c2 in currentFrame) {
 				currentCube = int.Parse (c2.name);
+				/* save each touch to file*/
+				SaveToFile (currentCube, pos);
+
 				SwipeCube(currentCube, pos);
 			}
 		}
-	}
+	}	
 
 	void SwipeCube(int currentCube, Vector3 pos){
 		int t = (int)timeLeft;
@@ -52,18 +67,12 @@ public class GameLogic{
 			//Debug.Log ("already exists");
 		} else {
 			if (currentCube == currentSelPattern [currentPathSize]) {
-				string nums = currentCube.ToString ();
-				pos = Camera.main.WorldToScreenPoint(pos);
-				string v1 = pos.ToString ();
-				string ts = DateTime.Now.ToString ("yyyyMMddHHmmssffff");
-				string together = nums + " " + v1 + " " + ts + "\n";
-				Debug.Log (together);
-				//File.AppendAllText (path, together);
+				SaveToFile (currentCube, pos, true);
 
 				//Debug.Log ("here");
 				currentPaths.Add (currentCube);
 				a.GetComponent<Renderer> ().material.color = Color.red;	
-				chop.Play ();
+				//chop.Play ();
 				//Debug.Log ("Current cube added:" + currentCube);
 				if (h.CheckEqual (currentSelPattern, currentPaths)) {
 					//gd.ChangePathsColors (currentPatternList);

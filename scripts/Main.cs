@@ -7,7 +7,6 @@ public class Main : MonoBehaviour{
 
 	public Shader shader1;
 	public Sprite[] sprites;
-	private string path;
 	List<GameObject> go;
 
 	private static int level = 1;
@@ -22,6 +21,7 @@ public class Main : MonoBehaviour{
 	private bool settingGame = false;
 	public static bool gameover = false;
 	public static bool increaseLevel = false;
+	public static string path;
 
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
@@ -44,21 +44,28 @@ public class Main : MonoBehaviour{
 
 	void InitSetup(){
 		settingGame = true;
+		/* original
 		go = pg.GetPatterns();
+		*/
+		// a sample of simple pattern from paper
+		go = pg.GetSimplePatterns ();
+
 		DecorateCube (go);
 		gl.SetCurrentPattern (pg.GetCurrentSelPattern());
 		settingGame = false;
 	}
 
+	void SaveFile(){
+		///*  to save the data
+		string filePath = Application.persistentDataPath;
+		string fileName =  string.Format(@"{0}.txt", Guid.NewGuid()	);
+		path = filePath + "/" + fileName;
+		//*/
+	}
+
 	void Awake(){
 		LoadSprites ();
-		// LoadFile ();
-
-		/*  to save the data
-			string filePath = Application.persistentDataPath;
-			string fileName =  string.Format(@"{0}.txt", Guid.NewGuid());
-			path = filePath + "/" + fileName;
-		*/
+		SaveFile ();
 	}
 
 	void Start () {
