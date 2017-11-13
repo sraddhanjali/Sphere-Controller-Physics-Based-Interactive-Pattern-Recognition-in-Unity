@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class GridDecorate{
 
-	public float LINEWIDTH = 0.2f;
+	public float LINEWIDTH = 0.1f;
 
 	void ColorCubePath(List<GameObject> patternCubeObject){
 		Color c = Color.grey;

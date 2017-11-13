@@ -21,17 +21,18 @@ public class GameLogic{
 		return currentSelPattern;
 	}
 
-	void SaveToFile(int currentCube, Vector3 pos, bool space=false){
+	void SaveToFile(string path, int currentCube, Vector3 pos){
 		string cn = currentCube.ToString ();
 		pos = Camera.main.WorldToScreenPoint(pos);
-		string co = pos.ToString ();
+		string x = pos.x.ToString ();
+		string y = pos.y.ToString ();
+		string z = pos.z.ToString ();
 		string ts = DateTime.Now.ToString ("yyyyMMddHHmmssffff");
-		string together = cn + " " + co + " " + ts + "\n";
+		string l = Main.currLabel.ToString ();
+		string together = l + " " + cn + " " + x + " " + y + " " + z + " " + ts + "\n";
 		//Debug.Log (together);
-		if (space) {
-			File.AppendAllText (Main.path, "\n");
-		}
-		File.AppendAllText (Main.path, together);
+
+		File.AppendAllText (path, together);
 	}
 
 	public void TouchLogic(){
@@ -43,12 +44,13 @@ public class GameLogic{
 			*/
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 			pos.z = -1;
-			Debug.Log (pos.ToString ());
+			/* PRINTING */
+			//Debug.Log (pos.ToString ());
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 			foreach (Collider2D c2 in currentFrame) {
 				currentCube = int.Parse (c2.name);
 				/* save each touch to file*/
-				SaveToFile (currentCube, pos);
+				SaveToFile (Main.allPath, currentCube, pos);
 
 				SwipeCube(currentCube, pos);
 			}
@@ -64,7 +66,7 @@ public class GameLogic{
 			//Debug.Log ("already exists");
 		} else {
 			if (currentCube == currentSelPattern [currentPathSize]) {
-				SaveToFile (currentCube, pos, true);
+				SaveToFile (Main.pattPath, currentCube, pos);
 
 				//Debug.Log ("here");
 				currentPaths.Add (currentCube);
