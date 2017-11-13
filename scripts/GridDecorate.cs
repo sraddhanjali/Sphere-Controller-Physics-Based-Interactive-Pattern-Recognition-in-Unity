@@ -40,8 +40,9 @@ public class GridDecorate{
 		}
 	}
 
-	public IEnumerator RemoveLines(List<GameObject> patternCubeObject){
-	    yield return new WaitForSeconds(3f);
+	/*public IEnumerator RemoveLines(List<GameObject> patternCubeObject){
+	    yield return new WaitForSeconds(3f);*/
+	public void RemoveLines(List<GameObject> patternCubeObject){
 
 		LineRenderer ln1;
 		for (int i = 0; i < patternCubeObject.Count; i++) {

@@ -157,4 +157,20 @@ class PatternGrid{
 		/* get list of pattern gameobjects */
 		return GetPatternGameobjects (combinedGrid);
 	}
+
+	public List<GameObject> GetZPatterns(){
+		List<int> zPatternList = new List<int>() {2, 5, 8, 10, 11, 12, 14, 16, 17, 18};
+		SetCurrentSelPattern (zPatternList);
+		return GetPatternGameobjects(zPatternList);
+	}
+
+	public void InitialCubesColor(){
+		GameObject[] objects = GameObject.FindGameObjectsWithTag("Cube");
+		for (int i = 0; i < objects.Length; i++)
+		{
+			GameObject b = objects[i];
+			b.layer = 8;
+			b.GetComponent<Renderer>().material.color = Color.white;
+		}
+	}
 }

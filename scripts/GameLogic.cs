@@ -12,10 +12,6 @@ public class GameLogic{
 	List<int> currentPaths = new List<int>();
 	List<int> currentSelPattern = new List<int>();
 
-	/* game player points */
-	public int playerPoints = 0;
-	public int pointsAdded = 0 ;
-
 
 	public void SetCurrentPattern(List<int> curr){
 		currentSelPattern = curr;
@@ -47,6 +43,7 @@ public class GameLogic{
 			*/
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 			pos.z = -1;
+			Debug.Log (pos.ToString ());
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 			foreach (Collider2D c2 in currentFrame) {
 				currentCube = int.Parse (c2.name);
@@ -77,6 +74,7 @@ public class GameLogic{
 				if (h.CheckEqual (currentSelPattern, currentPaths)) {
 					//gd.ChangePathsColors (currentPatternList);
 					PlayerPointsLogic (t);
+					currentPaths.Clear ();
 					Main.increaseLevel = true;
 					//Debug.Log ("DONEEEEE!!!");
 				} else {
@@ -91,17 +89,14 @@ public class GameLogic{
 	}
 
 	void PlayerPointsLogic(int left){
-		if (left > 7){
-			playerPoints += 50;
-			pointsAdded = 50;
+		if (left >= 7){
+			Main.playerPoints += 50;
 		}
-		else if (left > 4){
-			playerPoints += 25;
-			pointsAdded = 25;
+		else if (left >= 4){
+			Main.playerPoints  += 25;
 		}
 		else if (left > 0){
-			playerPoints += 10;
-			pointsAdded = 10;
+			Main.playerPoints  += 10;
 		}
 		else if (left <= 0){
 			Main.gameover = true;
