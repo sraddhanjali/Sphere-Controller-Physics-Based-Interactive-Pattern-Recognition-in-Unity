@@ -439,8 +439,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1414527997}
   - component: {fileID: 1414527996}
-  - component: {fileID: 1414527998}
   - component: {fileID: 1414527999}
+  - component: {fileID: 1414527998}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -484,15 +484,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1414527995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9a08a2375b464dd7b6cf8ebde5aaa2c, type: 3}
+  m_Script: {fileID: 11500000, guid: 871f693bb8fa740338598e052fff2374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites: []
-  LINEWIDTH: 0.14
-  chop: {fileID: 1414527999}
   shader1: {fileID: 0}
-  SWIPETHRESHOLD: 9
-  wordFile: {fileID: 4900000, guid: 977b9eec4bfcf4b1eb6ddf924e50b052, type: 3}
+  sprites: []
 --- !u!82 &1414527999
 AudioSource:
   m_ObjectHideFlags: 0

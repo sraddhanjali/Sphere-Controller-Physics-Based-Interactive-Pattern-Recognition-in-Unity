@@ -1,29 +1,29 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 
 public class GridDecorate{
 
-	public float LINEWIDTH = 0.5f;
+	public float LINEWIDTH = 0.2f;
 
-	void ColorCubePath(List<GameObject> patternCube){
+	void ColorCubePath(List<GameObject> patternCubeObject){
 		Color c = Color.grey;
 		GameObject b;
-		for (int i = 0; i < patternCube.Count; i++) {
-			b = patternCube [i];
+		for (int i = 0; i < patternCubeObject.Count; i++) {
+			b = patternCubeObject [i];
 			b.layer = 8;
 		}
 	}
 
-	void DrawLines(List<GameObject> patternCube){
+	public void DrawLines(List<GameObject> patternCubeObject){
 		LineRenderer ln;
-		for (int i = 0; i < patternCube.Count; i++) {
+		for (int i = 0; i < patternCubeObject.Count; i++) {
 			// last gameobject doesn't have any more gameobjects to draw line into so i runes only till second last
-			if (i != patternCube.Count - 1) {
-				GameObject g1 = patternCube [i];
-				GameObject g2 = patternCube [i + 1];
+			if (i != patternCubeObject.Count - 1) {
+				GameObject g1 = patternCubeObject [i];
+				GameObject g2 = patternCubeObject [i + 1];
 				if (g1.GetComponent<LineRenderer> ()) {
 					ln = g1.GetComponent<LineRenderer> ();
 				} else {
@@ -40,15 +40,15 @@ public class GridDecorate{
 		}
 	}
 
-	//IEnumerator RemoveLines(List<GameObject> patternCube){
-	void RemoveLines(List<GameObject> patternCube){
-	//	yield return new WaitForSeconds(3f);
+	/*public IEnumerator RemoveLines(List<GameObject> patternCubeObject){
+	    yield return new WaitForSeconds(3f);*/
+	public void RemoveLines(List<GameObject> patternCubeObject){
 
 		LineRenderer ln1;
-		for (int i = 0; i < patternCube.Count; i++) {
-			if (i != patternCube.Count - 1) {
-				GameObject p1 = patternCube [i];
-				GameObject p2 = patternCube [i + 1];
+		for (int i = 0; i < patternCubeObject.Count; i++) {
+			if (i != patternCubeObject.Count - 1) {
+				GameObject p1 = patternCubeObject [i];
+				GameObject p2 = patternCubeObject [i + 1];
 				ln1 = p1.GetComponent<LineRenderer> ();
 				ln1.SetPosition (0, Vector3.zero);
 				ln1.SetPosition (1, Vector3.zero);
@@ -60,21 +60,5 @@ public class GridDecorate{
 		for (int m = 0; m < paths.Count; m++) {
 			go[paths[m]].gameObject.GetComponent<Renderer>().material.color = Color.white;
 		}
-	}
-
-	/*void InitialCubesColor(List<GameObject> patternCube){
-		GameObject[] objects = GameObject.FindGameObjectsWithTag ("Cube");
-		for (int i = 0; i < objects.Length; i++) {
-			patternCube.Add (objects [i]);
-			GameObject b = patternCube [i];
-			b.layer = 8;
-			b.GetComponent<Renderer>().material.color = Color.white;
-		}
-	}*/
-
-	public void DecorateCube(List<GameObject> patternCubeObject){
-		DrawLines (patternCubeObject);
-		//StartCoroutine (RemoveLines(patternCube));	
-		RemoveLines(patternCubeObject);
 	}
 }
