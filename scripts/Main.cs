@@ -10,8 +10,10 @@ public class Main : MonoBehaviour{
 	public Sprite[] sprites;
 	List<GameObject> go;
 
-	private static int level = 1;
-	private static float timeLeft = 10.0f;
+	public static int level = 1;
+	public static string currLabel = "";
+	public static int patternIndex = 0;
+	public static float timeLeft = 10.0f;
 
 	PatternGrid pg = new PatternGrid();
 	GridDecorate gd = new GridDecorate();
@@ -22,9 +24,10 @@ public class Main : MonoBehaviour{
 	private bool settingGame = false;
 	public static bool gameover = false;
 	public static bool increaseLevel = false;
-	public static string path;
-
+	public static string allPath;
+	public static string pattPath;
 	public static int playerPoints = 0;
+	List<string> labels = new List<string>(){ "a", "b", "c", "d", "e" };
 
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
@@ -54,10 +57,10 @@ public class Main : MonoBehaviour{
 		/* set initial cubes colors */
 		pg.InitialCubesColor();
 		// a sample of simple pattern from paper
-		//go = pg.GetSimplePatterns ();
+		go = pg.GetSimplePatterns ();
 
 		/* just z pattern */
-		go = pg.GetZPatterns();
+		//go = pg.GetZPatterns();
 
 		DecorateCube (go);
 		gl.SetCurrentPattern (pg.GetCurrentSelPattern());
@@ -67,8 +70,10 @@ public class Main : MonoBehaviour{
 	void SaveFile(){
 		///*  to save the data
 		string filePath = Application.persistentDataPath;
-		string fileName =  string.Format(@"{0}.txt", Guid.NewGuid()	);
-		path = filePath + "/" + fileName;
+		string f1 =  string.Format(@"{0}.txt", Guid.NewGuid());
+		string f2 = string.Format("labels.txt");
+		allPath = filePath + "/" + f1;
+		pattPath = filePath + "/" + f2;
 		//*/
 	}
 
@@ -86,10 +91,24 @@ public class Main : MonoBehaviour{
 		go.Clear ();
 	}
 
+	void SetLabelLevel(){
+		if (level == 0) {
+			patternIndex = 0;
+		} else {
+			patternIndex += 1;
+		}
+		currLabel = labels [patternIndex];
+		Debug.Log (currLabel);
+	}
+
 	IEnumerator NewLevelWork(){
 		increaseLevel = false;
 		ClearVariables ();
 		level += 1;
+		int oldlevel = level - 1;
+		if (oldlevel % 5 == 0) {
+			SetLabelLevel ();
+		}
 		yield return new WaitForSeconds (0.5f);
 		InitSetup ();
 		timeLeft = 10.0f;
@@ -99,10 +118,11 @@ public class Main : MonoBehaviour{
 		timeLeft = 0;
 		SceneManager.LoadScene ("Menu");
 		gameover = false;
+		level = 1;
 	}
 
 	void Update () {
-		while (level <= 2) {
+		if (level <= 25) {
 			if (gameover == false) {
 				if (settingGame) {
 					return;
@@ -116,7 +136,8 @@ public class Main : MonoBehaviour{
 				GameOver ();
 			}
 			timeLeft -= Time.deltaTime;
+		} else {
+			GameOver ();
 		}
-		GameOver ();
 	}
 }

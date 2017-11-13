@@ -134,8 +134,9 @@ class PatternGrid{
 		return GetPatternGameobjects (combinedGrid);
 	}
 
-	public List<GameObject> GetSimplePatterns(){
-		List<List<int>> combinedGridList = new List<List<int>> () {
+	public List<List<int>> SamplePatterns(){
+		/*
+		List<List<int>> combinedGridList1 = new List<List<int>> () {
 			new List<int>() {4, 8, 6, 7, 10, 13, 14, 11},
 			new List<int>() {4, 8, 6, 7, 11, 13, 14, 12},
 			new List<int>() {4, 8, 6, 7, 14, 15, 17, 18},
@@ -149,8 +150,26 @@ class PatternGrid{
 			new List<int>() {1, 2, 5, 8, 9, 10, 17, 14, 11, 12},
 			new List<int>() {5, 6, 8, 7, 10, 11, 14, 16, 17}
 		};
+		*/
 
+		List<List<int>> combinedGridList2 = new List<List<int>> () {
+			new List<int>() {4, 8, 6, 7, 10, 13, 14, 11}, // label a
+			new List<int>() {2, 5, 8, 12, 14, 16, 17, 18}, // b
+			new List<int>() {4, 3, 5, 8, 10, 11, 14, 17, 18}, // c
+			new List<int>() {4, 3, 5, 8, 11, 13, 14, 12}, // d
+			new List<int>() {5, 6, 8, 9, 14, 15, 17, 18}, // e
+		};
+		return combinedGridList2;
+	}
+
+	public List<GameObject> GetSimplePatterns(){
+		
+		List<List<int>> combinedGridList = SamplePatterns ();
+		/* get random pattern from list of patterns
 		List<int> combinedGrid = combinedGridList[UnityEngine.Random.Range(0, combinedGridList.Count)];
+		*/
+
+		List<int> combinedGrid = combinedGridList [Main.patternIndex];
 		/* set total grid to current selected pattern */
 		SetCurrentSelPattern (combinedGrid);
 
