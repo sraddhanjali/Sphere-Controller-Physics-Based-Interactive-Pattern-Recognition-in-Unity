@@ -71,8 +71,8 @@ public class Main : MonoBehaviour{
 	void SaveFile(){
 		///*  to save the data
 		string filePath = Application.persistentDataPath;
-		string f1 =  string.Format(@"{0}.txt", Guid.NewGuid());
-		string f2 = string.Format("labels.txt");
+		string f1 =  string.Format(@"{0}.csv", Guid.NewGuid());
+		string f2 = string.Format("labels.csv");
 		allPath = filePath + "/" + f1;
 		pattPath = filePath + "/" + f2;
 		//*/
@@ -95,21 +95,23 @@ public class Main : MonoBehaviour{
 
 	void SetLabelLevel(){
 	/* level setup work */
-		if (level % 5 == 0 && level != 0) {
+		if (level % 40 == 0 && level != 0) {
 			patternIndex += 1;
 			currLabel = labels [patternIndex];
 		}
+		/*
 		Debug.Log (currLabel);
 		Debug.Log (level);
+		*/
 	}
 
 	IEnumerator NewLevelWork(){
 		increaseLevel = false;
 		ClearVariables ();
+		yield return new WaitForSeconds (0.8f);
 		level += 1;
-		yield return new WaitForSeconds (0.5f);
-		InitSetup ();
 		SetLabelLevel ();
+		InitSetup ();
 		timeLeft = 10.0f;
 	}
 

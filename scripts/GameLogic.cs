@@ -27,12 +27,11 @@ public class GameLogic{
 		string x = pos.x.ToString ();
 		string y = pos.y.ToString ();
 		string z = pos.z.ToString ();
-		string ts = DateTime.Now.ToString ("yyyyMMddHHmmssffff");
+		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 		string l = Main.currLabel.ToString ();
-		string together = l + " " + cn + " " + x + " " + y + " " + z + " " + ts + "\n";
-		//Debug.Log (together);
-
-		File.AppendAllText (path, together);
+		string csv = string.Format("{0},{1},{2},{3},{4}, {5}, {6}", Main.level.ToString(), l, cn, x, y, z, ts);
+		Debug.Log (csv);
+		File.AppendAllText (path, csv);
 	}
 
 	public void TouchLogic(){
