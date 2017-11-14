@@ -123,7 +123,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void Update () {
-		if (level <= 25) {
+		if (level <= 200) {
 			if (gameover == false) {
 				if (settingGame) {
 					return;
