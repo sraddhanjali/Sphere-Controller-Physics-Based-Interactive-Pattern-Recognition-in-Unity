@@ -29,7 +29,7 @@ public class GameLogic{
 		string z = pos.z.ToString ();
 		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 		string l = Main.currLabel.ToString ();
-		string csv = string.Format("{0},{1},{2},{3},{4}, {5}, {6}", Main.level.ToString(), l, cn, x, y, z, ts);
+		string csv = string.Format("{0},{1},{2},{3},{4}, {5}, {6}\n", Main.level.ToString(), l, cn, x, y, z, ts);
 		//Debug.Log (csv);
 		File.AppendAllText (path, csv);
 	}
