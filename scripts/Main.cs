@@ -95,7 +95,7 @@ public class Main : MonoBehaviour{
 
 	void SetLabelLevel(){
 	/* level setup work */
-		if (level % 40 == 0 && level != 0) {
+		if (level % 100 == 0 && level != 0) {
 			patternIndex += 1;
 			currLabel = labels [patternIndex];
 		}
@@ -107,7 +107,7 @@ public class Main : MonoBehaviour{
 
 	IEnumerator NewLevelWork(){
 		increaseLevel = false;
-		ClearVariables ();
+		ClearVariables ();	
 		yield return new WaitForSeconds (0.8f);
 		level += 1;
 		SetLabelLevel ();
@@ -123,7 +123,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void Update () {
-		if (level <= 200) {
+		if (level <= 500) {
 			if (gameover == false) {
 				if (settingGame) {
 					return;

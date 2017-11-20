@@ -151,7 +151,7 @@ class PatternGrid{
 			new List<int>() {5, 6, 8, 7, 10, 11, 14, 16, 17}
 		};
 		*/
-
+		/* watch data 1
 		List<List<int>> combinedGridList2 = new List<List<int>> () {
 			new List<int>() {4, 8, 6, 7, 10, 13, 14, 11}, // label a
 			new List<int>() {2, 5, 8, 12, 14, 16, 17, 18}, // b
@@ -160,6 +160,15 @@ class PatternGrid{
 			new List<int>() {5, 6, 8, 9, 14, 15, 17, 18}, // e
 		};
 		return combinedGridList2;
+		*/
+		List<List<int>> combinedGridList3 = new List<List<int>>(){
+			new List<int>() {10, 11, 14, 17, 18}, // label a
+			new List<int>() {10, 11, 14, 16, 17, 18}, // b
+			new List<int>() {10, 13, 16, 17, 18, 15, 12}, // c
+			new List<int>() {16, 13, 10, 14, 12, 15, 18}, // d
+			new List<int>() {13, 16, 17, 18, 15, 12, 11}, // e
+		};
+		return combinedGridList3;
 	}
 
 	public List<GameObject> GetSimplePatterns(){
@@ -189,7 +198,7 @@ class PatternGrid{
 		{
 			GameObject b = objects[i];
 			b.layer = 8;
-			b.GetComponent<Renderer>().material.color = Color.white;
+			b.GetComponent<Renderer> ().material.color = Color.white;
 		}
 	}
 }
