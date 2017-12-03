@@ -161,6 +161,7 @@ class PatternGrid{
 		};
 		return combinedGridList2;
 		*/
+
 		List<List<int>> combinedGridList3 = new List<List<int>>(){
 			new List<int>() {10, 11, 14, 17, 18}, // label a
 			new List<int>() {10, 11, 14, 16, 17, 18}, // b
@@ -169,6 +170,15 @@ class PatternGrid{
 			new List<int>() {13, 16, 17, 18, 15, 12, 11}, // e
 		};
 		return combinedGridList3;
+		/*
+		//simple, median and complex patterns
+		List<List<int>> combinedGridList3 = new List<List<int>>(){
+			new List<int>() {10, 11, 14, 17, 18}, // label a
+			new List<int>() {10, 14, 18, 15, 17, 16, 14, 12}, // b
+			new List<int>() {10, 11, 12, 13, 18, 17, 16, 15, 14}, // c
+		};
+		return combinedGridList3;
+		*/
 	}
 
 	public List<GameObject> GetSimplePatterns(){

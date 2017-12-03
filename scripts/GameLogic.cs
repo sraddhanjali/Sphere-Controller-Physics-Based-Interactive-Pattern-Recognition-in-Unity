@@ -49,7 +49,7 @@ public class GameLogic{
 			foreach (Collider2D c2 in currentFrame) {
 				currentCube = int.Parse (c2.name);
 				/* save each touch to file*/
-				SaveToFile (Main.allPath, currentCube, pos);
+				//SaveToFile (Main.allPath, currentCube, pos);
 
 				SwipeCube(currentCube, pos);
 			}
@@ -65,7 +65,8 @@ public class GameLogic{
 			//Debug.Log ("already exists");
 		} else {
 			if (currentCube == currentSelPattern [currentPathSize]) {
-				SaveToFile (Main.pattPath, currentCube, pos);
+				/* save exact pattern cube data to file*/
+				//SaveToFile (Main.pattPath, currentCube, pos);
 
 				//Debug.Log ("here");
 				currentPaths.Add (currentCube);

@@ -95,7 +95,7 @@ public class Main : MonoBehaviour{
 
 	void SetLabelLevel(){
 	/* level setup work */
-		if (level % 100 == 0 && level != 0) {
+		if (level % 1 == 0 && level != 0) {
 			patternIndex += 1;
 			currLabel = labels [patternIndex];
 		}
@@ -123,7 +123,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void Update () {
-		if (level <= 500) {
+		if (level <= 5) {
 			if (gameover == false) {
 				if (settingGame) {
 					return;
