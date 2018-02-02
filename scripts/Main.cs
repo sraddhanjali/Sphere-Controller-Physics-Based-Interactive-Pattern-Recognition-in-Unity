@@ -10,6 +10,7 @@ public class Main : MonoBehaviour{
 	public Sprite[] sprites;
 	List<GameObject> go;
 
+	public static int repetition = 2;
 	public static int level = 0;
 	public static string currLabel = "a";
 	public static int patternIndex = 0;
@@ -27,7 +28,7 @@ public class Main : MonoBehaviour{
 	public static string allPath;
 	public static string pattPath;
 	public static int playerPoints = 0;
-	List<string> labels = new List<string>(){ "a", "b", "c", "d", "e" };
+	List<string> labels = new List<string>(){ "a", "b", "c", "d" };
 
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
@@ -50,6 +51,8 @@ public class Main : MonoBehaviour{
 	}
 
 	void InitSetup(){
+		// we are setting_game so this has to be true, set cubes to initial colors, get patterns to draw on, decorate them and store current pattern in a datastructure
+		// then we will be done with setting the game hence setting_game = false
 		settingGame = true;
 		/* original
 		go = pg.GetPatterns();
@@ -69,18 +72,23 @@ public class Main : MonoBehaviour{
 	}
 
 	void SaveFile(){
-		///*  to save the data
+		//  to save the data
 		string filePath = Application.persistentDataPath;
 		string f1 =  string.Format(@"{0}.csv", Guid.NewGuid());
 		string f2 = string.Format("labels.csv");
 		allPath = filePath + "/" + f1;
 		pattPath = filePath + "/" + f2;
-		//*/
+		//
 	}
 
 	void Awake(){
+		// loading scavengers sprite and set filenames to store data
 		LoadSprites ();
 		SaveFile ();
+	}
+
+	int TotalRepetition(){
+		return repetition * labels.Count;
 	}
 
 	void Start () {
@@ -95,7 +103,7 @@ public class Main : MonoBehaviour{
 
 	void SetLabelLevel(){
 	/* level setup work */
-		if (level % 1 == 0 && level != 0) {
+		if (level % repetition == 0 && level != 0) {
 			patternIndex += 1;
 			currLabel = labels [patternIndex];
 		}
@@ -106,6 +114,8 @@ public class Main : MonoBehaviour{
 	}
 
 	IEnumerator NewLevelWork(){
+		// before new level is loaded, clear variables then wait for 0.8 then increase the level, setlabel of current pattern to be swiped and reset time to 10s
+		// TODO: figure out where increaseLevel should be placed
 		increaseLevel = false;
 		ClearVariables ();	
 		yield return new WaitForSeconds (0.8f);
@@ -116,6 +126,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void GameOver(){
+		// game over so timeleft set to 0, load menu and set level to 1
 		timeLeft = 0;
 		SceneManager.LoadScene ("Menu");
 		gameover = false;
@@ -123,7 +134,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void Update () {
-		if (level <= 5) {
+		if (level <= TotalRepetition()) {
 			if (gameover == false) {
 				if (settingGame) {
 					return;

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class GameLogic{
 	public AudioSource chop;
+	public bool correctSwipe = false;
 	Helper h = new Helper();
 	private static float timeLeft = 10.0f;
 	public GridDecorate gd = new GridDecorate();
@@ -49,8 +50,10 @@ public class GameLogic{
 			foreach (Collider2D c2 in currentFrame) {
 				currentCube = int.Parse (c2.name);
 				/* save each touch to file*/
-				//SaveToFile (Main.allPath, currentCube, pos);
-
+				//Debug.Log (pos.ToString ());
+				if (correctSwipe) {
+					SaveToFile (Main.allPath, currentCube, pos);
+				}
 				SwipeCube(currentCube, pos);
 			}
 		}
@@ -61,31 +64,23 @@ public class GameLogic{
 		int currentPathSize = currentPaths.Count;
 		//Debug.Log (currentCube);
 		GameObject a = GameObject.Find (currentCube.ToString ());
-		if (currentPaths.Contains (currentCube)) {
-			//Debug.Log ("already exists");
-		} else {
-			if (currentCube == currentSelPattern [currentPathSize]) {
-				/* save exact pattern cube data to file*/
-				//SaveToFile (Main.pattPath, currentCube, pos);
+		if (currentCube == currentSelPattern [currentPathSize]) {
+			correctSwipe = true;
+			/* save exact pattern cube data to file*/
+			SaveToFile (Main.pattPath, currentCube, pos);
 
-				//Debug.Log ("here");
-				currentPaths.Add (currentCube);
-				a.GetComponent<Renderer> ().material.color = Color.red;	
-				//chop.Play ();
-				//Debug.Log ("Current cube added:" + currentCube);
-				if (h.CheckEqual (currentSelPattern, currentPaths)) {
-					//gd.ChangePathsColors (currentPatternList);
-					PlayerPointsLogic (t);
-					currentPaths.Clear ();
-					Main.increaseLevel = true;
-					//Debug.Log ("DONEEEEE!!!");
-				} else {
-					if (currentPaths.Contains (currentCube)) {
-						//Debug.Log ("already swiped");
-					} else {
-						// Retry currentPaths.Clear ();
-					}
-				}
+			//Debug.Log ("here");
+			currentPaths.Add (currentCube);
+			a.GetComponent<Renderer> ().material.color = Color.red;	
+			//chop.Play ();
+			//Debug.Log ("Current cube added:" + currentCube);
+			if (h.CheckEqual (currentSelPattern, currentPaths)) {
+				//gd.ChangePathsColors (currentPatternList);
+				PlayerPointsLogic (t);
+				currentPaths.Clear ();
+				correctSwipe = false;
+				Main.increaseLevel = true;
+				//Debug.Log ("DONEEEEE!!!");
 			} 
 		}
 	}
