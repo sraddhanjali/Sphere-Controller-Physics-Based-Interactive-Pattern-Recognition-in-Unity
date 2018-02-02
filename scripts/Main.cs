@@ -10,7 +10,7 @@ public class Main : MonoBehaviour{
 	public Sprite[] sprites;
 	List<GameObject> go;
 
-	public static int repetition = 2;
+	public static int repetition = 30;
 	public static int level = 0;
 	public static string currLabel = "a";
 	public static int patternIndex = 0;
