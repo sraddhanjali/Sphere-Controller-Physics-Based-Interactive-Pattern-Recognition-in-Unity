@@ -1,11 +1,20 @@
-﻿import UnityEngine
-		
-class SwipeData(MonoBehaviour):
-	# Use this for initialization
-	def Start ():
-		pass
-	
-	# Update is called once per frame
-	def Update ():
-		pass
+﻿using System;
+using System.Collections.Generic;
 
+class SwipeDataHistory<T>{
+	Queue<T> data;
+
+	public SwipeDataHistory(){
+		data = new Queue<T>();
+	}
+
+	public void AddEntry(T newData){
+		data.Enqueue(newData);
+	}
+		
+	public void WriteToFile(){
+		foreach (T d in data) {
+			
+		}
+	}
+}
