@@ -186,13 +186,13 @@ class PatternGrid{
 
 		// watch_data_4 3*3
 		// TODO: make the input of 3*3 and above grid input insertion into list function instead of manual entry
-		List<List<int>> combinedGridList4 = new List<List<int>>(){
+		/*List<List<int>> combinedGridList4 = new List<List<int>>(){
 			new List<int>() {pattern[1], pattern[4], pattern[7], pattern[8], pattern[9]}, // label a
 			new List<int>() {pattern[1], pattern[4], pattern[7], pattern[8], pattern[9], pattern[6], pattern[3]}, // b
 			new List<int>() {pattern[1], pattern[2], pattern[3], pattern[5], pattern[7], pattern[8], pattern[9]}, // c
 			new List<int>() {pattern[1], pattern[4], pattern[5], pattern[6], pattern[9]}, // d
 		};
-		return combinedGridList4;
+		return combinedGridList4;*/
 
 		// watch_data_4 6*3 
 		// TODO: Don't know how to proceed
@@ -204,6 +204,37 @@ class PatternGrid{
 			new List<int>() {pattern[1], pattern[4], pattern[5], pattern[6], pattern[9]}, // d
 		};
 		return combinedGridList5;*/
+
+		/*all common patterns*/
+		List<List<int>> combinedGridList5 = new List<List<int>>(){
+			new List<int>() {pattern[3], pattern[2], pattern[5], pattern[8], pattern[7]}, // label a 32587
+			new List<int>() {pattern[1], pattern[4], pattern[5], pattern[6], pattern[9]}, // b
+			new List<int>() {pattern[1], pattern[4], pattern[7], pattern[8], pattern[9]}, // c
+			new List<int>() {pattern[3], pattern[2], pattern[1], pattern[4], pattern[5], pattern[6], pattern[9], pattern[8], pattern[7]}, // d
+			new List<int>() {pattern[1], pattern[4], pattern[7], pattern[8], pattern[9], pattern[6], pattern[3]},
+			new List<int>() {pattern[1],pattern[2],pattern[3],pattern[5],pattern[7],pattern[8],pattern[9]},
+			new List<int>() {pattern[3],pattern[5],pattern[6],pattern[8]},
+			new List<int>() {pattern[1],pattern[5],pattern[4],pattern[2]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[5],pattern[9]},
+			new List<int>() {pattern[1],pattern[4],pattern[7],pattern[5],pattern[3],pattern[6],pattern[9]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[5],pattern[9],pattern[6],pattern[3]},
+			new List<int>() {pattern[1],pattern[2],pattern[3],pattern[5],pattern[7]},
+			new List<int>() {pattern[3],pattern[2],pattern[1],pattern[4],pattern[7],pattern[8],pattern[9]},
+			new List<int>() {pattern[1],pattern[2],pattern[3],pattern[6],pattern[9],pattern[8],pattern[7]},
+			new List<int>() {pattern[3],pattern[2],pattern[1],pattern[4],pattern[7],pattern[8],pattern[9],pattern[6],pattern[5]},
+			new List<int>() {pattern[3],pattern[2],pattern[1],pattern[5],pattern[9],pattern[8],pattern[7]},
+			new List<int>() {pattern[1],pattern[4],pattern[7],pattern[5],pattern[9],pattern[6],pattern[3]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[5],pattern[9],pattern[6],pattern[3]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[5],pattern[3],pattern[6],pattern[9]},
+			new List<int>() {pattern[9],pattern[8],pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6],pattern[5]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6],pattern[9],pattern[8],pattern[5]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6],pattern[9]},
+			new List<int>() {pattern[1],pattern[4],pattern[8],pattern[6],pattern[3]},
+			new List<int>() {pattern[1],pattern[4],pattern[2],pattern[5],pattern[1]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6], pattern[5]},
+		};
+		return combinedGridList5;
+
 	}
 
 	public List<GameObject> GetSimplePatterns(){

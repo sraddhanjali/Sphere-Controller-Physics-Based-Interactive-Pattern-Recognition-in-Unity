@@ -10,7 +10,7 @@ public class Main : MonoBehaviour{
 	public Sprite[] sprites;
 	List<GameObject> go;
 
-	public static int repetition = 30;
+	public static int repetition = 1;
 	public static int level = 0;
 	public static string currLabel = "a";
 	public static int patternIndex = 0;
@@ -28,7 +28,7 @@ public class Main : MonoBehaviour{
 	public static string allPath;
 	public static string pattPath;
 	public static int playerPoints = 0;
-	List<string> labels = new List<string>(){ "a", "b", "c", "d" };
+	List<string> labels = new List<string>(){ "a", "b", "c", "d" , "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
 
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
@@ -118,7 +118,7 @@ public class Main : MonoBehaviour{
 		// TODO: figure out where increaseLevel should be placed
 		increaseLevel = false;
 		ClearVariables ();	
-		yield return new WaitForSeconds (0.8f);
+		yield return new WaitForSeconds (1.5f);
 		level += 1;
 		SetLabelLevel ();
 		InitSetup ();

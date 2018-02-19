@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class GameLogic{
 	public AudioSource chop;
 	public bool correctSwipe = false;
+	public int oldCube = 0;
 	Helper h = new Helper();
 	private static float timeLeft = 10.0f;
 	public GridDecorate gd = new GridDecorate();
@@ -45,15 +46,18 @@ public class GameLogic{
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 			pos.z = -1;
 			/* PRINTING */
-			//Debug.Log (pos.ToString ());
+			if (correctSwipe == false) {
+				SaveToFile (Main.allPath, currentSelPattern [0], pos);			
+			}
+			if (oldCube != 0) {
+				SaveToFile (Main.allPath, oldCube, pos);
+				Debug.Log (oldCube.ToString ());
+			}
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 			foreach (Collider2D c2 in currentFrame) {
 				currentCube = int.Parse (c2.name);
 				/* save each touch to file*/
-				//Debug.Log (pos.ToString ());
-				if (correctSwipe) {
-					SaveToFile (Main.allPath, currentCube, pos);
-				}
+				SaveToFile (Main.allPath, currentCube, pos);
 				SwipeCube(currentCube, pos);
 			}
 		}
@@ -64,10 +68,13 @@ public class GameLogic{
 		int currentPathSize = currentPaths.Count;
 		//Debug.Log (currentCube);
 		GameObject a = GameObject.Find (currentCube.ToString ());
+
 		if (currentCube == currentSelPattern [currentPathSize]) {
 			correctSwipe = true;
+			oldCube = currentCube;
+			Debug.Log (currentCube.ToString ());
 			/* save exact pattern cube data to file*/
-			SaveToFile (Main.pattPath, currentCube, pos);
+			//SaveToFile (Main.pattPath, currentCube, pos);
 
 			//Debug.Log ("here");
 			currentPaths.Add (currentCube);
