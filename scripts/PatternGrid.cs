@@ -207,6 +207,9 @@ class PatternGrid{
 
 		/*all common patterns*/
 		List<List<int>> combinedGridList5 = new List<List<int>>(){
+			new List<int>() {pattern[1],pattern[4],pattern[2],pattern[5], pattern[1]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6], pattern[5]},
+
 			new List<int>() {pattern[3], pattern[2], pattern[5], pattern[8], pattern[7]}, // label a 32587
 			new List<int>() {pattern[1], pattern[4], pattern[5], pattern[6], pattern[9]}, // b
 			new List<int>() {pattern[1], pattern[4], pattern[7], pattern[8], pattern[9]}, // c

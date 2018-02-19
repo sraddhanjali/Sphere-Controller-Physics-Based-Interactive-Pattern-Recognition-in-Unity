@@ -11,6 +11,7 @@ public class Main : MonoBehaviour{
 	List<GameObject> go;
 
 	public static int repetition = 1;
+	public int totalRepetition = 0;
 	public static int level = 0;
 	public static string currLabel = "a";
 	public static int patternIndex = 0;
@@ -87,13 +88,14 @@ public class Main : MonoBehaviour{
 		SaveFile ();
 	}
 
-	int TotalRepetition(){
-		return repetition * labels.Count;
+	void TotalRepetition(){
+		totalRepetition = repetition * labels.Count;
 	}
 
 	void Start () {
 		InitSetup ();
 		SetLabelLevel ();
+		TotalRepetition ();
 	}
 
 	void ClearVariables(){
@@ -134,7 +136,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void Update () {
-		if (level <= TotalRepetition()) {
+		if (level <= totalRepetition) {
 			if (gameover == false) {
 				if (settingGame) {
 					return;
@@ -143,13 +145,13 @@ public class Main : MonoBehaviour{
 						StartCoroutine (NewLevelWork ());
 					}
 					gl.TouchLogic ();
+					timeLeft -= Time.deltaTime;
 				}
 			} else if (gameover == true) {
 				GameOver ();
 			}
-			timeLeft -= Time.deltaTime;
 		} else {
 			GameOver ();
-		}
+		} 
 	}
 }

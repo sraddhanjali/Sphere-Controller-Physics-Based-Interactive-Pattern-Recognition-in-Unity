@@ -85,9 +85,10 @@ public class GameLogic{
 				//gd.ChangePathsColors (currentPatternList);
 				PlayerPointsLogic (t);
 				currentPaths.Clear ();
+				currentSelPattern.Clear ();
 				correctSwipe = false;
 				Main.increaseLevel = true;
-				//Debug.Log ("DONEEEEE!!!");
+				Debug.Log ("DONEEEEE!!!");
 			} 
 		}
 	}
