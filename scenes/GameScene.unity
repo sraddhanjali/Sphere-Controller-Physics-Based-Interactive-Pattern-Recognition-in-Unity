@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 795288037}
   - component: {fileID: 795288040}
   - component: {fileID: 795288039}
-  - component: {fileID: 795288038}
+  - component: {fileID: 795288041}
   m_Layer: 5
   m_Name: Flow Field
   m_TagString: Untagged
@@ -233,29 +233,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &795288038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 795288036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -2095666955, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 0, y: 0}
-  m_Constraint: 1
-  m_ConstraintCount: 5
 --- !u!114 &795288039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +266,22 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 795288036}
+--- !u!114 &795288041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 795288036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e69e4b6ec76045ca9a6189697d41ef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flowField: {fileID: 224706662629648042, guid: 38b898f8a4ee74df8b3e7db0bd7b1d87,
+    type: 2}
+  cube: {fileID: 1873674209014272, guid: 0e56da1afac8343eb8de04e4c0c76fa1, type: 2}
+  outsideCube: {fileID: 1764990973011180, guid: c78ded33b98c24bab9266a74c4c169d3,
+    type: 2}
 --- !u!1 &1005904228
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,8 +393,8 @@ MonoBehaviour:
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
   m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
+  m_InputActionsPerSecond: 20
+  m_RepeatDelay: 0
   m_ForceModuleActive: 0
 --- !u!114 &1248460762
 MonoBehaviour:
@@ -438,7 +431,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1414527997}
-  - component: {fileID: 1414527996}
   - component: {fileID: 1414527999}
   - component: {fileID: 1414527998}
   m_Layer: 0
@@ -448,21 +440,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1414527996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1414527995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e69e4b6ec76045ca9a6189697d41ef3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flowField: {fileID: 795288037}
-  cube: {fileID: 1873674209014272, guid: 0e56da1afac8343eb8de04e4c0c76fa1, type: 2}
-  outsideCube: {fileID: 1764990973011180, guid: c78ded33b98c24bab9266a74c4c169d3,
-    type: 2}
 --- !u!4 &1414527997
 Transform:
   m_ObjectHideFlags: 0
@@ -489,6 +466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader1: {fileID: 0}
   sprites: []
+  totalRepetition: 0
 --- !u!82 &1414527999
 AudioSource:
   m_ObjectHideFlags: 0

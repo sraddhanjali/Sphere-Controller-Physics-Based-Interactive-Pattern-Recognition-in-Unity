@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Diagnostics;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ public class GameLogic{
 	public GridDecorate gd = new GridDecorate();
 	List<int> currentPaths = new List<int>();
 	List<int> currentSelPattern = new List<int>();
+	Stopwatch sw = new Stopwatch ();
 
 
 	public void SetCurrentPattern(List<int> curr){
@@ -31,13 +33,14 @@ public class GameLogic{
 		string z = pos.z.ToString ();
 		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 		string l = Main.currLabel.ToString ();
-		string csv = string.Format("{0},{1},{2},{3},{4}, {5}, {6}\n", Main.level.ToString(), l, cn, x, y, z, ts);
+		string csv = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", Main.level.ToString(), l, cn, x, y, z, ts);
 		//Debug.Log (csv);
 		File.AppendAllText (path, csv);
 	}
 
 	public void TouchLogic(){
 		int currentCube;
+
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
 			/*
@@ -51,7 +54,7 @@ public class GameLogic{
 			}
 			if (oldCube != 0) {
 				SaveToFile (Main.allPath, oldCube, pos);
-				Debug.Log (oldCube.ToString ());
+				UnityEngine.Debug.Log (oldCube.ToString ());
 			}
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 			foreach (Collider2D c2 in currentFrame) {
@@ -63,6 +66,15 @@ public class GameLogic{
 		}
 	}	
 
+	void PrintTime(){
+		// Get the elapsed time as a TimeSpan value.
+		TimeSpan ts = sw.Elapsed;
+
+		// Format and display the TimeSpan value.
+		string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+		UnityEngine.Debug.Log("RunTime " + elapsedTime);
+	}
+
 	void SwipeCube(int currentCube, Vector3 pos){
 		int t = (int)timeLeft;
 		int currentPathSize = currentPaths.Count;
@@ -72,12 +84,14 @@ public class GameLogic{
 		if (currentCube == currentSelPattern [currentPathSize]) {
 			correctSwipe = true;
 			oldCube = currentCube;
-			Debug.Log (currentCube.ToString ());
+			UnityEngine.Debug.Log (currentCube.ToString ());
+			//Console.WriteLine (currentCube.ToString ());
 			/* save exact pattern cube data to file*/
 			//SaveToFile (Main.pattPath, currentCube, pos);
 
 			//Debug.Log ("here");
 			currentPaths.Add (currentCube);
+			sw.Start ();
 			a.GetComponent<Renderer> ().material.color = Color.red;	
 			//chop.Play ();
 			//Debug.Log ("Current cube added:" + currentCube);
@@ -88,7 +102,12 @@ public class GameLogic{
 				currentSelPattern.Clear ();
 				correctSwipe = false;
 				Main.increaseLevel = true;
-				Debug.Log ("DONEEEEE!!!");
+				Main.won += 1;
+				//Debug.Log ("DONEEEEE!!!");
+				UnityEngine.Debug.Log ("DONE!");
+				sw.Stop ();
+				PrintTime ();
+				sw.Reset ();
 			} 
 		}
 	}

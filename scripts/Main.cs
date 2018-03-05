@@ -10,12 +10,12 @@ public class Main : MonoBehaviour{
 	public Sprite[] sprites;
 	List<GameObject> go;
 
-	public static int repetition = 1;
+	public static int repetition = 20;
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static string currLabel = "a";
 	public static int patternIndex = 0;
-	public static float timeLeft = 10.0f;
+	public static float timeLeft = 15.0f;
 
 	PatternGrid pg = new PatternGrid();
 	GridDecorate gd = new GridDecorate();
@@ -25,18 +25,22 @@ public class Main : MonoBehaviour{
 	/* game state variables */
 	private bool settingGame = false;
 	public static bool gameover = false;
+	public static int won = 0;
+	public static bool done = false;
 	public static bool increaseLevel = false;
 	public static string allPath;
 	public static string pattPath;
 	public static int playerPoints = 0;
-	List<string> labels = new List<string>(){ "a", "b", "c", "d" , "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
+	List<string> labels = new List<string> (){ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
 
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
-		if (gameover == false) {
-			GUILayout.Label ("\n Level: " + level+ "\n Time:" + (int)timeLeft + "\n Points:" + playerPoints, guiStyle);
+		if (gameover == false && done == false) {
+			GUILayout.Label ("\n Level: " + level + "\n Time:" + (int)timeLeft + "\n Points:" + playerPoints, guiStyle);
+		} else if(done == true){
+			GUILayout.Label ("Won", guiStyle);
 		} else {
-			GUILayout.Label ("GameOver", guiStyle);
+			GUILayout.Label ("Game Over", guiStyle);
 		}
 	}
 
@@ -124,15 +128,20 @@ public class Main : MonoBehaviour{
 		level += 1;
 		SetLabelLevel ();
 		InitSetup ();
-		timeLeft = 10.0f;
+		timeLeft = 15.0f;
+	}
+
+	void Reset(){
+		timeLeft = 0;
+		gameover = false;
+		level = 0;
+		Main.increaseLevel = false;
 	}
 
 	void GameOver(){
 		// game over so timeleft set to 0, load menu and set level to 1
-		timeLeft = 0;
+		Reset();
 		SceneManager.LoadScene ("Menu");
-		gameover = false;
-		level = 1;
 	}
 
 	void Update () {
@@ -150,8 +159,6 @@ public class Main : MonoBehaviour{
 			} else if (gameover == true) {
 				GameOver ();
 			}
-		} else {
-			GameOver ();
-		} 
+		}
 	}
 }
