@@ -20,7 +20,7 @@ public class GridDecorate{
 	public void DrawLines(List<GameObject> patternCubeObject){
 		LineRenderer ln;
 		for (int i = 0; i < patternCubeObject.Count; i++) {
-			// last gameobject doesn't have any more gameobjects to draw line into so i runes only till second last
+			// last gameobject doesn't have any more gameobjects to draw line into so i runs only till second last
 			if (i != patternCubeObject.Count - 1) {
 				GameObject g1 = patternCubeObject [i];
 				GameObject g2 = patternCubeObject [i + 1];
@@ -29,7 +29,15 @@ public class GridDecorate{
 				} else {
 					ln = g1.AddComponent<LineRenderer> ();
 				}
-				g1.GetComponent<SpriteRenderer> ().material.color = Color.black;
+
+				if (i == 0)
+				{
+					g1.GetComponent<SpriteRenderer> ().material.color = Color.red;
+				}
+				else{
+					g1.GetComponent<SpriteRenderer> ().material.color = Color.black;
+					
+				}
 				g2.GetComponent<SpriteRenderer> ().material.color = Color.black;
 				ln.SetPosition (0, g1.transform.position);
 				ln.SetPosition (1, g2.transform.position);

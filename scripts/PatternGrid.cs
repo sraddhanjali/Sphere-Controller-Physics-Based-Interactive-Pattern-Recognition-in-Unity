@@ -25,7 +25,7 @@ class PatternGrid{
 		{7, new List<List<int>>{ new List<int>{1, 2, 3, 5, 9, 11}, new List<int>{4, 8, 9, 12, 15}, new List<int>{7, 8, 4} } },
 		{8, new List<List<int>>{ new List<int>{4, 11, 14}, new List<int>{9, 6, 5, 12, 14, 17}, new List<int>{1, 8, 10, 13} } },
 		{9, new List<List<int>>{ new List<int>{2, 9, 11}, new List<int>{6, 8, 15}, new List<int>{4, 7, 10, 17} } }
-	}; 
+	};
 
 	/* second grid */
 	public void CreateNumCubeMap(){ // mapping of second grid in the scheme of 9X3 grid
@@ -134,7 +134,8 @@ class PatternGrid{
 		return GetPatternGameobjects (combinedGrid);
 	}
 
-	public List<List<int>> SamplePatterns(){
+	public List<List<int>> SamplePatterns()
+	{
 		/*
 		List<List<int>> combinedGridList1 = new List<List<int>> () {
 			new List<int>() {4, 8, 6, 7, 10, 13, 14, 11},
@@ -206,7 +207,7 @@ class PatternGrid{
 		return combinedGridList5;*/
 
 		/*all common patterns*/
-		List<List<int>> combinedGridList5 = new List<List<int>>(){
+		/*List<List<int>> combinedGridList5 = new List<List<int>>(){
 			new List<int>() {pattern[3], pattern[2], pattern[5], pattern[8], pattern[7]}, // label a 32587
 			new List<int>() {pattern[1], pattern[4], pattern[5], pattern[6], pattern[9]}, // b
 			new List<int>() {pattern[1], pattern[4], pattern[7], pattern[8], pattern[9]}, // c
@@ -217,28 +218,57 @@ class PatternGrid{
 			new List<int>() {pattern[1],pattern[5],pattern[4],pattern[2]},
 			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[5],pattern[9]},
 			new List<int>() {pattern[1],pattern[4],pattern[7],pattern[5],pattern[3],pattern[6],pattern[9]},
-			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[5],pattern[9],pattern[6],pattern[3]},
-			new List<int>() {pattern[1],pattern[2],pattern[3],pattern[5],pattern[7]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[5],pattern[9],pattern[6],pattern[3]}, //k
+			new List<int>() {pattern[1],pattern[2],pattern[3],pattern[5],pattern[7]}, 
 			new List<int>() {pattern[3],pattern[2],pattern[1],pattern[4],pattern[7],pattern[8],pattern[9]},
 			new List<int>() {pattern[1],pattern[2],pattern[3],pattern[6],pattern[9],pattern[8],pattern[7]},
 			new List<int>() {pattern[3],pattern[2],pattern[1],pattern[4],pattern[7],pattern[8],pattern[9],pattern[6],pattern[5]},
-			new List<int>() {pattern[3],pattern[2],pattern[1],pattern[5],pattern[9],pattern[8],pattern[7]},
+			new List<int>() {pattern[3],pattern[2],pattern[1],pattern[5],pattern[9],pattern[8],pattern[7]}, 
 			new List<int>() {pattern[1],pattern[4],pattern[7],pattern[5],pattern[9],pattern[6],pattern[3]},
-			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[5],pattern[9],pattern[6],pattern[3]},
+			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[5],pattern[9],pattern[6],pattern[3]}, //r
 			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[5],pattern[3],pattern[6],pattern[9]},
 			new List<int>() {pattern[9],pattern[8],pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6],pattern[5]},
 			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6],pattern[9],pattern[8],pattern[5]},
 			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6],pattern[9]},
-			new List<int>() {pattern[1],pattern[4],pattern[8],pattern[6],pattern[3]},
+			new List<int>() {pattern[1],pattern[4],pattern[8],pattern[6],pattern[3]}, // r
 			new List<int>() {pattern[1],pattern[4],pattern[2],pattern[5],pattern[1]},
 			new List<int>() {pattern[7],pattern[4],pattern[1],pattern[2],pattern[3],pattern[6], pattern[5]},
 		};
-		return combinedGridList5;
-
+		return combinedGridList5;*/
+		List<List<int>> combinedGridList6 = new List<List<int>>()
+		{
+			new List<int>() {1, 4, 5, 6, 9, 12, 11, 14, 17, 16}, //a
+			new List<int>() {3, 2, 5, 8, 7, 10, 13, 14, 15, 18}, //b 
+			new List<int>() {3, 2, 5, 8, 7, 10, 13, 16, 17, 18}, //c
+			new List<int>() {1, 4, 5, 6, 9, 12, 11, 10, 13, 14, 15, 18, 17, 16}, //d
+			new List<int>() {3, 2, 5, 8, 7, 10, 13, 16, 17, 18, 15, 12}, //e
+			new List<int>() {3, 2, 5, 8, 7, 10, 11, 12, 14, 16, 17, 18}, //f
+			new List<int>() {1, 4, 5, 6, 9, 12, 14, 15, 17}, //g
+			new List<int>() {3, 2, 5, 8, 7, 10, 14, 13, 11}, //h
+			new List<int>() {7, 4, 1, 2, 3, 5, 9, 12, 11, 14, 17, 16}, //i
+			new List<int>() {1, 4, 7, 5, 3, 6, 9, 12, 11, 10, 13, 14, 15, 18, 17, 16}, //j
+			new List<int>() {16, 13, 10, 14, 18, 15, 12, 9, 6, 5, 4, 1}, //k
+			new List<int>() {3, 2, 5, 8, 7, 10, 11, 12, 14, 16}, //l
+			new List<int>() {1, 4, 5, 6, 9, 12, 11, 10, 13, 16, 17, 18}, //m
+			new List<int>() {3, 2, 5, 8, 7, 10, 11, 12, 15, 18, 17, 16	}, //n
+			new List<int>() {1, 4, 5, 6, 9, 12, 11, 10, 13, 16, 17, 18, 15, 14}, //o
+			new List<int>() {1, 4, 5, 6, 9, 12, 11, 10, 14, 18, 17, 16}, //p
+			new List<int>() {1, 2, 3, 6, 9, 8, 7, 10, 13, 16, 14, 18, 15, 12}, //q
+			new List<int>() {2, 4, 5, 7, 10, 11, 12, 14, 16}, //r
+			new List<int>() {7, 4, 1, 5, 3, 6, 9, 12, 11, 10, 14, 18, 17, 16}, //s
+			new List<int>() {16, 17, 18, 14, 10, 11, 12, 9, 8, 7, 4, 1, 2, 3, 6, 5}, //t
+			new List<int>() {12, 15, 18, 14, 16, 13, 10, 7, 4, 1, 2, 3, 6, 5}, //u
+			new List<int>() {7, 4, 1, 2, 3, 6, 9, 12, 14, 15, 17}, //v
+			new List<int>() {2, 4, 5, 7, 10, 13, 17, 15, 12}, //w
+			new List<int>() {1, 2, 3, 5, 7, 10, 13, 11, 14, 10}, //x
+			new List<int>() {12, 15, 18, 14, 16, 13, 10, 7, 4, 1, 2, 3, 6, 5}, //y
+		};
+		return combinedGridList6;
 	}
 
 	public List<GameObject> GetSimplePatterns(){
 		
+		// 25 patterns
 		List<List<int>> combinedGridList = SamplePatterns ();
 		/* get random pattern from list of patterns
 		List<int> combinedGrid = combinedGridList[UnityEngine.Random.Range(0, combinedGridList.Count)];

@@ -10,7 +10,7 @@ public class Main : MonoBehaviour{
 	public Sprite[] sprites;
 	List<GameObject> go;
 
-	public static int repetition = 20;
+	public static int repetition = 40;
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static string currLabel = "a";
@@ -28,11 +28,14 @@ public class Main : MonoBehaviour{
 	public static int won = 0;
 	public static bool done = false;
 	public static bool increaseLevel = false;
+	public static bool top = false;
 	public static string allPath;
 	public static string pattPath;
 	public static int playerPoints = 0;
 	List<string> labels = new List<string> (){ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
-
+	List<string> topLabels = new List<string>(){"i", "r", "s", "t", "u", "v", "y"};
+	List<string> bottomLabels = new List<string>(){"a", "b", "c", "d", "e", "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "w", "x"}; 
+	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
 		if (gameover == false && done == false) {
@@ -52,7 +55,6 @@ public class Main : MonoBehaviour{
 	void DecorateCube(List<GameObject> patternCubeObject){
 		gd.DrawLines (patternCubeObject);
 		/*StartCoroutine (gd.RemoveLines(patternCubeObject));*/
-		//
 	}
 
 	void InitSetup(){
@@ -83,7 +85,6 @@ public class Main : MonoBehaviour{
 		string f2 = string.Format("labels.csv");
 		allPath = filePath + "/" + f1;
 		pattPath = filePath + "/" + f2;
-		//
 	}
 
 	void Awake(){
@@ -112,6 +113,13 @@ public class Main : MonoBehaviour{
 		if (level % repetition == 0 && level != 0) {
 			patternIndex += 1;
 			currLabel = labels [patternIndex];
+			if (topLabels.Contains(currLabel))
+			{
+				top = true;
+			} else if (bottomLabels.Contains(currLabel))
+			{
+				top = false;
+			}
 		}
 		/*
 		Debug.Log (currLabel);

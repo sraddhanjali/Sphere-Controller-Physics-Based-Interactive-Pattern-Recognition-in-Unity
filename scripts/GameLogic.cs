@@ -35,7 +35,12 @@ public class GameLogic{
 		string l = Main.currLabel.ToString ();
 		string csv = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", Main.level.ToString(), l, cn, x, y, z, ts);
 		//Debug.Log (csv);
-		File.AppendAllText (path, csv);
+		if (Main.top){
+			if(currentCube <= 9){File.AppendAllText (path, csv);}
+		} else if (!Main.top){
+			if(currentCube > 9){File.AppendAllText (path, csv);}
+		}
+		
 	}
 
 	public void TouchLogic(){
@@ -43,15 +48,13 @@ public class GameLogic{
 
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
-			/*
-			Vector3 pos = Camera.main.ViewportToWorldPoint(touch.position);
-			*/
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 			pos.z = -1;
 			/* PRINTING */
-			if (correctSwipe == false) {
+			/*if (correctSwipe == false) {
 				SaveToFile (Main.allPath, currentSelPattern [0], pos);			
-			}
+			}*/
+			
 			if (oldCube != 0) {
 				SaveToFile (Main.allPath, oldCube, pos);
 				UnityEngine.Debug.Log (oldCube.ToString ());
@@ -99,6 +102,7 @@ public class GameLogic{
 				//gd.ChangePathsColors (currentPatternList);
 				PlayerPointsLogic (t);
 				currentPaths.Clear ();
+				oldCube = 0;
 				currentSelPattern.Clear ();
 				correctSwipe = false;
 				Main.increaseLevel = true;
