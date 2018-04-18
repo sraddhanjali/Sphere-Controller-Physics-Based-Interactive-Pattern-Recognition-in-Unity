@@ -1,41 +1,74 @@
-﻿using UnityEngine; // vector3
+using UnityEngine; // vector3
 using System; // string
 using System.IO;
 using System.Text;
 using System.Collections.Generic; // list, dictionary
-	
-class Pattern{
-	public enum Difficulty {simple, median, complex};
-//	public Difficulty currentSel; 
-	public List<int> pa = new List<int>();
-	public Dictionary<int, Vector3> coordMap = new Dictionary<int, Vector3>();
-	public Dictionary<int, String> timeMap = new Dictionary<int, String>();
 
-	public static String GetTimestamp(DateTime value) {
-		return value.ToString("yyyyMMddHHmmssffff");
-	}
+public class Pattern
+{
+    private List<int> main;
+    private List<List<int>> bogus;
+    private List<int> obstacle;
+    private int pattLen;
+    private string pattName;
 
-	public void SetPattern(int singleP){
-		pa.Add (singleP);
-	}
+    private bool mainP;
+    private bool bogusP;
+    private bool obstacleP;
+    public enum PattType {ma, bo, ob};
 
-	public void SetCoordinates(int singleP, Vector3 coord){
-		coordMap.Add (singleP, coord);
-	}
+    public bool toTrack = false;
 
-	public void SetTimestamp(int singleP, DateTime t){
-		timeMap.Add (singleP, GetTimestamp (t));
-	}	
+    private PattType p;
 
-	public List<int> GetPattern(){
-		return pa;
-	}
+    public Pattern(){
+        this.mainP = false;
+        this.bogusP = false;
+        this.obstacleP = false;
+        this.main = new List<int>();
+        this.bogus = new List<List<int>>();
+        this.obstacle = new List<int>();
+    }
+    
+    public void AddPattern(List<int> patt, bool track){
+        this.mainP = true;
+        this.toTrack = track;
+        this.p = PattType.ma;
+        this.main = patt;
+        this.setLength(this.main);
+        this.pattName = "main pattern";
+    }
 
-	public Dictionary<int, Vector3> GetCoordinates(){
-		return coordMap;
-	}
+    public void AddPattern(List<List<int>> bog){
+        this.bogusP = true;
+        this.p = PattType.bo;
+        this.bogus = bog;
+        this.setLength(this.bogus);
+        this.pattName = "bogus";
+    }
 
-	public Dictionary<int, String> GetTimestamp(){
-		return timeMap;
-	}
-}
+    public void AddPattern(List<int> obs){
+        this.obstacleP = true;
+        this.p = PattType.ob;
+        this.obstacle = obs;
+        this.setLength(this.obstacle);
+        this.pattName = "obstacle";
+    }
+
+    public void setLength<T> (List<T> o){
+        this.pattLen = o.Count;
+    }
+
+    public int getLength(){
+        return this.pattLen;
+    }
+    
+    public string getPatternString(){
+        return string.Format("**** PatternName: {0}", this.pattName);
+    }
+
+    public PattType getType()
+    {
+        return this.p;
+    }
+}    
