@@ -17,14 +17,6 @@ public class GameLogic{
 	Stopwatch sw = new Stopwatch ();
 
 
-	public void SetCurrentPattern(List<int> curr){
-		currentSelPattern = curr;
-	}
-
-	public List<int> GetCurrentPattern(){
-		return currentSelPattern;
-	}
-
 	void SaveToFile(string path, int currentCube, Vector3 pos){
 		string cn = currentCube.ToString ();
 		pos = Camera.main.WorldToScreenPoint(pos);
@@ -34,26 +26,16 @@ public class GameLogic{
 		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 		string l = Main.currLabel.ToString ();
 		string csv = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", Main.level.ToString(), l, cn, x, y, z, ts);
-		//Debug.Log (csv);
-		if (Main.top){
-			if(currentCube <= 9){File.AppendAllText (path, csv);}
-		} else if (!Main.top){
-			if(currentCube > 9){File.AppendAllText (path, csv);}
-		}
-		
+		File.AppendAllText (path, csv);
 	}
 
-	public void TouchLogic(){
+	public void TouchLogic(Board b){
 		int currentCube;
 
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 			pos.z = -1;
-			/* PRINTING */
-			/*if (correctSwipe == false) {
-				SaveToFile (Main.allPath, currentSelPattern [0], pos);			
-			}*/
 			
 			if (oldCube != 0) {
 				SaveToFile (Main.allPath, oldCube, pos);
@@ -96,7 +78,6 @@ public class GameLogic{
 			currentPaths.Add (currentCube);
 			sw.Start ();
 			a.GetComponent<Renderer> ().material.color = Color.red;	
-			//chop.Play ();
 			//Debug.Log ("Current cube added:" + currentCube);
 			if (h.CheckEqual (currentSelPattern, currentPaths)) {
 				//gd.ChangePathsColors (currentPatternList);
@@ -108,6 +89,7 @@ public class GameLogic{
 				Main.increaseLevel = true;
 				Main.won += 1;
 				//Debug.Log ("DONEEEEE!!!");
+				chop.Play ();
 				UnityEngine.Debug.Log ("DONE!");
 				sw.Stop ();
 				PrintTime ();

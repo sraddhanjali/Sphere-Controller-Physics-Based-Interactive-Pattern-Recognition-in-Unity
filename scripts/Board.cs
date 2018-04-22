@@ -3,37 +3,28 @@ using System; // string
 using System.IO;
 using System.Text;
 using System.Collections.Generic; // list, dictionary
-	
-public class Board
-{
-	private List<Pattern> patterns;
-	private string pattName;
 
-	public int trackingIndex;
-	public int matchingIndex;
-
-	private int pipeCount;
+public class Board{
+	List<Pattern> patterns = new List<Pattern>();
+	List<Obstacle> obstacles = new List<Obstacle>();
+	private int trackingIndex;
+	private int matchingIndex;
 
 	public Board(){
-		this.patterns = new List<Pattern>();
-		this.trackingIndex = 0;
-		this.matchingIndex = 0;
+		trackingIndex = 0;
+		matchingIndex = 0;
 	}
 
-	public void AddPattern(Pattern n){
-		this.patterns.Add(n);
-		this.pipeCount += 1;
+	public void AddPattern(Pattern pattern){
+		this.patterns.Add(pattern);
 	}
 
-	public void AddPatternName(string name){
-		this.pattName = name;
+	public void AddObstacle(Obstacle obstacle){
+		this.obstacles.Add(obstacle);
 	}
 
-	public int getPipeCount(){
-		return this.pipeCount;
+	public List<Pattern> GetPatterns(){
+		return this.patterns;
 	}
 	
-	public string getBoardString(){
-		return string.Format("*** Board name: {0}", this.pattName);
-	}
 }
