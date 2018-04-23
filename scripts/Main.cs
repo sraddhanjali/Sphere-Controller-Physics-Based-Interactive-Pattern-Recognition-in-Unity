@@ -8,7 +8,7 @@ public class Main : MonoBehaviour{
 
 	public Shader shader1;
 	public Sprite[] sprites;
-	public static int repetition = 2;
+	public static int repetition = 1;
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static string currLabel = "a";
@@ -85,7 +85,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void ClearBoard(){
-cd		gd.Remove(GetPattern());
+		gd.Remove(GetPattern());
 	}
 
 	void SetBoardLevel(){
@@ -97,8 +97,8 @@ cd		gd.Remove(GetPattern());
 
 	IEnumerator NextBoard(){
 		increaseLevel = false;
-		ClearBoard ();	
 		yield return new WaitForSeconds (1.5f);
+		ClearBoard ();	
 		level += 1;
 		SetBoardLevel ();
 		InitBoard ();

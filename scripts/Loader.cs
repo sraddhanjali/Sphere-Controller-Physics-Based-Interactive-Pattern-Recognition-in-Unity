@@ -33,7 +33,7 @@ public class Loader{
 				lenSplit2 = pattern.Length;
 				for (int k = 0; k < lenSplit2; k++){
 					cubeNumber = pattern[k];
-					Debug.Log(cubeNumber);
+					//Debug.Log(cubeNumber);
 					p.Add(GameObject.Find(String.Format("{0}", cubeNumber)));
 				}
 				if (lenSplit2 != 1){

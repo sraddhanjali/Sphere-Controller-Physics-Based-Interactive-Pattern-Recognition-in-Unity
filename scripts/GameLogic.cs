@@ -7,15 +7,6 @@ using System.Collections.Generic;
 
 public class GameLogic{
 	public AudioSource chop;
-	public bool correctSwipe = false;
-	public int oldCube = 0;
-	Helper h = new Helper();
-	private static float timeLeft = 10.0f;
-	public GridDecorate gd = new GridDecorate();
-	List<int> currentPaths = new List<int>();
-	List<int> currentSelPattern = new List<int>();
-	Stopwatch sw = new Stopwatch ();
-
 
 	void SaveToFile(string path, int currentCube, Vector3 pos){
 		string cn = currentCube.ToString ();
@@ -31,72 +22,36 @@ public class GameLogic{
 
 	public void TouchLogic(Board b){
 		int currentCube;
-
+		
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 			pos.z = -1;
 			
-			if (oldCube != 0) {
-				SaveToFile (Main.allPath, oldCube, pos);
-				UnityEngine.Debug.Log (oldCube.ToString ());
-			}
 			Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
-			foreach (Collider2D c2 in currentFrame) {
-				currentCube = int.Parse (c2.name);
-				/* save each touch to file*/
-				SaveToFile (Main.allPath, currentCube, pos);
-				SwipeCube(currentCube, pos);
+			foreach (Collider2D c2 in currentFrame)
+			{
+				GameObject go = c2.gameObject;
+
+				if (b.match){
+					b.StartMatching(go);
+				}
+				else{
+					if (b.SetPatternToMatchInBoard(go)){
+						UnityEngine.Debug.Log("first endpoint matched");
+					}
+				}
+				if (b.track){
+					currentCube = int.Parse (c2.name);
+					SaveToFile (Main.allPath, currentCube, pos);	
+				}
+
+				if (b.AllMatched()){
+					Main.increaseLevel = true;
+				}
 			}
 		}
 	}	
-
-	void PrintTime(){
-		// Get the elapsed time as a TimeSpan value.
-		TimeSpan ts = sw.Elapsed;
-
-		// Format and display the TimeSpan value.
-		string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-		UnityEngine.Debug.Log("RunTime " + elapsedTime);
-	}
-
-	void SwipeCube(int currentCube, Vector3 pos){
-		int t = (int)timeLeft;
-		int currentPathSize = currentPaths.Count;
-		//Debug.Log (currentCube);
-		GameObject a = GameObject.Find (currentCube.ToString ());
-
-		if (currentCube == currentSelPattern [currentPathSize]) {
-			correctSwipe = true;
-			oldCube = currentCube;
-			UnityEngine.Debug.Log (currentCube.ToString ());
-			//Console.WriteLine (currentCube.ToString ());
-			/* save exact pattern cube data to file*/
-			//SaveToFile (Main.pattPath, currentCube, pos);
-
-			//Debug.Log ("here");
-			currentPaths.Add (currentCube);
-			sw.Start ();
-			a.GetComponent<Renderer> ().material.color = Color.red;	
-			//Debug.Log ("Current cube added:" + currentCube);
-			if (h.CheckEqual (currentSelPattern, currentPaths)) {
-				//gd.ChangePathsColors (currentPatternList);
-				PlayerPointsLogic (t);
-				currentPaths.Clear ();
-				oldCube = 0;
-				currentSelPattern.Clear ();
-				correctSwipe = false;
-				Main.increaseLevel = true;
-				Main.won += 1;
-				//Debug.Log ("DONEEEEE!!!");
-				chop.Play ();
-				UnityEngine.Debug.Log ("DONE!");
-				sw.Stop ();
-				PrintTime ();
-				sw.Reset ();
-			} 
-		}
-	}
 
 	void PlayerPointsLogic(int left){
 		if (left >= 7){

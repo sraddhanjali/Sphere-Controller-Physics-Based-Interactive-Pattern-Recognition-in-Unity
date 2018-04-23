@@ -70,10 +70,4 @@ public class GridDecorate{
 			}
 		}
 	}
-
-	void ChangePathsColors(List<int> paths, List<GameObject> go){
-		for (int m = 0; m < paths.Count; m++){
-			go[paths[m]].gameObject.GetComponent<Renderer>().material.color = Color.white;
-		}
-	}
 }
