@@ -7,13 +7,12 @@ using UnityEngine.SceneManagement;
 public class Main : MonoBehaviour{
 
 	public Shader shader1;
-	public Sprite[] sprites;
+	public static Sprite[] sprites;
 	public static int repetition = 1;
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static string currLabel = "a";
 	public static int patternIndex = 0;
-	public static float timeLeft = 15.0f;
 
 	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
@@ -35,7 +34,7 @@ public class Main : MonoBehaviour{
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
 		if (gameover == false && done == false) {
-			GUILayout.Label ("\n Level: " + level + "\n Time:" + (int)timeLeft + "\n Points:" + playerPoints, guiStyle);
+			GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
 		} else if(done == true){
 			GUILayout.Label ("Won", guiStyle);
 		} else {
@@ -57,7 +56,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void Awake(){
-		//LoadSprites();
+		LoadSprites();
 		SaveFile();
 	}
 
@@ -65,8 +64,7 @@ public class Main : MonoBehaviour{
 		totalRepetition = repetition * labels.Count;
 	}
 
-	Board GetPattern()
-	{
+	Board GetBoard(){
 		return boardList[patternIndex];
 	}
 
@@ -80,12 +78,12 @@ public class Main : MonoBehaviour{
 	
 	void InitBoard(){
 		settingGame = true;
-		gd.Draw(GetPattern());
+		gd.Draw(GetBoard());
 		settingGame = false;
 	}
 
 	void ClearBoard(){
-		gd.Remove(GetPattern());
+		gd.Remove(GetBoard());
 	}
 
 	void SetBoardLevel(){
@@ -102,11 +100,9 @@ public class Main : MonoBehaviour{
 		level += 1;
 		SetBoardLevel ();
 		InitBoard ();
-		timeLeft = 15.0f;
 	}
 
 	void Reset(){
-		timeLeft = 0;
 		gameover = false;
 		level = 0;
 		Main.increaseLevel = false;
@@ -126,8 +122,7 @@ public class Main : MonoBehaviour{
 					if (increaseLevel) {
 						StartCoroutine (NextBoard ());
 					}
-					gl.TouchLogic (GetPattern());
-					timeLeft -= Time.deltaTime;
+					gl.TouchLogic (GetBoard());
 				}
 			} else if (gameover == true) {
 				GameOver ();

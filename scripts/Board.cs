@@ -31,10 +31,13 @@ public class Board{
 		return this.patterns;
 	}
 
+	public List<Obstacle> GetObstacles(){
+		return this.obstacles;
+	}
+
 	public void ClearVariableState(){
 		this.counter = 0;
 		this.match = false;
-		this.track = false;
 		this.matchingIndex = 0;
 	}
 
@@ -46,7 +49,6 @@ public class Board{
 	{
 		if (this.matchedCount == this.GetCurrentPatternSize()){
 			this.matchedCount = 0;
-			this.ClearVariableState();
 			return true;
 		}
 		else{
@@ -60,8 +62,8 @@ public class Board{
 			go.GetComponent<Renderer> ().material.color = Color.red;
 			if (patternGO[counter] == patternGO[patternGO.Count - 1]){
 				Debug.Log("Last endpoint matched" + patternGO[counter] + go.name);
-				this.matchedCount += 1;
 				this.ClearVariableState();
+				this.matchedCount += 1;
 			}
 			else{
 				Debug.Log("matched");

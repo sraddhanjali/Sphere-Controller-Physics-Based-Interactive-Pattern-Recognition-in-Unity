@@ -43,28 +43,16 @@ public class GameLogic{
 				}
 				if (b.track){
 					currentCube = int.Parse (c2.name);
+					UnityEngine.Debug.Log("writing to file");
 					SaveToFile (Main.allPath, currentCube, pos);	
 				}
 
 				if (b.AllMatched()){
 					Main.increaseLevel = true;
+					b.ClearVariableState();
+					Main.playerPoints += 100;
 				}
 			}
 		}
 	}	
-
-	void PlayerPointsLogic(int left){
-		if (left >= 7){
-			Main.playerPoints += 50;
-		}
-		else if (left >= 4){
-			Main.playerPoints  += 25;
-		}
-		else if (left > 0){
-			Main.playerPoints  += 10;
-		}
-		else if (left <= 0){
-			Main.gameover = true;
-		}
-	}
 }

@@ -22,6 +22,11 @@ public class GridDecorate{
 		for (int i = 0; i < pattern.Count; i++){
 			this.DrawLines(pattern[i].sequence);
 		}
+		List<Obstacle> obstacle = board.GetObstacles();
+		for (int i = 0; i < obstacle.Count; i++){
+			GameObject g1 = obstacle[i].gameObject;
+			g1.GetComponent<SpriteRenderer>().material.color = Color.green;
+		}
 	}
 
 	public void DrawLines(List<GameObject> gameObject){
@@ -55,6 +60,11 @@ public class GridDecorate{
 		List<Pattern> pattern = board.GetPatterns();
 		for (int i = 0; i < pattern.Count; i++){
 			this.RemoveLines(pattern[i].sequence);
+		}
+		List<Obstacle> obstacle = board.GetObstacles();
+		for (int i = 0; i < obstacle.Count; i++){
+			GameObject g1 = obstacle[i].gameObject;
+			g1.GetComponent<SpriteRenderer>().material.color = Color.black;
 		}
 	}
 	
