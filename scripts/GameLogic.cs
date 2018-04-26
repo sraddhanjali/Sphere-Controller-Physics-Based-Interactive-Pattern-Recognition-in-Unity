@@ -8,20 +8,7 @@ using System.Collections.Generic;
 public class GameLogic{
 	public AudioSource chop;
 
-	void SaveToFile(string path, int currentCube, Vector3 pos){
-		string cn = currentCube.ToString ();
-		pos = Camera.main.WorldToScreenPoint(pos);
-		string x = pos.x.ToString ();
-		string y = pos.y.ToString ();
-		string z = pos.z.ToString ();
-		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-		string l = Main.currLabel.ToString ();
-		string csv = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", Main.level.ToString(), l, cn, x, y, z, ts);
-		File.AppendAllText (path, csv);
-	}
-
 	public void TouchLogic(Board b){
-		int currentCube;
 		
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
@@ -32,24 +19,18 @@ public class GameLogic{
 			foreach (Collider2D c2 in currentFrame)
 			{
 				GameObject go = c2.gameObject;
-
 				if (b.match){
-					b.StartMatching(go);
+					b.StartMatching(go, pos);
 				}
+				
 				else{
-					if (b.SetPatternToMatchInBoard(go)){
+					if (b.SetPatternToMatchInBoard(go, pos)){
 						UnityEngine.Debug.Log("first endpoint matched");
 					}
-				}
-				if (b.track){
-					currentCube = int.Parse (c2.name);
-					UnityEngine.Debug.Log("writing to file");
-					SaveToFile (Main.allPath, currentCube, pos);	
 				}
 
 				if (b.AllMatched()){
 					Main.increaseLevel = true;
-					b.ClearVariableState();
 					Main.playerPoints += 100;
 				}
 			}

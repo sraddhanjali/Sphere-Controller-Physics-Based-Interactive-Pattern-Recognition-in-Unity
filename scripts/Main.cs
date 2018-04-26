@@ -11,7 +11,6 @@ public class Main : MonoBehaviour{
 	public static int repetition = 1;
 	public int totalRepetition = 0;
 	public static int level = 0;
-	public static string currLabel = "a";
 	public static int patternIndex = 0;
 
 	GridDecorate gd = new GridDecorate();
@@ -29,7 +28,8 @@ public class Main : MonoBehaviour{
 	public static string allPath;
 	public static string pattPath;
 	public static int playerPoints = 0;
-	private List<string> labels = new List<string>(); 
+	private List<string> labels = new List<string>();
+	private List<string> currBoardLabels = new List<string>();
 	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
@@ -68,17 +68,26 @@ public class Main : MonoBehaviour{
 		return boardList[patternIndex];
 	}
 
+	void PrintList(List<string> obj){
+		for (int i = 0; i < obj.Count; i++){
+			Debug.Log(obj[i]);
+		}
+	}
+
 	void Start(){
 		boardList = loader.ReadFileTest();
 		labels = loader.GetLabels();
-		InitBoard ();
+		//PrintList(labels);
+		StartCoroutine(InitBoard ());
 		SetTotalRepetition ();
 		SetBoardLevel ();
 	}
 	
-	void InitBoard(){
+	IEnumerator InitBoard(){
 		settingGame = true;
-		gd.Draw(GetBoard());
+		StartCoroutine(gd.Draw(GetBoard()));
+		yield return new WaitForSeconds(5.0f);
+		gd.Remove(GetBoard());
 		settingGame = false;
 	}
 
@@ -90,7 +99,7 @@ public class Main : MonoBehaviour{
 		if (level % repetition == 0 && level != 0) {
 			patternIndex += 1;
 		}
-		currLabel = labels [patternIndex];
+		currBoardLabels.AddRange(GetBoard().GetLabels());
 	}
 
 	IEnumerator NextBoard(){
@@ -99,7 +108,7 @@ public class Main : MonoBehaviour{
 		ClearBoard ();	
 		level += 1;
 		SetBoardLevel ();
-		InitBoard ();
+		StartCoroutine(InitBoard ());
 	}
 
 	void Reset(){
@@ -124,7 +133,7 @@ public class Main : MonoBehaviour{
 					}
 					gl.TouchLogic (GetBoard());
 				}
-			} else if (gameover == true) {
+			} else{
 				GameOver ();
 			}
 		}

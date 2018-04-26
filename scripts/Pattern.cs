@@ -20,7 +20,7 @@ public class Pattern{
         return this.sequence.Count;
     }
 
-    public override string ToString(){
+    public string getName(){
         return this.name;
     }
 }    

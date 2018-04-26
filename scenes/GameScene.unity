@@ -455,7 +455,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader1: {fileID: 0}
-  sprites: []
   totalRepetition: 0
 --- !u!82 &1414527999
 AudioSource:
