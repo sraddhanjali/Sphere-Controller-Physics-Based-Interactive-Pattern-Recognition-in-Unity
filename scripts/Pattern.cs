@@ -1,41 +1,26 @@
-﻿using UnityEngine; // vector3
+using UnityEngine;
 using System; // string
 using System.IO;
 using System.Text;
 using System.Collections.Generic; // list, dictionary
-	
-class Pattern{
-	public enum Difficulty {simple, median, complex};
-//	public Difficulty currentSel; 
-	public List<int> pa = new List<int>();
-	public Dictionary<int, Vector3> coordMap = new Dictionary<int, Vector3>();
-	public Dictionary<int, String> timeMap = new Dictionary<int, String>();
 
-	public static String GetTimestamp(DateTime value) {
-		return value.ToString("yyyyMMddHHmmssffff");
-	}
+public class Pattern{
+    public List<GameObject> sequence { get; private set; }
+    public int Length = 0;
 
-	public void SetPattern(int singleP){
-		pa.Add (singleP);
-	}
+    public string name { get; private set; }
 
-	public void SetCoordinates(int singleP, Vector3 coord){
-		coordMap.Add (singleP, coord);
-	}
+    public Pattern(List<GameObject> sequence, string name){
+        this.sequence = sequence;
+        this.Length = sequence.Count;
+        this.name = name;
+    }
 
-	public void SetTimestamp(int singleP, DateTime t){
-		timeMap.Add (singleP, GetTimestamp (t));
-	}	
+    public int getLength(){
+        return this.sequence.Count;
+    }
 
-	public List<int> GetPattern(){
-		return pa;
-	}
-
-	public Dictionary<int, Vector3> GetCoordinates(){
-		return coordMap;
-	}
-
-	public Dictionary<int, String> GetTimestamp(){
-		return timeMap;
-	}
-}
+    public string getName(){
+        return this.name;
+    }
+}    

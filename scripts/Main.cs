@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -7,34 +7,38 @@ using UnityEngine.SceneManagement;
 public class Main : MonoBehaviour{
 
 	public Shader shader1;
-	public Sprite[] sprites;
-	List<GameObject> go;
-
+	public static Sprite[] sprites;
+	public static int repetition = 1;
+	public int totalRepetition = 0;
 	public static int level = 0;
-	public static string currLabel = "a";
 	public static int patternIndex = 0;
-	public static float timeLeft = 10.0f;
 
-	PatternGrid pg = new PatternGrid();
 	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
 	GUIStyle guiStyle = new GUIStyle();
-
-	/* game state variables */
+	List<Board> boardList = new List<Board>();
+	Loader loader = new Loader();
+	
 	private bool settingGame = false;
 	public static bool gameover = false;
+	public static int won = 0;
+	public static bool done = false;
 	public static bool increaseLevel = false;
+	public static bool top = false;
 	public static string allPath;
 	public static string pattPath;
 	public static int playerPoints = 0;
-	List<string> labels = new List<string>(){ "a", "b", "c", "d", "e" };
-
+	private List<string> labels = new List<string>();
+	private List<string> currBoardLabels = new List<string>();
+	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
-		if (gameover == false) {
-			GUILayout.Label ("\n Level: " + level+ "\n Time:" + (int)timeLeft + "\n Points:" + playerPoints, guiStyle);
+		if (gameover == false && done == false) {
+			GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
+		} else if(done == true){
+			GUILayout.Label ("Won", guiStyle);
 		} else {
-			GUILayout.Label ("GameOver", guiStyle);
+			GUILayout.Label ("Game Over", guiStyle);
 		}
 	}
 
@@ -43,102 +47,95 @@ public class Main : MonoBehaviour{
 		shader1 = Shader.Find ("Outlined/Silhouetted Diffuse");
 	}
 
-	void DecorateCube(List<GameObject> patternCubeObject){
-		gd.DrawLines (patternCubeObject);
-		/*StartCoroutine (gd.RemoveLines(patternCubeObject));*/
-		//
-	}
-
-	void InitSetup(){
-		settingGame = true;
-		/* original
-		go = pg.GetPatterns();
-		*/
-		/* set initial cubes colors */
-		pg.InitialCubesColor();
-		// a sample of simple pattern from paper
-		go = pg.GetSimplePatterns ();
-
-		/* just z pattern */
-		//go = pg.GetZPatterns();
-
-		DecorateCube (go);
-		gl.SetCurrentPattern (pg.GetCurrentSelPattern());
-		settingGame = false;
-
-	}
-
 	void SaveFile(){
-		///*  to save the data
 		string filePath = Application.persistentDataPath;
 		string f1 =  string.Format(@"{0}.csv", Guid.NewGuid());
 		string f2 = string.Format("labels.csv");
 		allPath = filePath + "/" + f1;
 		pattPath = filePath + "/" + f2;
-		//*/
 	}
 
 	void Awake(){
-		LoadSprites ();
-		SaveFile ();
+		LoadSprites();
+		SaveFile();
 	}
 
-	void Start () {
-		InitSetup ();
-		SetLabelLevel ();
+	void SetTotalRepetition(){
+		totalRepetition = repetition * labels.Count;
 	}
 
-	void ClearVariables(){
-		gd.RemoveLines(go);
-		go.Clear ();
+	Board GetBoard(){
+		return boardList[patternIndex];
 	}
 
-	void SetLabelLevel(){
-	/* level setup work */
-		if (level % 100 == 0 && level != 0) {
-			patternIndex += 1;
-			currLabel = labels [patternIndex];
+	void PrintList(List<string> obj){
+		for (int i = 0; i < obj.Count; i++){
+			Debug.Log(obj[i]);
 		}
-		/*
-		Debug.Log (currLabel);
-		Debug.Log (level);
-		*/
 	}
 
-	IEnumerator NewLevelWork(){
+	void Start(){
+		boardList = loader.ReadFileTest();
+		labels = loader.GetLabels();
+		//PrintList(labels);
+		StartCoroutine(InitBoard ());
+		SetTotalRepetition ();
+		SetBoardLevel ();
+	}
+	
+	IEnumerator InitBoard(){
+		settingGame = true;
+		StartCoroutine(gd.Draw(GetBoard()));
+		yield return new WaitForSeconds(5.0f);
+		gd.Remove(GetBoard());
+		settingGame = false;
+	}
+
+	void ClearBoard(){
+		gd.Remove(GetBoard());
+	}
+
+	void SetBoardLevel(){
+		if (level % repetition == 0 && level != 0) {
+			patternIndex += 1;
+		}
+		currBoardLabels.AddRange(GetBoard().GetLabels());
+	}
+
+	IEnumerator NextBoard(){
 		increaseLevel = false;
-		ClearVariables ();	
-		yield return new WaitForSeconds (0.8f);
+		yield return new WaitForSeconds (1.5f);
+		ClearBoard ();	
 		level += 1;
-		SetLabelLevel ();
-		InitSetup ();
-		timeLeft = 10.0f;
+		SetBoardLevel ();
+		StartCoroutine(InitBoard ());
+	}
+
+	void Reset(){
+		gameover = false;
+		level = 0;
+		Main.increaseLevel = false;
 	}
 
 	void GameOver(){
-		timeLeft = 0;
+		Reset();
 		SceneManager.LoadScene ("Menu");
-		gameover = false;
-		level = 1;
 	}
 
-	void Update () {
-		if (level <= 500) {
+	void Update(){
+		if (level <= totalRepetition) {
 			if (gameover == false) {
 				if (settingGame) {
 					return;
 				} else {
 					if (increaseLevel) {
-						StartCoroutine (NewLevelWork ());
+						StartCoroutine (NextBoard ());
 					}
-					gl.TouchLogic ();
+					gl.TouchLogic (GetBoard());
 				}
-			} else if (gameover == true) {
+			} else{
 				GameOver ();
 			}
-			timeLeft -= Time.deltaTime;
-		} else {
-			GameOver ();
 		}
 	}
 }
