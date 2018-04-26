@@ -79,25 +79,7 @@ public class Board{
 		return bigChunk;
 	}
 	
-	void SaveToFile(string path, int currentCube, string label, Vector3 pos){
-		string cn = currentCube.ToString ();
-		pos = Camera.main.WorldToScreenPoint(pos);
-		string x = pos.x.ToString ();
-		string y = pos.y.ToString ();
-		string z = pos.z.ToString ();
-		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-		string csv = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", Main.level.ToString(), label, cn, x, y, z, ts);
-		File.AppendAllText (path, csv);
-	}
-
-	public void Save(GameObject go, Vector3 pos){
-		int currentCube = int.Parse (go.name);
-		UnityEngine.Debug.Log("writing to file");
-		UnityEngine.Debug.Log(currentCube);
-		SaveToFile (Main.allPath, currentCube, this.GetCurrentLabel(), pos);
-	}
-
-	public void StartMatching(GameObject go, Vector3 pos){
+	public void StartMatching(GameObject go){
 		List<GameObject> patternGO = this.patterns[this.matchingIndex].sequence;
 		if (GameObject.ReferenceEquals(patternGO[counter], go)){
 			go.GetComponent<SpriteRenderer> ().material.color = Color.red;
@@ -110,11 +92,10 @@ public class Board{
 				Debug.Log("matched");
 				this.counter += 1;
 			}
-			this.Save(go, pos);
 		}
 	}
 
-	public bool SetPatternToMatchInBoard(GameObject go, Vector3 pos){
+	public bool SetPatternToMatchInBoard(GameObject go){
 		for (int i = 0; i < this.patterns.Count; i++){
 			List<GameObject> patternGO = this.patterns[i].sequence;
 			if (GameObject.ReferenceEquals(patternGO[0], go)){
@@ -124,7 +105,6 @@ public class Board{
 				this.matchingIndex = i;
 				go.GetComponent<SpriteRenderer> ().material.color = Color.red;
 				this.counter += 1;
-				Save(go, pos);
 				return true;
 			}
 		}
