@@ -12,7 +12,7 @@ public class AddButtons : MonoBehaviour {
 	int worldHeight  = 3;
 	int cubeNum = 0;
 
-	void  Awake () {
+	void Awake () {
 		CreateWorld ();
 	}
 

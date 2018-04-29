@@ -55,6 +55,6 @@ public class Loader{
 	}
 
 	public List<string> GetLabels(){
-		return this.labels;
+		return labels;
 	}
 }

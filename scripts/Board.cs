@@ -19,44 +19,44 @@ public class Board{
 	}
 
 	public List<string> GetLabels(){
-		return this.labels;
+		return labels;
 	}
 
 	public void AddPattern(Pattern pattern){
-		this.patterns.Add(pattern);
-		this.labels.Add(pattern.getName());
+		patterns.Add(pattern);
+		labels.Add(pattern.getName());
 	}
 
 	public void AddObstacle(Obstacle obstacle){
-		this.obstacles.Add(obstacle);
+		obstacles.Add(obstacle);
 	}
 
 	public List<Pattern> GetPatterns(){
-		return this.patterns;
+		return patterns;
 	}
 
 	public List<Obstacle> GetObstacles(){
-		return this.obstacles;
+		return obstacles;
 	}
 
 	public string GetCurrentLabel(){
-		return this.labels[this.matchingIndex];
+		return labels[matchingIndex];
 	}
 
 	public void ClearVariableState(){
-		this.counter = 0;
-		this.match = false;
-		this.matchingIndex = 0;
+		counter = 0;
+		match = false;
+		matchingIndex = 0;
 	}
 
 	public int GetCurrentPatternSize(){
-		return this.patterns.Count;
+		return patterns.Count;
 	}
 
 	public bool AllMatched(){
-		if (this.matchedCount == this.GetCurrentPatternSize()){
-			this.matchedCount = 0;
-			this.ClearVariableState();
+		if (matchedCount == GetCurrentPatternSize()){
+			matchedCount = 0;
+			ClearVariableState();
 			return true;
 		}
 		else{
@@ -65,8 +65,8 @@ public class Board{
 	}	
 	
 	public List<GameObject> ToDraw(){
-		List<Obstacle> obstacle = this.obstacles;
-		List<Pattern> pattern = this.patterns;
+		List<Obstacle> obstacle = obstacles;
+		List<Pattern> pattern = patterns;
 		List<GameObject> bigChunk = new List<GameObject>();
 		for (int i = 0; i < pattern.Count; i++){
 			bigChunk.AddRange(pattern[i].sequence);
@@ -80,31 +80,31 @@ public class Board{
 	}
 	
 	public void StartMatching(GameObject go){
-		List<GameObject> patternGO = this.patterns[this.matchingIndex].sequence;
+		List<GameObject> patternGO = patterns[matchingIndex].sequence;
 		if (GameObject.ReferenceEquals(patternGO[counter], go)){
 			go.GetComponent<SpriteRenderer> ().material.color = Color.red;
 			if (patternGO[counter] == patternGO[patternGO.Count - 1]){
 				Debug.Log("Last endpoint matched" + patternGO[counter] + go.name);
-				this.ClearVariableState();
-				this.matchedCount += 1;
+				ClearVariableState();
+				matchedCount += 1;
 			}
 			else{
 				Debug.Log("matched");
-				this.counter += 1;
+				counter += 1;
 			}
 		}
 	}
 
 	public bool SetPatternToMatchInBoard(GameObject go){
-		for (int i = 0; i < this.patterns.Count; i++){
-			List<GameObject> patternGO = this.patterns[i].sequence;
+		for (int i = 0; i < patterns.Count; i++){
+			List<GameObject> patternGO = patterns[i].sequence;
 			if (GameObject.ReferenceEquals(patternGO[0], go)){
 				Debug.Log(patternGO[0] + go.name);
-				this.match = true;
+				match = true;
 				Debug.Log("matching init...");	
-				this.matchingIndex = i;
+				matchingIndex = i;
 				go.GetComponent<SpriteRenderer> ().material.color = Color.red;
-				this.counter += 1;
+				counter += 1;
 				return true;
 			}
 		}

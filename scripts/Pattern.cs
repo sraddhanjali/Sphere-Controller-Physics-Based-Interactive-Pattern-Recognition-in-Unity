@@ -2,6 +2,7 @@ using UnityEngine;
 using System; // string
 using System.IO;
 using System.Text;
+using System.Collections;
 using System.Collections.Generic; // list, dictionary
 
 public class Pattern{

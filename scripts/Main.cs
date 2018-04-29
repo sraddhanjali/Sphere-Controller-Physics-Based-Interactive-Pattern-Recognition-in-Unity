@@ -8,7 +8,7 @@ public class Main : MonoBehaviour{
 
 	public Shader shader1;
 	public static Sprite[] sprites;
-	public static int repetition = 1;
+	public static int repetition = 1	;
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static int patternIndex = 0;
@@ -78,7 +78,8 @@ public class Main : MonoBehaviour{
 		boardList = loader.ReadFileTest();
 		labels = loader.GetLabels();
 		//PrintList(labels);
-		StartCoroutine(InitBoard ());
+		//StartCoroutine(InitBoard());
+		SphereController.instance.SetBoard(GetBoard());
 		SetTotalRepetition ();
 		SetBoardLevel ();
 	}
@@ -86,13 +87,13 @@ public class Main : MonoBehaviour{
 	IEnumerator InitBoard(){
 		settingGame = true;
 		StartCoroutine(gd.Draw(GetBoard()));
-		yield return new WaitForSeconds(5.0f);
-		gd.Remove(GetBoard());
+		yield return new WaitForSeconds(2.0f);
+	    StartCoroutine(gd.Remove(GetBoard()));
 		settingGame = false;
 	}
 
 	void ClearBoard(){
-		gd.Remove(GetBoard());
+		gd.Clear(GetBoard());
 	}
 
 	void SetBoardLevel(){
@@ -108,13 +109,14 @@ public class Main : MonoBehaviour{
 		ClearBoard ();	
 		level += 1;
 		SetBoardLevel ();
-		StartCoroutine(InitBoard ());
+		SphereController.instance.SetBoard(GetBoard());
+		//StartCoroutine(InitBoard ());
 	}
 
 	void Reset(){
 		gameover = false;
 		level = 0;
-		Main.increaseLevel = false;
+		increaseLevel = false;
 	}
 
 	void GameOver(){
