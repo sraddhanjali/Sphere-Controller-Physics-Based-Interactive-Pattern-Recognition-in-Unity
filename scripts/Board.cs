@@ -13,6 +13,7 @@ public class Board{
 	private int counter = 0;
 	private int matchedCount = 0;
 	public List<string> labels = new List<string>();
+	public LinkedList<GameObject> allPatterns = new LinkedList<GameObject>();
 	
 	public Board(){
 		matchingIndex = 0;
@@ -62,7 +63,43 @@ public class Board{
 		else{
 			return false;
 		}
-	}	
+	}
+
+	public void LoadLinkedList() {
+		List<Obstacle> obstacle = obstacles;
+		List<Pattern> pattern = patterns;
+		LinkedListNode<GameObject> tipNode = null;
+		foreach (Pattern p in pattern) {
+			foreach (GameObject g in p.sequence) {
+				if (tipNode == null) {
+					allPatterns.AddFirst(g);	
+				}
+				else {
+					allPatterns.AddAfter(tipNode, g);
+				}
+				tipNode = allPatterns.Last;
+			}
+		}
+		// Print the linkedlist to see if they arrive in order
+		/*foreach (GameObject g in allPatterns) {
+			Debug.Log(g.name);
+		}*/
+	}
+
+	public List<LinkedListNode<GameObject>> GetNextNodeImp(LinkedListNode<GameObject> g, List<LinkedListNode<GameObject>> refList, int count) {
+		LinkedListNode<GameObject> next = g.Next;
+		if (count == 0) {
+			return refList;
+		}
+		refList.Add(next);
+		return GetNextNodeImp(next, refList, --count);
+	}
+
+	public List<LinkedListNode<GameObject>> GetNextNode(GameObject g, int count=2) {
+		List<LinkedListNode<GameObject>> refList = new List<LinkedListNode<GameObject>>();
+		LinkedListNode<GameObject> gll = allPatterns.Find(g);
+		return GetNextNodeImp(gll, refList, count);
+	}
 	
 	public List<GameObject> ToDraw(){
 		List<Obstacle> obstacle = obstacles;

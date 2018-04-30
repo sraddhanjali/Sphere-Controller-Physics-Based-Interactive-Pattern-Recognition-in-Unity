@@ -20,6 +20,7 @@ public class Main : MonoBehaviour{
 	Loader loader = new Loader();
 	
 	private bool settingGame = false;
+	public static bool reload = false;
 	public static bool gameover = false;
 	public static int won = 0;
 	public static bool done = false;
@@ -82,6 +83,7 @@ public class Main : MonoBehaviour{
 		SphereController.instance.SetBoard(GetBoard());
 		SetTotalRepetition ();
 		SetBoardLevel ();
+		boardList[patternIndex].LoadLinkedList();
 	}
 	
 	IEnumerator InitBoard(){
@@ -97,7 +99,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void SetBoardLevel(){
-		if (level % repetition == 0 && level != 0) {
+		if (level % repetition == 0 && level != 0 && reload == false) {
 			patternIndex += 1;
 		}
 		currBoardLabels.AddRange(GetBoard().GetLabels());
@@ -106,8 +108,10 @@ public class Main : MonoBehaviour{
 	IEnumerator NextBoard(){
 		increaseLevel = false;
 		yield return new WaitForSeconds (1.5f);
-		ClearBoard ();	
-		level += 1;
+		ClearBoard ();
+		if (reload != true) {
+			level += 1;	
+		}
 		SetBoardLevel ();
 		SphereController.instance.SetBoard(GetBoard());
 		//StartCoroutine(InitBoard ());

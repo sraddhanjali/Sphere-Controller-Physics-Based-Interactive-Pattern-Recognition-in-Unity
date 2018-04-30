@@ -26,7 +26,7 @@ public class GameLogic{
 		File.AppendAllText (path, csv);
 	}
 	
-	public void TouchLogic(Board b){
+	/*public void TouchLogic(Board b){
 		
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch (0);
@@ -54,5 +54,44 @@ public class GameLogic{
 				}
 			}
 		}
-	}	
+	}*/
+	
+	public void TouchLogic(Board b) {
+		if (Input.touchCount > 0) {
+			Touch touch = Input.GetTouch(0);
+			if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled) {
+				UnityEngine.Debug.Log("Continuous touch");
+				Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
+				pos.z = -1;
+			
+				Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
+				foreach (Collider2D c2 in currentFrame)
+				{
+					GameObject go = c2.gameObject;
+					Save(go, b, pos);
+					if (b.match){
+						b.StartMatching(go);
+					}
+				
+					else{
+						if (b.SetPatternToMatchInBoard(go)){
+							UnityEngine.Debug.Log("first endpoint matched");
+						}
+					}
+
+					if (b.AllMatched()){
+						Main.increaseLevel = true;
+						Main.playerPoints += 100;
+					}
+
+					SphereController.instance.MoveSphere(b.GetNextNode(go));
+				}
+			}
+			else {
+				UnityEngine.Debug.Log("hand lifted");
+				UnityEngine.Debug.Log("loading the same level");
+				Main.reload = true;
+			}
+		}
+	}
 }
