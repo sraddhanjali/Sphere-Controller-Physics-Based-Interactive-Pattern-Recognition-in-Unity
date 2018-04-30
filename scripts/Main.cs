@@ -23,7 +23,8 @@ public class Main : MonoBehaviour{
 	public static bool reload = false;
 	public static bool gameover = false;
 	public static bool increaseLevel = false;
-	public static string allPath;
+	public static string touchDataPath;
+	public static string tempDataPath; 
 	public static int playerPoints = 0;
 	private List<string> labels = new List<string>();
 	
@@ -42,8 +43,9 @@ public class Main : MonoBehaviour{
 	void SaveFile(){
 		string filePath = Application.persistentDataPath;
 		string f1 =  string.Format(@"{0}.csv", Guid.NewGuid());
-		string f2 = string.Format("labels.csv");
-		allPath = filePath + "/" + f1;
+		string f2 = string.Format("tmp.csv");
+		touchDataPath = filePath + "/" + f1;
+		tempDataPath = filePath + "/"  + f2;
 	}
 
 	void Awake(){

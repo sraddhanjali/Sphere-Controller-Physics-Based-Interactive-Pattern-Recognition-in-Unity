@@ -9,7 +9,6 @@ public class SphereController : MonoBehaviour {
 	public bool updateComplete = false;
 	public GameObject currentTouch;
 	public Board currentBoard = null;
-	public bool set = false;
 	
 	void Awake ()
 	{
@@ -33,7 +32,7 @@ public class SphereController : MonoBehaviour {
 		sphere.GetComponent<MeshRenderer>().material.color = Color.red;
 	}
 
-	public IEnumerator AnimateBoard(Board board) {
+	/*public IEnumerator AnimateBoard(Board board) {
 		Debug.Log("Animating the board");
 		List<GameObject> gObjs = board.ToDraw();
 		for (int i = 0; i < gObjs.Count; i++) {
@@ -41,8 +40,7 @@ public class SphereController : MonoBehaviour {
 			sphere.transform.position = g.transform.position;
 			yield return new WaitForSeconds(0.5f);
 		}
-		set = false;
-	}
+	}*/
 
 	public void SetBoard (Board board) {
 		///Debug.Log("Setting board");
@@ -72,10 +70,6 @@ public class SphereController : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
-		/*if (currentBoard != null && set == false) {
-			StartCoroutine(AnimateBoard(currentBoard));
-			set = true;
-		}*/
 		List<LinkedListNode<GameObject>> nxtNode = currentBoard.GetNextNode(currentTouch);
 		if (updateComplete == false) {
 			Move(nxtNode);	

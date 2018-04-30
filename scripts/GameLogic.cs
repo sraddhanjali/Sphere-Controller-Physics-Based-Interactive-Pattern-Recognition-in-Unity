@@ -1,29 +1,48 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Diagnostics;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class GameLogic{
 	public AudioSource chop;
-	
-	public void Save(GameObject go, Board b, Vector3 pos){
-		int currentCube = int.Parse (go.name);
-		UnityEngine.Debug.Log("writing to file");
-		UnityEngine.Debug.Log(currentCube);
-		SaveToFile (Main.allPath, currentCube, b.GetCurrentLabel(), pos);
+
+	public string ChunkToSave(GameObject go, Board b, Vector3 pos) {
+		string cn = int.Parse(go.name).ToString ();
+		string label = b.GetCurrentLabel();
+		Vector3 n = Camera.main.WorldToScreenPoint(pos);
+		string x = n.x.ToString ();
+		string y = n.y.ToString ();
+		string z = n.z.ToString ();
+		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+		string csvstring = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", Main.level.ToString(), label, cn, x, y, z, ts);
+		return csvstring;
 	}
 	
-	void SaveToFile(string path, int currentCube, string label, Vector3 pos){
-		string cn = currentCube.ToString ();
-		pos = Camera.main.WorldToScreenPoint(pos);
-		string x = pos.x.ToString ();
-		string y = pos.y.ToString ();
-		string z = pos.z.ToString ();
-		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-		string csv = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", Main.level.ToString(), label, cn, x, y, z, ts);
-		File.AppendAllText (path, csv);
+	void SaveToFile() {
+		//Open the stream and read it back.
+		using (FileStream fs = File.OpenRead(Main.tempDataPath)){
+			byte[] b = new byte[1024];
+			UTF8Encoding temp = new UTF8Encoding(true);
+			while (fs.Read(b,0,b.Length) > 0){
+				 (Main.touchDataPath, temp.GetString(b));
+			}
+		}
+	}
+
+	public void TempSave(GameObject go, Board b, Vector3 pos) {
+		if (Main.reload && Main.increaseLevel) {
+			if (File.Exists(Main.tempDataPath)){
+				File.Delete(Main.tempDataPath);
+			}
+		}
+		using (FileStream fs = File.Create(Main.tempDataPath)) {
+			string csvstring = ChunkToSave(go, b, pos);
+			fs.AppendAllText(fs, csvstring);
+		}
 	}
 		
 	public void TouchLogic(Board b) {
@@ -38,7 +57,7 @@ public class GameLogic{
 				foreach (Collider2D c2 in currentFrame)
 				{
 					GameObject go = c2.gameObject;
-					Save(go, b, pos);
+					TempSave(go, b, pos);
 					if (b.match){
 						b.StartMatching(go);
 					}
@@ -50,6 +69,7 @@ public class GameLogic{
 					}
 
 					if (b.AllMatched()){
+						SaveToFile();
 						Main.increaseLevel = true;
 						Main.reload = false;
 						Main.playerPoints += 100;
