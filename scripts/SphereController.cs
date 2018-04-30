@@ -60,7 +60,7 @@ public class SphereController : MonoBehaviour {
 	}
 
 	public IEnumerator MoveSphere(List<LinkedListNode<GameObject>> go) {
-		Debug.Log("Moving Sphere");
+		//Debug.Log("Moving Sphere");
 		foreach(LinkedListNode<GameObject> g in go) {
 			sphere.transform.position = g.Value.transform.position;
 			yield return new WaitForSeconds(0.1f);

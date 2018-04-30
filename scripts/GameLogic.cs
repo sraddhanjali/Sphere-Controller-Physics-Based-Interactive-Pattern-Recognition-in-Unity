@@ -3,9 +3,10 @@ using System.IO;
 using System.Text;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
+using UnityEngine.EventSystems;
 
 public class GameLogic{
 	public AudioSource chop;
@@ -23,33 +24,29 @@ public class GameLogic{
 	}
 	
 	void SaveToFile() {
-		//Open the stream and read it back.
 		using (FileStream fs = File.OpenRead(Main.tempDataPath)){
 			byte[] b = new byte[1024];
 			UTF8Encoding temp = new UTF8Encoding(true);
 			while (fs.Read(b,0,b.Length) > 0){
-				 (Main.touchDataPath, temp.GetString(b));
+				File.AppendAllText(Main.touchDataPath, temp.GetString(b));
 			}
 		}
 	}
 
 	public void TempSave(GameObject go, Board b, Vector3 pos) {
-		if (Main.reload && Main.increaseLevel) {
+		if (Main.reload || Main.increaseLevel) {
 			if (File.Exists(Main.tempDataPath)){
 				File.Delete(Main.tempDataPath);
 			}
 		}
-		using (FileStream fs = File.Create(Main.tempDataPath)) {
-			string csvstring = ChunkToSave(go, b, pos);
-			fs.AppendAllText(fs, csvstring);
-		}
+		string csvstring = ChunkToSave(go, b, pos);
+		File.AppendAllText(Main.tempDataPath, csvstring);
 	}
 		
 	public void TouchLogic(Board b) {
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch(0);
 			if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled) {
-				UnityEngine.Debug.Log("Continuous touch");
 				Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 				pos.z = -1;
 				
@@ -68,22 +65,21 @@ public class GameLogic{
 						}
 					}
 
-					if (b.AllMatched()){
+					if (b.AllMatched()) {
+						UnityEngine.Debug.Log("all matched");
 						SaveToFile();
-						Main.increaseLevel = true;
-						Main.reload = false;
+						EventManager.TriggerEvent("success");
 						Main.playerPoints += 100;
 					}
 
 					SphereController.instance.SetCurrentTouchPosition(go);
 				}
-			}
-			else {
-				UnityEngine.Debug.Log("hand lifted");
-				UnityEngine.Debug.Log("loading the same level");
-				if (Main.increaseLevel == false) {
-					Main.reload = true;	
-				}
+			}else {
+				UnityEngine.Debug.Log("handlifted");
+				/*if (Main.increaseLevel == false) {
+					Main.reload = true;
+					UnityEngine.Debug.Log("loading the same level");
+				}*/
 			}
 		}
 	}

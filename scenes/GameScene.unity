@@ -162,7 +162,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.4852941, g: 0.47815743, b: 0.47815743, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -218,7 +218,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sphere: {fileID: 0}
-  set: 0
+  updateComplete: 0
+  currentTouch: {fileID: 0}
 --- !u!1 &795288036
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +245,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 795288036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00018310547, y: 0, z: 0}
+  m_LocalPosition: {x: 1602, y: -171, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1685365586}
@@ -252,7 +253,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00018310547, y: 0}
+  m_AnchoredPosition: {x: 1602, y: -171}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &795288039
@@ -638,7 +639,7 @@ RectTransform:
   m_GameObject: {fileID: 1685365582}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 90}
-  m_LocalScale: {x: 0.008498198, y: 0.008498198, z: 0.008498198}
+  m_LocalScale: {x: 0.008495346, y: 0.008495346, z: 0.008495346}
   m_Children:
   - {fileID: 795288037}
   m_Father: {fileID: 0}

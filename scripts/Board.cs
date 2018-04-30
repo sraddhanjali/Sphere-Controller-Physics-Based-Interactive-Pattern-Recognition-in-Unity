@@ -126,7 +126,11 @@ public class Board{
 		List<GameObject> patternGO = patterns[matchingIndex].sequence;
 		if (GameObject.ReferenceEquals(patternGO[counter], go)){
 			go.GetComponent<SpriteRenderer> ().material.color = Color.black;
-			if (patternGO[counter] == patternGO[patternGO.Count - 1]){
+			GameObject g1 = patternGO[counter];
+			Debug.Log(g1.name);
+			GameObject g2 = patternGO[patternGO.Count - 1];
+			Debug.Log(g2.name);
+			if (g1 == g2){
 				Debug.Log("Last endpoint matched" + patternGO[counter] + go.name);
 				ClearVariableState();
 				matchedCount += 1;
@@ -137,7 +141,9 @@ public class Board{
 			}
 		}
 		else {
-			Main.reload = true;
+			//Main.reload = true;
+			EventManager.TriggerEvent("fail");
+			//ClearVariableState();
 		}
 	}
 
@@ -145,18 +151,16 @@ public class Board{
 		for (int i = 0; i < patterns.Count; i++){
 			List<GameObject> patternGO = patterns[i].sequence;
 			if (GameObject.ReferenceEquals(patternGO[0], go)){
-				Debug.Log(patternGO[0] + go.name);
 				match = true;
-				Debug.Log("matching init...");	
 				matchingIndex = i;
 				go.GetComponent<SpriteRenderer> ().material.color = Color.black;
 				counter += 1;
 				return true;
 			}
-			else {
-				Main.reload = true;
-			}
 		}
+		//Main.reload = true;
+		EventManager.TriggerEvent("fail");
+		//ClearVariableState();
 		return false;
 	}
 }

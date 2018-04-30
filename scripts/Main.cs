@@ -2,6 +2,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour{
@@ -71,8 +73,10 @@ public class Main : MonoBehaviour{
 		GetBoard().LoadLinkedList();
 	}
 	
-	void ClearBoard(){
+	void ClearBoard() {
+		Debug.Log("clearing");
 		gd.Clear(GetBoard());
+		GetBoard().ClearVariableState();
 	}
 	
 	void SetBoardLevel(){
@@ -87,6 +91,7 @@ public class Main : MonoBehaviour{
 		SetTotalRepetition ();
 		SetBoardLevel ();
 		InitBoard();
+		ListenersInit();
 	}
 	
 	void Reset(){
@@ -97,7 +102,19 @@ public class Main : MonoBehaviour{
 	
 	void GameOver(){
 		Reset();
+		ListenerStop();
 		SceneManager.LoadScene ("Menu");
+	}
+
+	void ListenerStop() {
+		EventManager.StopListening("success", NextBoard);
+		EventManager.StopListening("fail", ReloadLevel);
+	}
+
+	void ListenersInit() {
+		EventManager.StartListening("success", NextBoard);
+		EventManager.StartListening("fail", ReloadLevel);
+		EventManager.StartListening("gameover", GameOver);
 	}
 	
 	void InitBoard(){
@@ -108,30 +125,20 @@ public class Main : MonoBehaviour{
 	}
 
 	void NextBoard(){
-		increaseLevel = false;
+		//increaseLevel = false;
 		ClearBoard ();
-		if (reload == false) {
-			level += 1;
-			SetBoardLevel ();
-			InitBoard();
-		}
-		if (reload == true) {
-			reload = false;
-		}
+		level += 1;
+		SetBoardLevel ();
+		InitBoard();
+	}
+
+	void ReloadLevel() {
+		ClearBoard();
 	}
 
 	void Update(){
 		if (level <= totalRepetition) {
-			if (gameover == false) {
-				if(settingGame == false){
-					if (increaseLevel || reload) {
-						NextBoard();
-					}
-					gl.TouchLogic (GetBoard());
-				}
-			} else{
-				GameOver ();
-			}
+			gl.TouchLogic (GetBoard());
 		}
 	}
 }
