@@ -64,7 +64,8 @@ public class Board{
 			return false;
 		}
 	}
-
+	
+	//TODO: Obstacle needs to be added in line with the pattern list
 	public void LoadLinkedList() {
 		List<Obstacle> obstacle = obstacles;
 		List<Pattern> pattern = patterns;
@@ -87,15 +88,20 @@ public class Board{
 	}
 
 	public List<LinkedListNode<GameObject>> GetNextNodeImp(LinkedListNode<GameObject> g, List<LinkedListNode<GameObject>> refList, int count) {
-		LinkedListNode<GameObject> next = g.Next;
-		if (count == 0) {
+		if (g != null) {
+			LinkedListNode<GameObject> next = g.Next;
+			if (count == 0 || next == null) {
+				return refList;
+			}
+			refList.Add(next);
+			return GetNextNodeImp(next, refList, --count);
+		}
+		else {
 			return refList;
 		}
-		refList.Add(next);
-		return GetNextNodeImp(next, refList, --count);
 	}
 
-	public List<LinkedListNode<GameObject>> GetNextNode(GameObject g, int count=2) {
+	public List<LinkedListNode<GameObject>> GetNextNode(GameObject g, int count=3) {
 		List<LinkedListNode<GameObject>> refList = new List<LinkedListNode<GameObject>>();
 		LinkedListNode<GameObject> gll = allPatterns.Find(g);
 		return GetNextNodeImp(gll, refList, count);
@@ -119,7 +125,7 @@ public class Board{
 	public void StartMatching(GameObject go){
 		List<GameObject> patternGO = patterns[matchingIndex].sequence;
 		if (GameObject.ReferenceEquals(patternGO[counter], go)){
-			go.GetComponent<SpriteRenderer> ().material.color = Color.red;
+			go.GetComponent<SpriteRenderer> ().material.color = Color.black;
 			if (patternGO[counter] == patternGO[patternGO.Count - 1]){
 				Debug.Log("Last endpoint matched" + patternGO[counter] + go.name);
 				ClearVariableState();
@@ -129,6 +135,9 @@ public class Board{
 				Debug.Log("matched");
 				counter += 1;
 			}
+		}
+		else {
+			Main.reload = true;
 		}
 	}
 
@@ -140,9 +149,12 @@ public class Board{
 				match = true;
 				Debug.Log("matching init...");	
 				matchingIndex = i;
-				go.GetComponent<SpriteRenderer> ().material.color = Color.red;
+				go.GetComponent<SpriteRenderer> ().material.color = Color.black;
 				counter += 1;
 				return true;
+			}
+			else {
+				Main.reload = true;
 			}
 		}
 		return false;

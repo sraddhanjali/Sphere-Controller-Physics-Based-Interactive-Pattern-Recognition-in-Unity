@@ -8,7 +8,7 @@ public class Main : MonoBehaviour{
 
 	public Shader shader1;
 	public static Sprite[] sprites;
-	public static int repetition = 1	;
+	public static int repetition = 1;
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static int patternIndex = 0;
@@ -22,24 +22,15 @@ public class Main : MonoBehaviour{
 	private bool settingGame = false;
 	public static bool reload = false;
 	public static bool gameover = false;
-	public static int won = 0;
-	public static bool done = false;
 	public static bool increaseLevel = false;
-	public static bool top = false;
 	public static string allPath;
-	public static string pattPath;
 	public static int playerPoints = 0;
 	private List<string> labels = new List<string>();
-	private List<string> currBoardLabels = new List<string>();
 	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50; 
-		if (gameover == false && done == false) {
+		if (gameover == false) {
 			GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
-		} else if(done == true){
-			GUILayout.Label ("Won", guiStyle);
-		} else {
-			GUILayout.Label ("Game Over", guiStyle);
 		}
 	}
 
@@ -53,7 +44,6 @@ public class Main : MonoBehaviour{
 		string f1 =  string.Format(@"{0}.csv", Guid.NewGuid());
 		string f2 = string.Format("labels.csv");
 		allPath = filePath + "/" + f1;
-		pattPath = filePath + "/" + f2;
 	}
 
 	void Awake(){
@@ -69,73 +59,71 @@ public class Main : MonoBehaviour{
 		return boardList[patternIndex];
 	}
 
-	void PrintList(List<string> obj){
+	/*void PrintList(List<string> obj){		pattPath = filePath + "/" + f2;
 		for (int i = 0; i < obj.Count; i++){
 			Debug.Log(obj[i]);
+		}
+	}*/
+	
+	void LoadingLinkedListOfPatterns() {
+		GetBoard().LoadLinkedList();
+	}
+	
+	void ClearBoard(){
+		gd.Clear(GetBoard());
+	}
+	
+	void SetBoardLevel(){
+		if (level % repetition == 0 && level != 0) {
+			patternIndex += 1;
 		}
 	}
 
 	void Start(){
 		boardList = loader.ReadFileTest();
 		labels = loader.GetLabels();
-		//PrintList(labels);
-		//StartCoroutine(InitBoard());
-		SphereController.instance.SetBoard(GetBoard());
 		SetTotalRepetition ();
 		SetBoardLevel ();
-		boardList[patternIndex].LoadLinkedList();
+		InitBoard();
 	}
 	
-	IEnumerator InitBoard(){
-		settingGame = true;
-		StartCoroutine(gd.Draw(GetBoard()));
-		yield return new WaitForSeconds(2.0f);
-	    StartCoroutine(gd.Remove(GetBoard()));
-		settingGame = false;
-	}
-
-	void ClearBoard(){
-		gd.Clear(GetBoard());
-	}
-
-	void SetBoardLevel(){
-		if (level % repetition == 0 && level != 0 && reload == false) {
-			patternIndex += 1;
-		}
-		currBoardLabels.AddRange(GetBoard().GetLabels());
-	}
-
-	IEnumerator NextBoard(){
-		increaseLevel = false;
-		yield return new WaitForSeconds (1.5f);
-		ClearBoard ();
-		if (reload != true) {
-			level += 1;	
-		}
-		SetBoardLevel ();
-		SphereController.instance.SetBoard(GetBoard());
-		//StartCoroutine(InitBoard ());
-	}
-
 	void Reset(){
 		gameover = false;
 		level = 0;
 		increaseLevel = false;
 	}
-
+	
 	void GameOver(){
 		Reset();
 		SceneManager.LoadScene ("Menu");
+	}
+	
+	void InitBoard(){
+		settingGame = true;
+		LoadingLinkedListOfPatterns();
+		SphereController.instance.SetBoard(GetBoard());
+		settingGame = false;
+	}
+
+	void NextBoard(){
+		increaseLevel = false;
+		ClearBoard ();
+		if (reload == false) {
+			level += 1;
+			SetBoardLevel ();
+			InitBoard();
+		}
+		if (reload == true) {
+			reload = false;
+		}
 	}
 
 	void Update(){
 		if (level <= totalRepetition) {
 			if (gameover == false) {
-				if (settingGame) {
-					return;
-				} else {
-					if (increaseLevel) {
-						StartCoroutine (NextBoard ());
+				if(settingGame == false){
+					if (increaseLevel || reload) {
+						NextBoard();
 					}
 					gl.TouchLogic (GetBoard());
 				}
