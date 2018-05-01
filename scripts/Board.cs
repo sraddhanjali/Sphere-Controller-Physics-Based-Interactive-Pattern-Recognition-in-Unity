@@ -17,6 +17,7 @@ public class Board{
 	
 	public Board(){
 		matchingIndex = 0;
+		LoadLinkedList();
 	}
 
 	public List<string> GetLabels(){
@@ -32,14 +33,6 @@ public class Board{
 		obstacles.Add(obstacle);
 	}
 
-	public List<Pattern> GetPatterns(){
-		return patterns;
-	}
-
-	public List<Obstacle> GetObstacles(){
-		return obstacles;
-	}
-
 	public string GetCurrentLabel(){
 		return labels[matchingIndex];
 	}
@@ -50,7 +43,7 @@ public class Board{
 		matchingIndex = 0;
 	}
 
-	public int GetCurrentPatternSize(){
+	public int GetCurrentPatternSize() {
 		return patterns.Count;
 	}
 
@@ -60,17 +53,28 @@ public class Board{
 			ClearVariableState();
 			return true;
 		}
-		else{
-			return false;
-		}
+		return false;
 	}
 	
-	//TODO: Obstacle needs to be added in line with the pattern list
-	public void LoadLinkedList() {
+	public List<GameObject> ToDraw(){
 		List<Obstacle> obstacle = obstacles;
 		List<Pattern> pattern = patterns;
+		List<GameObject> bigChunk = new List<GameObject>();
+		for (int i = 0; i < pattern.Count; i++){
+			bigChunk.AddRange(pattern[i].sequence);
+			if (i == 0){
+				if(obstacle.Count > 0){
+					bigChunk.Add(obstacle[0].gameObject);
+				}
+			}
+		}
+		return bigChunk;
+	}
+
+	//TODO: Obstacle needs to be added in line with the pattern list
+	public void LoadLinkedList() {
 		LinkedListNode<GameObject> tipNode = null;
-		foreach (Pattern p in pattern) {
+		foreach (Pattern p in patterns) {
 			foreach (GameObject g in p.sequence) {
 				if (tipNode == null) {
 					allPatterns.AddFirst(g);	
@@ -96,9 +100,7 @@ public class Board{
 			refList.Add(next);
 			return GetNextNodeImp(next, refList, --count);
 		}
-		else {
-			return refList;
-		}
+		return refList;
 	}
 
 	public List<LinkedListNode<GameObject>> GetNextNode(GameObject g, int count=3) {
@@ -107,47 +109,41 @@ public class Board{
 		return GetNextNodeImp(gll, refList, count);
 	}
 	
-	public List<GameObject> ToDraw(){
-		List<Obstacle> obstacle = obstacles;
-		List<Pattern> pattern = patterns;
-		List<GameObject> bigChunk = new List<GameObject>();
-		for (int i = 0; i < pattern.Count; i++){
-			bigChunk.AddRange(pattern[i].sequence);
-			if (i == 0){
-				if(obstacle.Count > 0){
-					bigChunk.Add(obstacle[0].gameObject); // 8
-				}
-			}
-		}
-		return bigChunk;
-	}
-	
 	public void StartMatching(GameObject go){
 		List<GameObject> patternGO = patterns[matchingIndex].sequence;
 		if (GameObject.ReferenceEquals(patternGO[counter], go)){
 			go.GetComponent<SpriteRenderer> ().material.color = Color.black;
 			GameObject g1 = patternGO[counter];
-			Debug.Log(g1.name);
-			GameObject g2 = patternGO[patternGO.Count - 1];
-			Debug.Log(g2.name);
+			GameObject g2 = patternGO[patternGO.Count-1];
 			if (g1 == g2){
-				Debug.Log("Last endpoint matched" + patternGO[counter] + go.name);
-				ClearVariableState();
-				matchedCount += 1;
+				Debug.Log("Last endpoint matched");
+				if (AllMatched()) {
+					Debug.Log("success triggered in B 0");
+					EventManager.TriggerEvent("success");
+				}
+				else {
+					matchedCount += 1;
+					match = false;
+					counter = 0;
+					Debug.Log("start matching next pattern");
+				}
 			}
 			else{
-				Debug.Log("matched");
 				counter += 1;
+				Debug.Log("matched in B");
 			}
+			EventManager.TriggerEvent("matches");
 		}
-		else {
-			//Main.reload = true;
+		else if (GameObject.ReferenceEquals(patternGO[counter-1], go)) {
+			Debug.Log("Pressing previous region");
+		}
+		else{
+			Debug.LogWarning("fail triggered in B 1");
 			EventManager.TriggerEvent("fail");
-			//ClearVariableState();
 		}
 	}
 
-	public bool SetPatternToMatchInBoard(GameObject go){
+	public bool SetPatternToMatchInBoard(GameObject go) {
 		for (int i = 0; i < patterns.Count; i++){
 			List<GameObject> patternGO = patterns[i].sequence;
 			if (GameObject.ReferenceEquals(patternGO[0], go)){
@@ -155,12 +151,10 @@ public class Board{
 				matchingIndex = i;
 				go.GetComponent<SpriteRenderer> ().material.color = Color.black;
 				counter += 1;
+				EventManager.TriggerEvent("matches");
 				return true;
 			}
 		}
-		//Main.reload = true;
-		EventManager.TriggerEvent("fail");
-		//ClearVariableState();
 		return false;
 	}
 }

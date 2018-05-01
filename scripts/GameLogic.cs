@@ -24,23 +24,22 @@ public class GameLogic{
 	}
 	
 	void SaveToFile() {
-		using (FileStream fs = File.OpenRead(Main.tempDataPath)){
-			byte[] b = new byte[1024];
-			UTF8Encoding temp = new UTF8Encoding(true);
-			while (fs.Read(b,0,b.Length) > 0){
-				File.AppendAllText(Main.touchDataPath, temp.GetString(b));
+		string final = " ";
+		using (StreamReader sr = File.OpenText(Main.tempDataPath)){
+			string s = "";
+			while ((s = sr.ReadLine()) != null) {
+				final += s;
+				final += Environment.NewLine;
 			}
 		}
+		File.AppendAllText(Main.touchDataPath, final);
 	}
 
 	public void TempSave(GameObject go, Board b, Vector3 pos) {
-		if (Main.reload || Main.increaseLevel) {
-			if (File.Exists(Main.tempDataPath)){
-				File.Delete(Main.tempDataPath);
-			}
-		}
 		string csvstring = ChunkToSave(go, b, pos);
-		File.AppendAllText(Main.tempDataPath, csvstring);
+		if(File.Exists(Main.tempDataPath)) {
+			File.AppendAllText(Main.tempDataPath, csvstring + Environment.NewLine);	
+		}
 	}
 		
 	public void TouchLogic(Board b) {
@@ -54,32 +53,32 @@ public class GameLogic{
 				foreach (Collider2D c2 in currentFrame)
 				{
 					GameObject go = c2.gameObject;
+					UnityEngine.Debug.Log("object found : " + go.name);
+					SphereController.instance.SetCurrentTouchPosition(go);
 					TempSave(go, b, pos);
 					if (b.match){
 						b.StartMatching(go);
 					}
-				
-					else{
-						if (b.SetPatternToMatchInBoard(go)){
-							UnityEngine.Debug.Log("first endpoint matched");
+					else {
+						if (b.SetPatternToMatchInBoard(go)) {
+							UnityEngine.Debug.Log("first matching tip of first pattern");
 						}
 					}
-
-					if (b.AllMatched()) {
-						UnityEngine.Debug.Log("all matched");
-						SaveToFile();
-						EventManager.TriggerEvent("success");
-						Main.playerPoints += 100;
-					}
-
-					SphereController.instance.SetCurrentTouchPosition(go);
 				}
-			}else {
+			}else if(touch.phase == TouchPhase.Ended){
 				UnityEngine.Debug.Log("handlifted");
-				/*if (Main.increaseLevel == false) {
-					Main.reload = true;
-					UnityEngine.Debug.Log("loading the same level");
-				}*/
+				if (b.AllMatched()) {
+					SaveToFile();
+					UnityEngine.Debug.Log("success triggered in GL");
+					EventManager.TriggerEvent("success");
+				}
+				else {
+					UnityEngine.Debug.LogWarning("fail triggered in GL");
+					EventManager.TriggerEvent("fail");
+					if (File.Exists(Main.tempDataPath)){
+						File.Delete(Main.tempDataPath);
+					}
+				}
 			}
 		}
 	}

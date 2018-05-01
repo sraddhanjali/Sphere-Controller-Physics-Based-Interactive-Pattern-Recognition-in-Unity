@@ -6,7 +6,7 @@ public class SphereController : MonoBehaviour {
 	
 	public static SphereController instance = null;
 	public GameObject sphere;
-	public bool updateComplete = false;
+	public bool updateComplete = true;
 	public GameObject currentTouch;
 	public Board currentBoard = null;
 	
@@ -32,16 +32,6 @@ public class SphereController : MonoBehaviour {
 		sphere.GetComponent<MeshRenderer>().material.color = Color.red;
 	}
 
-	/*public IEnumerator AnimateBoard(Board board) {
-		Debug.Log("Animating the board");
-		List<GameObject> gObjs = board.ToDraw();
-		for (int i = 0; i < gObjs.Count; i++) {
-			GameObject g = gObjs[i];
-			sphere.transform.position = g.transform.position;
-			yield return new WaitForSeconds(0.5f);
-		}
-	}*/
-
 	public void SetBoard (Board board) {
 		///Debug.Log("Setting board");
 		currentBoard = board;
@@ -49,29 +39,31 @@ public class SphereController : MonoBehaviour {
 	}
 
 	public void SetCurrentTouchPosition(GameObject g) {
-		if (currentTouch != g) {
+		if (!GameObject.ReferenceEquals(currentTouch, g)) {
 			updateComplete = false;
 			currentTouch = g;
+			Debug.LogWarning("inside sphere");
 		}
 	}
 
 	public void Move(List<LinkedListNode<GameObject>> go) {
 		StartCoroutine(MoveSphere(go));
+		updateComplete = true;
 	}
 
 	public IEnumerator MoveSphere(List<LinkedListNode<GameObject>> go) {
 		//Debug.Log("Moving Sphere");
 		foreach(LinkedListNode<GameObject> g in go) {
 			sphere.transform.position = g.Value.transform.position;
-			yield return new WaitForSeconds(0.1f);
+			yield return new WaitForSeconds(0.2f);
 		}
-		updateComplete = true;
 	} 
 		
 	// Update is called once per frame
 	void Update () {
 		List<LinkedListNode<GameObject>> nxtNode = currentBoard.GetNextNode(currentTouch);
 		if (updateComplete == false) {
+			Debug.LogWarning("moving");
 			Move(nxtNode);	
 		}
 	}

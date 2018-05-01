@@ -10,6 +10,7 @@ public class Main : MonoBehaviour{
 
 	public Shader shader1;
 	public static Sprite[] sprites;
+	public AudioClip moveSound;
 	public static int repetition = 1;
 	public int totalRepetition = 0;
 	public static int level = 0;
@@ -21,20 +22,14 @@ public class Main : MonoBehaviour{
 	List<Board> boardList = new List<Board>();
 	Loader loader = new Loader();
 	
-	private bool settingGame = false;
-	public static bool reload = false;
-	public static bool gameover = false;
-	public static bool increaseLevel = false;
 	public static string touchDataPath;
 	public static string tempDataPath; 
 	public static int playerPoints = 0;
 	private List<string> labels = new List<string>();
 	
 	protected void OnGUI(){
-		guiStyle.fontSize = 50; 
-		if (gameover == false) {
-			GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
-		}
+		guiStyle.fontSize = 60; 
+		GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
 	}
 
 	void LoadSprites(){
@@ -56,7 +51,7 @@ public class Main : MonoBehaviour{
 	}
 
 	void SetTotalRepetition(){
-		totalRepetition = repetition * labels.Count;
+		totalRepetition = (repetition * labels.Count)/2;
 	}
 
 	Board GetBoard(){
@@ -69,35 +64,16 @@ public class Main : MonoBehaviour{
 		}
 	}*/
 	
-	void LoadingLinkedListOfPatterns() {
-		GetBoard().LoadLinkedList();
-	}
-	
-	void ClearBoard() {
-		Debug.Log("clearing");
-		gd.Clear(GetBoard());
-		GetBoard().ClearVariableState();
-	}
-	
-	void SetBoardLevel(){
-		if (level % repetition == 0 && level != 0) {
-			patternIndex += 1;
-		}
-	}
-
 	void Start(){
 		boardList = loader.ReadFileTest();
 		labels = loader.GetLabels();
 		SetTotalRepetition ();
-		SetBoardLevel ();
 		InitBoard();
 		ListenersInit();
 	}
 	
 	void Reset(){
-		gameover = false;
 		level = 0;
-		increaseLevel = false;
 	}
 	
 	void GameOver(){
@@ -115,30 +91,58 @@ public class Main : MonoBehaviour{
 		EventManager.StartListening("success", NextBoard);
 		EventManager.StartListening("fail", ReloadLevel);
 		EventManager.StartListening("gameover", GameOver);
+		EventManager.StartListening("matches", Vibrate);
 	}
 	
+	void ClearBoard() {
+		Debug.Log("clearing " + level.ToString() + " in main.cs");
+		gd.Clear(GetBoard());
+		GetBoard().ClearVariableState();
+	}
+	
+	void SetBoardLevel(){
+		if (level % repetition == 0 && level != 0) {
+			patternIndex += 1;
+		}
+	}
+
+	void Vibrate() {
+		Handheld.Vibrate();
+	}
+
+	void PlayWrongMoveSound() {
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.pitch = 0.95f;
+		audio.clip = moveSound;
+		audio.Play();
+	}
+
 	void InitBoard(){
-		settingGame = true;
-		LoadingLinkedListOfPatterns();
+		SetBoardLevel ();
+		GetBoard().LoadLinkedList();
 		SphereController.instance.SetBoard(GetBoard());
-		settingGame = false;
 	}
 
 	void NextBoard(){
-		//increaseLevel = false;
+		playerPoints += 100;
 		ClearBoard ();
 		level += 1;
-		SetBoardLevel ();
 		InitBoard();
 	}
 
 	void ReloadLevel() {
+		PlayWrongMoveSound();
 		ClearBoard();
+		SphereController.instance.SetBoard(GetBoard());
 	}
 
 	void Update(){
-		if (level <= totalRepetition) {
+		if (level < totalRepetition) {
 			gl.TouchLogic (GetBoard());
+		}
+		else {
+			Debug.Log("gameover triggered in Main");
+			EventManager.TriggerEvent("gameover");
 		}
 	}
 }

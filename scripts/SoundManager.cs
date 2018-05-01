@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour {
-	
-	public AudioSource efxSource;   
+
+	public AudioSource efxSource;
 	public static SoundManager instance = null;     //Allows other scripts to call functions from SoundManager.             
 
 	void Awake ()
