@@ -15,21 +15,37 @@ public class Main : MonoBehaviour{
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static int patternIndex = 0;
-
+	
 	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
 	GUIStyle guiStyle = new GUIStyle();
+	GUIStyle boxStyle = new GUIStyle();
+	GUIStyle boxStyle1 = new GUIStyle();
 	List<Board> boardList = new List<Board>();
 	Loader loader = new Loader();
 	
 	public static string touchDataPath;
 	public static string tempDataPath; 
 	public static int playerPoints = 0;
+	public static string statusText;
+	public static bool right = false;
 	private List<string> labels = new List<string>();
 	
 	protected void OnGUI(){
-		guiStyle.fontSize = 60; 
-		GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
+		guiStyle.fontSize = 50;
+		guiStyle.normal.textColor = Color.black;
+		boxStyle.fontSize = 100;
+		boxStyle.normal.textColor = Color.green;
+		boxStyle1.fontSize = 100;
+		boxStyle1.normal.textColor = Color.red;
+		GUILayout.Label ("\n level: " + level + "points:" + playerPoints, guiStyle);
+		if (right) {
+			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle);	
+		}
+		else {
+			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle1);
+		}
+		
 	}
 
 	void LoadSprites(){
@@ -52,10 +68,6 @@ public class Main : MonoBehaviour{
 
 	void SetTotalRepetition(){
 		totalRepetition = (repetition * labels.Count)/2;
-	}
-
-	Board GetBoard(){
-		return boardList[patternIndex];
 	}
 
 	/*void PrintList(List<string> obj){		pattPath = filePath + "/" + f2;
@@ -85,6 +97,8 @@ public class Main : MonoBehaviour{
 	void ListenerStop() {
 		EventManager.StopListening("success", NextBoard);
 		EventManager.StopListening("fail", ReloadLevel);
+		EventManager.StopListening("gameover", GameOver);
+		EventManager.StopListening("matches", Vibrate);
 	}
 
 	void ListenersInit() {
@@ -105,6 +119,10 @@ public class Main : MonoBehaviour{
 			patternIndex += 1;
 		}
 	}
+	
+	Board GetBoard(){
+		return boardList[patternIndex];
+	}
 
 	void Vibrate() {
 		Handheld.Vibrate();
@@ -123,7 +141,9 @@ public class Main : MonoBehaviour{
 		SphereController.instance.SetBoard(GetBoard());
 	}
 
-	void NextBoard(){
+	void NextBoard() {
+		statusText = "Great Job!";
+		right = true;
 		playerPoints += 100;
 		ClearBoard ();
 		level += 1;
@@ -132,7 +152,10 @@ public class Main : MonoBehaviour{
 
 	void ReloadLevel() {
 		PlayWrongMoveSound();
+		statusText = "Oops! Try again!";
+		right = false;
 		ClearBoard();
+		GetBoard().LoadLinkedList();
 		SphereController.instance.SetBoard(GetBoard());
 	}
 

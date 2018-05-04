@@ -33,7 +33,7 @@ public class SphereController : MonoBehaviour {
 	}
 
 	public void SetBoard (Board board) {
-		///Debug.Log("Setting board");
+		updateComplete = true; 
 		currentBoard = board;
 		sphere.transform.position = currentBoard.allPatterns.First.Value.transform.position;
 	}
@@ -59,12 +59,16 @@ public class SphereController : MonoBehaviour {
 		}
 	} 
 		
-	// Update is called once per frame
 	void Update () {
-		List<LinkedListNode<GameObject>> nxtNode = currentBoard.GetNextNode(currentTouch);
-		if (updateComplete == false) {
-			Debug.LogWarning("moving");
-			Move(nxtNode);	
+		if (currentTouch) {
+			List<LinkedListNode<GameObject>> nxtNode = currentBoard.GetNextNode(currentTouch);
+			if (updateComplete == false) {
+				Debug.LogWarning("moving");
+				if (nxtNode.Count != 0) {
+					Move(nxtNode);	
+				}
+				
+			}	
 		}
 	}
 }

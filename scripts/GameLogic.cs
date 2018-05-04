@@ -9,8 +9,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 public class GameLogic{
-	public AudioSource chop;
-
+	
 	public string ChunkToSave(GameObject go, Board b, Vector3 pos) {
 		string cn = int.Parse(go.name).ToString ();
 		string label = b.GetCurrentLabel();
@@ -55,7 +54,7 @@ public class GameLogic{
 					GameObject go = c2.gameObject;
 					UnityEngine.Debug.Log("object found : " + go.name);
 					SphereController.instance.SetCurrentTouchPosition(go);
-					TempSave(go, b, pos);
+					//TempSave(go, b, pos);
 					if (b.match){
 						b.StartMatching(go);
 					}
@@ -68,16 +67,16 @@ public class GameLogic{
 			}else if(touch.phase == TouchPhase.Ended){
 				UnityEngine.Debug.Log("handlifted");
 				if (b.AllMatched()) {
-					SaveToFile();
+					//SaveToFile();
 					UnityEngine.Debug.Log("success triggered in GL");
 					EventManager.TriggerEvent("success");
 				}
 				else {
 					UnityEngine.Debug.LogWarning("fail triggered in GL");
 					EventManager.TriggerEvent("fail");
-					if (File.Exists(Main.tempDataPath)){
+					/*if (File.Exists(Main.tempDataPath)){
 						File.Delete(Main.tempDataPath);
-					}
+					}*/
 				}
 			}
 		}

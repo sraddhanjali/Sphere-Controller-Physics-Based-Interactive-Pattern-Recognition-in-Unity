@@ -443,7 +443,6 @@ GameObject:
   - component: {fileID: 1414527999}
   - component: {fileID: 1414527998}
   - component: {fileID: 1414527996}
-  - component: {fileID: 1414528000}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -570,18 +569,6 @@ AudioSource:
     m_PostInfinity: 2
     m_RotationOrder: 0
   m_ExtensionPropertyValues: []
---- !u!114 &1414528000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1414527995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 775ef3f2a303649faac68d227fb905c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  efxSource: {fileID: 0}
 --- !u!1 &1685365582
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,6 +754,18 @@ Prefab:
     - target: {fileID: 1803808600654374, guid: 119229d62dd2a417bae4b97fd39b2f39, type: 2}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4417018280364970, guid: 119229d62dd2a417bae4b97fd39b2f39, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4417018280364970, guid: 119229d62dd2a417bae4b97fd39b2f39, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4417018280364970, guid: 119229d62dd2a417bae4b97fd39b2f39, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 119229d62dd2a417bae4b97fd39b2f39, type: 2}
