@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class Main : MonoBehaviour{
-
+public class Main : MonoBehaviour {
+	
 	public Shader shader1;
 	public static Sprite[] sprites;
 	public AudioClip moveSound;
@@ -15,6 +16,7 @@ public class Main : MonoBehaviour{
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static int patternIndex = 0;
+
 	
 	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
@@ -38,6 +40,7 @@ public class Main : MonoBehaviour{
 		boxStyle.normal.textColor = Color.green;
 		boxStyle1.fontSize = 100;
 		boxStyle1.normal.textColor = Color.red;
+		level = MainMenuButtons.speed;
 		GUILayout.Label ("\n level: " + level + "points:" + playerPoints, guiStyle);
 		if (right) {
 			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle);	
@@ -62,6 +65,9 @@ public class Main : MonoBehaviour{
 	}
 
 	void Awake(){
+		if (MainMenuButtons.speed != null) {
+			Debug.Log("speed is set");
+		}
 		LoadSprites();
 		SaveFile();
 	}

@@ -9,6 +9,8 @@ public class SphereController : MonoBehaviour {
 	public bool updateComplete = true;
 	public GameObject currentTouch;
 	public Board currentBoard = null;
+
+	private int speed { get; set; }
 	
 	void Awake ()
 	{
@@ -60,7 +62,11 @@ public class SphereController : MonoBehaviour {
 	} 
 		
 	void Update () {
-		if (currentTouch) {
+		// If game if active (onStart event):
+		//   calculate next coordinate according to speed
+		//   move sphere to next coordinate
+		
+		/*if (currentTouch) {
 			List<LinkedListNode<GameObject>> nxtNode = currentBoard.GetNextNode(currentTouch);
 			if (updateComplete == false) {
 				Debug.LogWarning("moving");
@@ -69,6 +75,6 @@ public class SphereController : MonoBehaviour {
 				}
 				
 			}	
-		}
+		}*/
 	}
 }

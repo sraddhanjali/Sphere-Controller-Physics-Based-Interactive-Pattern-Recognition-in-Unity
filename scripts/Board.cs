@@ -91,7 +91,7 @@ public class Board{
 		}*/
 	}
 
-	public List<LinkedListNode<GameObject>> GetNextNodeImp(LinkedListNode<GameObject> g, List<LinkedListNode<GameObject>> refList, int count) {
+	/*public List<LinkedListNode<GameObject>> GetNextNodeImp(LinkedListNode<GameObject> g, List<LinkedListNode<GameObject>> refList, int count) {
 		if (g != null) {
 			LinkedListNode<GameObject> next = g.Next;
 			if (count == 0 || next == null) {
@@ -107,7 +107,7 @@ public class Board{
 		List<LinkedListNode<GameObject>> refList = new List<LinkedListNode<GameObject>>();
 		LinkedListNode<GameObject> gll = allPatterns.Find(g);
 		return GetNextNodeImp(gll, refList, count);
-	}
+	}*/
 	
 	public void StartMatching(GameObject go){
 		List<GameObject> patternGO = patterns[matchingIndex].sequence;
