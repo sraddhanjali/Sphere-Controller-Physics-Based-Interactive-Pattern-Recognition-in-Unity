@@ -17,7 +17,8 @@ public class Main : MonoBehaviour {
 	public static int level = 0;
 	public static int patternIndex = 0;
 
-	
+	public bool moveFlag = false;
+
 	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
 	GUIStyle guiStyle = new GUIStyle();
@@ -40,7 +41,6 @@ public class Main : MonoBehaviour {
 		boxStyle.normal.textColor = Color.green;
 		boxStyle1.fontSize = 100;
 		boxStyle1.normal.textColor = Color.red;
-		level = MainMenuButtons.speed;
 		GUILayout.Label ("\n level: " + level + "points:" + playerPoints, guiStyle);
 		if (right) {
 			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle);	
@@ -48,7 +48,6 @@ public class Main : MonoBehaviour {
 		else {
 			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle1);
 		}
-		
 	}
 
 	void LoadSprites(){
@@ -65,9 +64,6 @@ public class Main : MonoBehaviour {
 	}
 
 	void Awake(){
-		if (MainMenuButtons.speed != null) {
-			Debug.Log("speed is set");
-		}
 		LoadSprites();
 		SaveFile();
 	}
@@ -76,20 +72,12 @@ public class Main : MonoBehaviour {
 		totalRepetition = (repetition * labels.Count)/2;
 	}
 
-	/*void PrintList(List<string> obj){		pattPath = filePath + "/" + f2;
+	/*void PrintList(List<string> obj){	
 		for (int i = 0; i < obj.Count; i++){
 			Debug.Log(obj[i]);
 		}
 	}*/
-	
-	void Start(){
-		boardList = loader.ReadFileTest();
-		labels = loader.GetLabels();
-		SetTotalRepetition ();
-		InitBoard();
-		ListenersInit();
-	}
-	
+		
 	void Reset(){
 		level = 0;
 	}
@@ -105,13 +93,6 @@ public class Main : MonoBehaviour {
 		EventManager.StopListening("fail", ReloadLevel);
 		EventManager.StopListening("gameover", GameOver);
 		EventManager.StopListening("matches", Vibrate);
-	}
-
-	void ListenersInit() {
-		EventManager.StartListening("success", NextBoard);
-		EventManager.StartListening("fail", ReloadLevel);
-		EventManager.StartListening("gameover", GameOver);
-		EventManager.StartListening("matches", Vibrate);
 	}
 	
 	void ClearBoard() {
@@ -141,6 +122,31 @@ public class Main : MonoBehaviour {
 		audio.Play();
 	}
 
+	void SetMoveFlag() {
+		moveFlag = true;
+	}
+
+	void UnsetMoveFlag() {
+		moveFlag = false;
+	}
+	
+	void ListenersInit() {
+		EventManager.StartListening("success", NextBoard);
+		EventManager.StartListening("fail", ReloadLevel);
+		EventManager.StartListening("gameover", GameOver);
+		EventManager.StartListening("matches", Vibrate);
+		EventManager.StartListening("startmove", SetMoveFlag);
+		EventManager.StartListening("endmove", UnsetMoveFlag);
+	}
+	
+	void Start(){
+		boardList = loader.ReadFileTest();
+		labels = loader.GetLabels();
+		SetTotalRepetition ();
+		ListenersInit();
+		InitBoard();
+	}
+
 	void InitBoard(){
 		SetBoardLevel ();
 		GetBoard().LoadLinkedList();
@@ -156,18 +162,18 @@ public class Main : MonoBehaviour {
 		InitBoard();
 	}
 
-	void ReloadLevel() {
+	public void ReloadLevel() {
 		PlayWrongMoveSound();
-		statusText = "Oops! Try again!";
+		statusText = "Try again!";
 		right = false;
 		ClearBoard();
-		GetBoard().LoadLinkedList();
-		SphereController.instance.SetBoard(GetBoard());
 	}
 
 	void Update(){
 		if (level < totalRepetition) {
-			gl.TouchLogic (GetBoard());
+			if (!moveFlag) {
+				gl.TouchLogic (GetBoard());	
+			}
 		}
 		else {
 			Debug.Log("gameover triggered in Main");

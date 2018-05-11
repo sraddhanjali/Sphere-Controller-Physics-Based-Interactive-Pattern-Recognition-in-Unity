@@ -22,7 +22,7 @@ public class GameLogic{
 		return csvstring;
 	}
 	
-	void SaveToFile() {
+	void SaveToFile() {	
 		string final = " ";
 		using (StreamReader sr = File.OpenText(Main.tempDataPath)){
 			string s = "";
@@ -53,7 +53,7 @@ public class GameLogic{
 				{
 					GameObject go = c2.gameObject;
 					UnityEngine.Debug.Log("object found : " + go.name);
-					SphereController.instance.SetCurrentTouchPosition(go);
+					//SphereController.instance.SetCurrentTouchPosition(go);
 					//TempSave(go, b, pos);
 					if (b.match){
 						b.StartMatching(go);

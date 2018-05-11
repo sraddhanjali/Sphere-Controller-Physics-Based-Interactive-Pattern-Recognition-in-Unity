@@ -8,12 +8,8 @@ using UnityEngine.SceneManagement;
 
 
 public class MainMenuButtons: MonoBehaviour {
-	static public int speed;
+	static public int speed = 2;
 	
-	void Awake() {
-		//Debug.Log("menu is awake");
-	}
-
 	public void PlayGame () {	
 		SceneManager.LoadScene("GameScene");
 	}
@@ -22,10 +18,6 @@ public class MainMenuButtons: MonoBehaviour {
 		Application.Quit ();
 	}
 	
-	void Update() {
-		//Debug.Log("update");
-	}
-
 	public void GetInput(string userInput) {
 		speed = Int32.Parse(userInput);
 		Debug.Log("You entered " + userInput);

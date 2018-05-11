@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SphereController : MonoBehaviour {
 	
@@ -23,7 +24,7 @@ public class SphereController : MonoBehaviour {
 			//Destroy this, this enforces our singleton pattern so there can only be one instance of SoundManager.
 			Destroy (gameObject);
 
-		//Set SphereController to DontDestroyOnLoad so that it won't be destroyed when reloading our scene.
+		//Set SphereController to Dlevel = MainMenuButtons.speed;ontDestroyOnLoad so that it won't be destroyed when reloading our scene.
 		DontDestroyOnLoad (gameObject);
 	}
 
@@ -32,49 +33,53 @@ public class SphereController : MonoBehaviour {
 		//Debug.Log("sphere controller starting");
 		sphere = GameObject.FindGameObjectWithTag("Sphere");
 		sphere.GetComponent<MeshRenderer>().material.color = Color.red;
+		EventManager.StartListening("fail", ResetSphere);
 	}
 
+	private void ResetSphere() {
+		//if (!updateComplete) {
+		Move(currentBoard.allPatterns.First.Value);
+		//}
+	}
+	
+	/**
+	 * This function should only be called once every time a level is loaded.
+	 */
 	public void SetBoard (Board board) {
-		updateComplete = true; 
+		updateComplete = false; 
 		currentBoard = board;
-		sphere.transform.position = currentBoard.allPatterns.First.Value.transform.position;
+		// This is the first time this level was loaded so reseAnjali Acharya t the sphere and start animation
+		ResetSphere();
+		//sphere.transform.position = currentBoard.allPatterns.First.Value.transform.position;
 	}
-
+	
+	/*
 	public void SetCurrentTouchPosition(GameObject g) {
 		if (!GameObject.ReferenceEquals(currentTouch, g)) {
 			updateComplete = false;
 			currentTouch = g;
 			Debug.LogWarning("inside sphere");
 		}
-	}
+	}*/
 
-	public void Move(List<LinkedListNode<GameObject>> go) {
+	public void Move(GameObject go) {
 		StartCoroutine(MoveSphere(go));
-		updateComplete = true;
 	}
 
-	public IEnumerator MoveSphere(List<LinkedListNode<GameObject>> go) {
-		//Debug.Log("Moving Sphere");
-		foreach(LinkedListNode<GameObject> g in go) {
-			sphere.transform.position = g.Value.transform.position;
-			yield return new WaitForSeconds(0.2f);
+	private IEnumerator MoveSphere(GameObject go) {
+		EventManager.TriggerEvent("startmove");
+		float speed = 1.0f / (float) MainMenuButtons.speed;
+		foreach (GameObject currentBoardAllPattern in currentBoard.allPatterns) {
+			sphere.transform.position = currentBoardAllPattern.transform.position;
+			yield return new WaitForSeconds(speed);
 		}
+		updateComplete = true;
+		EventManager.TriggerEvent("endmove");
 	} 
 		
 	void Update () {
-		// If game if active (onStart event):
-		//   calculate next coordinate according to speed
-		//   move sphere to next coordinate
-		
-		/*if (currentTouch) {
-			List<LinkedListNode<GameObject>> nxtNode = currentBoard.GetNextNode(currentTouch);
-			if (updateComplete == false) {
-				Debug.LogWarning("moving");
-				if (nxtNode.Count != 0) {
-					Move(nxtNode);	
-				}
-				
-			}	
-		}*/
+//		if (!updateComplete) {
+//			Move(currentBoard.allPatterns.First.Value);
+//		}
 	}
 }
