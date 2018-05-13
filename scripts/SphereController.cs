@@ -48,20 +48,10 @@ public class SphereController : MonoBehaviour {
 	public void SetBoard (Board board) {
 		updateComplete = false; 
 		currentBoard = board;
-		// This is the first time this level was loaded so reseAnjali Acharya t the sphere and start animation
+		// This is the first time this level was loaded so reset the sphere and start animation
 		ResetSphere();
-		//sphere.transform.position = currentBoard.allPatterns.First.Value.transform.position;
 	}
 	
-	/*
-	public void SetCurrentTouchPosition(GameObject g) {
-		if (!GameObject.ReferenceEquals(currentTouch, g)) {
-			updateComplete = false;
-			currentTouch = g;
-			Debug.LogWarning("inside sphere");
-		}
-	}*/
-
 	public void Move(GameObject go) {
 		StartCoroutine(MoveSphere(go));
 	}
@@ -76,10 +66,4 @@ public class SphereController : MonoBehaviour {
 		updateComplete = true;
 		EventManager.TriggerEvent("endmove");
 	} 
-		
-	void Update () {
-//		if (!updateComplete) {
-//			Move(currentBoard.allPatterns.First.Value);
-//		}
-	}
 }

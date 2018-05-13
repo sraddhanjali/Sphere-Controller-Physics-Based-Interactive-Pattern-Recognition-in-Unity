@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
@@ -58,9 +59,8 @@ public class Main : MonoBehaviour {
 	void SaveFile(){
 		string filePath = Application.persistentDataPath;
 		string f1 =  string.Format(@"{0}.csv", Guid.NewGuid());
-		string f2 = string.Format("tmp.csv");
 		touchDataPath = filePath + "/" + f1;
-		tempDataPath = filePath + "/"  + f2;
+		File.Create(touchDataPath);
 	}
 
 	void Awake(){
@@ -69,15 +69,9 @@ public class Main : MonoBehaviour {
 	}
 
 	void SetTotalRepetition(){
-		totalRepetition = (repetition * labels.Count)/2;
+		totalRepetition = repetition * labels.Count/2;
 	}
 
-	/*void PrintList(List<string> obj){	
-		for (int i = 0; i < obj.Count; i++){
-			Debug.Log(obj[i]);
-		}
-	}*/
-		
 	void Reset(){
 		level = 0;
 	}

@@ -9,37 +9,6 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 public class GameLogic{
-	
-	public string ChunkToSave(GameObject go, Board b, Vector3 pos) {
-		string cn = int.Parse(go.name).ToString ();
-		string label = b.GetCurrentLabel();
-		Vector3 n = Camera.main.WorldToScreenPoint(pos);
-		string x = n.x.ToString ();
-		string y = n.y.ToString ();
-		string z = n.z.ToString ();
-		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-		string csvstring = string.Format("{0},{1},{2},{3},{4},{5},{6}\n", Main.level.ToString(), label, cn, x, y, z, ts);
-		return csvstring;
-	}
-	
-	void SaveToFile() {	
-		string final = " ";
-		using (StreamReader sr = File.OpenText(Main.tempDataPath)){
-			string s = "";
-			while ((s = sr.ReadLine()) != null) {
-				final += s;
-				final += Environment.NewLine;
-			}
-		}
-		File.AppendAllText(Main.touchDataPath, final);
-	}
-
-	public void TempSave(GameObject go, Board b, Vector3 pos) {
-		string csvstring = ChunkToSave(go, b, pos);
-		if(File.Exists(Main.tempDataPath)) {
-			File.AppendAllText(Main.tempDataPath, csvstring + Environment.NewLine);	
-		}
-	}
 		
 	public void TouchLogic(Board b) {
 		if (Input.touchCount > 0) {
@@ -53,13 +22,11 @@ public class GameLogic{
 				{
 					GameObject go = c2.gameObject;
 					UnityEngine.Debug.Log("object found : " + go.name);
-					//SphereController.instance.SetCurrentTouchPosition(go);
-					//TempSave(go, b, pos);
 					if (b.match){
-						b.StartMatching(go);
+						b.StartMatching(go, pos);
 					}
 					else {
-						if (b.SetPatternToMatchInBoard(go)) {
+						if (b.SetPatternToMatchInBoard(go, pos)) {
 							UnityEngine.Debug.Log("first matching tip of first pattern");
 						}
 					}
@@ -67,16 +34,12 @@ public class GameLogic{
 			}else if(touch.phase == TouchPhase.Ended){
 				UnityEngine.Debug.Log("handlifted");
 				if (b.AllMatched()) {
-					//SaveToFile();
 					UnityEngine.Debug.Log("success triggered in GL");
 					EventManager.TriggerEvent("success");
 				}
 				else {
 					UnityEngine.Debug.LogWarning("fail triggered in GL");
 					EventManager.TriggerEvent("fail");
-					/*if (File.Exists(Main.tempDataPath)){
-						File.Delete(Main.tempDataPath);
-					}*/
 				}
 			}
 		}

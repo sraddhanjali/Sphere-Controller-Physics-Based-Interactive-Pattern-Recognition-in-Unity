@@ -85,40 +85,33 @@ public class Board{
 				tipNode = allPatterns.Last;
 			}
 		}
-		// Print the linkedlist to see if they arrive in order
-		/*foreach (GameObject g in allPatterns) {
-			Debug.Log(g.name);
-		}*/
 	}
-
-	/*public List<LinkedListNode<GameObject>> GetNextNodeImp(LinkedListNode<GameObject> g, List<LinkedListNode<GameObject>> refList, int count) {
-		if (g != null) {
-			LinkedListNode<GameObject> next = g.Next;
-			if (count == 0 || next == null) {
-				return refList;
-			}
-			refList.Add(next);
-			return GetNextNodeImp(next, refList, --count);
-		}
-		return refList;
-	}
-
-	public List<LinkedListNode<GameObject>> GetNextNode(GameObject g, int count=3) {
-		List<LinkedListNode<GameObject>> refList = new List<LinkedListNode<GameObject>>();
-		LinkedListNode<GameObject> gll = allPatterns.Find(g);
-		return GetNextNodeImp(gll, refList, count);
-	}*/
 	
-	public void StartMatching(GameObject go){
+	public string ChunkToSave(GameObject go, Vector3 pos) {
+		string cn = int.Parse(go.name).ToString ();
+		string label = GetCurrentLabel();
+		Vector3 n = Camera.main.WorldToScreenPoint(pos);
+		string x = n.x.ToString ();
+		string y = n.y.ToString ();
+		string z = n.z.ToString ();
+		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+		string csvstring = string.Format("{0},{1},{2},{3},{4},{5},{6}", Main.level.ToString(), label, cn, x, y, z, ts);
+		return csvstring;
+	}
+	
+	public void StartMatching(GameObject go, Vector3 pos){
 		List<GameObject> patternGO = patterns[matchingIndex].sequence;
 		if (GameObject.ReferenceEquals(patternGO[counter], go)){
+			GameData.instance.LoadToTemp(ChunkToSave(go, pos));
 			go.GetComponent<SpriteRenderer> ().material.color = Color.black;
+			EventManager.TriggerEvent("matches");
 			GameObject g1 = patternGO[counter];
 			GameObject g2 = patternGO[patternGO.Count-1];
 			if (g1 == g2){
 				Debug.Log("Last endpoint matched");
 				if (AllMatched()) {
 					Debug.Log("success triggered in B 0");
+					GameData.instance.SaveToFile();
 					EventManager.TriggerEvent("success");
 				}
 				else {
@@ -131,10 +124,11 @@ public class Board{
 			else{
 				counter += 1;
 				Debug.Log("matched in B");
+				EventManager.TriggerEvent("matches");
 			}
-			EventManager.TriggerEvent("matches");
 		}
 		else if (GameObject.ReferenceEquals(patternGO[counter-1], go)) {
+			GameData.instance.LoadToTemp(ChunkToSave(go, pos));
 			Debug.Log("Pressing previous region");
 		}
 		else{
@@ -143,10 +137,11 @@ public class Board{
 		}
 	}
 
-	public bool SetPatternToMatchInBoard(GameObject go) {
+	public bool SetPatternToMatchInBoard(GameObject go, Vector3 pos) {
 		for (int i = 0; i < patterns.Count; i++){
 			List<GameObject> patternGO = patterns[i].sequence;
-			if (GameObject.ReferenceEquals(patternGO[0], go)){
+			if (GameObject.ReferenceEquals(patternGO[0], go)) {
+				GameData.instance.LoadToTemp(ChunkToSave(go, pos));
 				match = true;
 				matchingIndex = i;
 				go.GetComponent<SpriteRenderer> ().material.color = Color.black;
