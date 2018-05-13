@@ -13,7 +13,7 @@ public class Main : MonoBehaviour {
 	public Shader shader1;
 	public static Sprite[] sprites;
 	public AudioClip moveSound;
-	public static int repetition = 1;
+	public static int repetition = 2;
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static int patternIndex = 0;
@@ -29,7 +29,6 @@ public class Main : MonoBehaviour {
 	Loader loader = new Loader();
 	
 	public static string touchDataPath;
-	public static string tempDataPath; 
 	public static int playerPoints = 0;
 	public static string statusText;
 	public static bool right = false;
@@ -42,7 +41,7 @@ public class Main : MonoBehaviour {
 		boxStyle.normal.textColor = Color.green;
 		boxStyle1.fontSize = 100;
 		boxStyle1.normal.textColor = Color.red;
-		GUILayout.Label ("\n level: " + level + "points:" + playerPoints, guiStyle);
+		GUILayout.Label ("\n Level: " + level + "Points:" + playerPoints, guiStyle);
 		if (right) {
 			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle);	
 		}
@@ -72,12 +71,8 @@ public class Main : MonoBehaviour {
 		totalRepetition = repetition * labels.Count/2;
 	}
 
-	void Reset(){
+	void GameOver() {
 		level = 0;
-	}
-	
-	void GameOver(){
-		Reset();
 		ListenerStop();
 		SceneManager.LoadScene ("Menu");
 	}
@@ -87,18 +82,6 @@ public class Main : MonoBehaviour {
 		EventManager.StopListening("fail", ReloadLevel);
 		EventManager.StopListening("gameover", GameOver);
 		EventManager.StopListening("matches", Vibrate);
-	}
-	
-	void ClearBoard() {
-		Debug.Log("clearing " + level.ToString() + " in main.cs");
-		gd.Clear(GetBoard());
-		GetBoard().ClearVariableState();
-	}
-	
-	void SetBoardLevel(){
-		if (level % repetition == 0 && level != 0) {
-			patternIndex += 1;
-		}
 	}
 	
 	Board GetBoard(){
@@ -140,10 +123,23 @@ public class Main : MonoBehaviour {
 		ListenersInit();
 		InitBoard();
 	}
+	
+	void ClearBoard() {
+		Debug.Log("clearing " + level.ToString() + " in main.cs");
+		gd.Clear(GetBoard());
+		GetBoard().ClearVariableState();
+	}
+	
+	void SetBoardLevel(){
+		if (level % repetition == 0 && level != 0) {
+			patternIndex += 1;
+			GetBoard().LoadLinkedList();
+		}
+	}
 
 	void InitBoard(){
 		SetBoardLevel ();
-		GetBoard().LoadLinkedList();
+		//GetBoard().LoadLinkedList();
 		SphereController.instance.SetBoard(GetBoard());
 	}
 
