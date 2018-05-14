@@ -36,10 +36,10 @@ public class Loader{
 				}
 				if (lenSplit2 != 1){
 					if (j == 0){
-						labels.Add(allPatterns[lenSplit1 - 2]);
+						LabelsStore(allPatterns[lenSplit1 - 2]);
 					}
 					else{
-						labels.Add(allPatterns[lenSplit1 - 1]);
+						LabelsStore(allPatterns[lenSplit1 - 1]);
 					}
 					Pattern pat = new Pattern(p, labels[labels.Count-1]);
 					board.AddPattern(pat);
@@ -55,6 +55,6 @@ public class Loader{
 	}
 
 	public List<string> GetLabels(){
-		return this.labels;
+		return labels;
 	}
 }

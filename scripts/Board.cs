@@ -13,98 +13,140 @@ public class Board{
 	private int counter = 0;
 	private int matchedCount = 0;
 	public List<string> labels = new List<string>();
+	public LinkedList<GameObject> allPatterns = new LinkedList<GameObject>();
 	
 	public Board(){
 		matchingIndex = 0;
-	}
-
-	public List<string> GetLabels(){
-		return this.labels;
+		LoadLinkedList();
 	}
 
 	public void AddPattern(Pattern pattern){
-		this.patterns.Add(pattern);
-		this.labels.Add(pattern.getName());
+		patterns.Add(pattern);
+		labels.Add(pattern.getName());
 	}
 
 	public void AddObstacle(Obstacle obstacle){
-		this.obstacles.Add(obstacle);
-	}
-
-	public List<Pattern> GetPatterns(){
-		return this.patterns;
-	}
-
-	public List<Obstacle> GetObstacles(){
-		return this.obstacles;
+		obstacles.Add(obstacle);
 	}
 
 	public string GetCurrentLabel(){
-		return this.labels[this.matchingIndex];
+		return labels[matchingIndex];
 	}
 
 	public void ClearVariableState(){
-		this.counter = 0;
-		this.match = false;
-		this.matchingIndex = 0;
+		counter = 0;
+		match = false;
+		matchingIndex = 0;
+		ClearAllPatterns();
 	}
 
-	public int GetCurrentPatternSize(){
-		return this.patterns.Count;
+	public int GetCurrentPatternSize() {
+		return patterns.Count;
 	}
 
 	public bool AllMatched(){
-		if (this.matchedCount == this.GetCurrentPatternSize()){
-			this.matchedCount = 0;
-			this.ClearVariableState();
+		if (matchedCount == GetCurrentPatternSize()){
+			matchedCount = 0;
+			ClearVariableState();
 			return true;
 		}
-		else{
-			return false;
-		}
-	}	
+		return false;
+	}
 	
 	public List<GameObject> ToDraw(){
-		List<Obstacle> obstacle = this.obstacles;
-		List<Pattern> pattern = this.patterns;
+		List<Obstacle> obstacle = obstacles;
+		List<Pattern> pattern = patterns;
 		List<GameObject> bigChunk = new List<GameObject>();
 		for (int i = 0; i < pattern.Count; i++){
 			bigChunk.AddRange(pattern[i].sequence);
 			if (i == 0){
 				if(obstacle.Count > 0){
-					bigChunk.Add(obstacle[0].gameObject); // 8
+					bigChunk.Add(obstacle[0].gameObject);
 				}
 			}
 		}
 		return bigChunk;
 	}
-	
-	public void StartMatching(GameObject go){
-		List<GameObject> patternGO = this.patterns[this.matchingIndex].sequence;
-		if (GameObject.ReferenceEquals(patternGO[counter], go)){
-			go.GetComponent<SpriteRenderer> ().material.color = Color.red;
-			if (patternGO[counter] == patternGO[patternGO.Count - 1]){
-				Debug.Log("Last endpoint matched" + patternGO[counter] + go.name);
-				this.ClearVariableState();
-				this.matchedCount += 1;
-			}
-			else{
-				Debug.Log("matched");
-				this.counter += 1;
+
+	public void LoadLinkedList() {
+		LinkedListNode<GameObject> tipNode = null;
+		foreach (Pattern p in patterns) {
+			foreach (GameObject g in p.sequence) {
+				if (tipNode == null) {
+					allPatterns.AddFirst(g);	
+				}
+				else {
+					allPatterns.AddAfter(tipNode, g);
+				}
+				tipNode = allPatterns.Last;
 			}
 		}
 	}
 
-	public bool SetPatternToMatchInBoard(GameObject go){
-		for (int i = 0; i < this.patterns.Count; i++){
-			List<GameObject> patternGO = this.patterns[i].sequence;
-			if (GameObject.ReferenceEquals(patternGO[0], go)){
-				Debug.Log(patternGO[0] + go.name);
-				this.match = true;
-				Debug.Log("matching init...");	
-				this.matchingIndex = i;
-				go.GetComponent<SpriteRenderer> ().material.color = Color.red;
-				this.counter += 1;
+	public void ClearAllPatterns() {
+		allPatterns = new LinkedList<GameObject>();
+	}
+	
+	public string ChunkToSave(GameObject go, Vector3 pos) {
+		string cn = int.Parse(go.name).ToString ();
+		string label = GetCurrentLabel();
+		Vector3 n = Camera.main.WorldToScreenPoint(pos);
+		string x = n.x.ToString ();
+		string y = n.y.ToString ();
+		string z = n.z.ToString ();
+		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+		string csvstring = string.Format("{0},{1},{2},{3},{4},{5},{6}", Main.level.ToString(), label, cn, x, y, z, ts);
+		return csvstring;
+	}
+	
+	public void StartMatching(GameObject go, Vector3 pos){
+		List<GameObject> patternGO = patterns[matchingIndex].sequence;
+		if (GameObject.ReferenceEquals(patternGO[counter], go)){
+			GameData.instance.LoadToTemp(ChunkToSave(go, pos));
+			go.GetComponent<SpriteRenderer> ().material.color = Color.black;
+			EventManager.TriggerEvent("matches");
+			GameObject g1 = patternGO[counter];
+			GameObject g2 = patternGO[patternGO.Count-1];
+			if (g1 == g2){
+				Debug.Log("Last endpoint matched");
+				if (AllMatched()) {
+					Debug.Log("success triggered in B 0");
+					GameData.instance.SaveToFile();
+					EventManager.TriggerEvent("success");
+				}
+				else {
+					matchedCount += 1;
+					match = false;
+					counter = 0;
+					Debug.Log("start matching next pattern");
+				}
+			}
+			else{
+				counter += 1;
+				Debug.Log("matched in B");
+				EventManager.TriggerEvent("matches");
+			}
+		}
+		else if (GameObject.ReferenceEquals(patternGO[counter-1], go)) {
+			GameData.instance.LoadToTemp(ChunkToSave(go, pos));
+			Debug.Log("Pressing previous region");
+		}
+		else{
+			Debug.LogWarning("fail triggered in B 1");
+			EventManager.TriggerEvent("fail");
+		}
+	}
+
+	public bool SetPatternToMatchInBoard(GameObject go, Vector3 pos) {
+		for (int i = 0; i < patterns.Count; i++){
+			List<GameObject> patternGO = patterns[i].sequence;
+			if (GameObject.ReferenceEquals(patternGO[0], go)) {
+				GameData.instance.LoadToTemp(ChunkToSave(go, pos));
+				match = true;
+				matchingIndex = i;
+				go.GetComponent<SpriteRenderer> ().material.color = Color.black;
+				counter += 1;
+				EventManager.TriggerEvent("matches");
 				return true;
 			}
 		}
