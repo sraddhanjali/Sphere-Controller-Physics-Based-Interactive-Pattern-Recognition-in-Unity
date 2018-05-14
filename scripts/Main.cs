@@ -17,7 +17,6 @@ public class Main : MonoBehaviour {
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static int patternIndex = 0;
-
 	public bool moveFlag = false;
 
 	GridDecorate gd = new GridDecorate();
@@ -41,7 +40,7 @@ public class Main : MonoBehaviour {
 		boxStyle.normal.textColor = Color.green;
 		boxStyle1.fontSize = 100;
 		boxStyle1.normal.textColor = Color.red;
-		GUILayout.Label ("\n Level: " + level + "Points:" + playerPoints, guiStyle);
+		GUILayout.Label ("\n level: " + level + " points:" + playerPoints, guiStyle);
 		if (right) {
 			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle);	
 		}
@@ -68,13 +67,13 @@ public class Main : MonoBehaviour {
 	}
 
 	void SetTotalRepetition(){
-		totalRepetition = repetition * labels.Count/2;
+		totalRepetition = (repetition * labels.Count)/2; // Labels are 14*2 but occur in pair so divide by 2 
 	}
 
 	void GameOver() {
 		level = 0;
 		ListenerStop();
-		SceneManager.LoadScene ("Menu");
+		SceneManager.LoadScene("Menu");
 	}
 
 	void ListenerStop() {
@@ -125,7 +124,7 @@ public class Main : MonoBehaviour {
 	}
 	
 	void ClearBoard() {
-		Debug.Log("clearing " + level.ToString() + " in main.cs");
+		Debug.Log("clearing " + level.ToString() + "in main.cs");
 		gd.Clear(GetBoard());
 		GetBoard().ClearVariableState();
 	}
@@ -133,13 +132,12 @@ public class Main : MonoBehaviour {
 	void SetBoardLevel(){
 		if (level % repetition == 0 && level != 0) {
 			patternIndex += 1;
-			GetBoard().LoadLinkedList();
 		}
 	}
 
 	void InitBoard(){
 		SetBoardLevel ();
-		//GetBoard().LoadLinkedList();
+		GetBoard().LoadLinkedList();
 		SphereController.instance.SetBoard(GetBoard());
 	}
 
@@ -152,11 +150,13 @@ public class Main : MonoBehaviour {
 		InitBoard();
 	}
 
-	public void ReloadLevel() {
+	void ReloadLevel() {
 		PlayWrongMoveSound();
 		statusText = "Try again!";
 		right = false;
 		ClearBoard();
+		GetBoard().LoadLinkedList();
+		SphereController.instance.SetBoard(GetBoard());
 	}
 
 	void Update(){

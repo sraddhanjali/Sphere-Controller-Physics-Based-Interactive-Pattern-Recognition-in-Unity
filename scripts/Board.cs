@@ -20,10 +20,6 @@ public class Board{
 		LoadLinkedList();
 	}
 
-	public List<string> GetLabels(){
-		return labels;
-	}
-
 	public void AddPattern(Pattern pattern){
 		patterns.Add(pattern);
 		labels.Add(pattern.getName());
@@ -41,6 +37,7 @@ public class Board{
 		counter = 0;
 		match = false;
 		matchingIndex = 0;
+		ClearAllPatterns();
 	}
 
 	public int GetCurrentPatternSize() {
@@ -71,7 +68,6 @@ public class Board{
 		return bigChunk;
 	}
 
-	//TODO: Obstacle needs to be added in line with the pattern list
 	public void LoadLinkedList() {
 		LinkedListNode<GameObject> tipNode = null;
 		foreach (Pattern p in patterns) {
@@ -85,6 +81,10 @@ public class Board{
 				tipNode = allPatterns.Last;
 			}
 		}
+	}
+
+	public void ClearAllPatterns() {
+		allPatterns = new LinkedList<GameObject>();
 	}
 	
 	public string ChunkToSave(GameObject go, Vector3 pos) {

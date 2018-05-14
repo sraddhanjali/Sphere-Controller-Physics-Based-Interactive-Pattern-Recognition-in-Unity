@@ -23,27 +23,18 @@ public class SphereController : MonoBehaviour {
 	void Start () {
 		sphere = GameObject.FindGameObjectWithTag("Sphere");
 		sphere.GetComponent<MeshRenderer>().material.color = Color.red;
-		EventManager.StartListening("fail", ResetSphere);
-		EventManager.StartListening("gameover", StopListeners);
 	}
 
-	void StopListeners() {
-		EventManager.StopListening("fail", ResetSphere);
-		EventManager.StopListening("gameover", StopListeners);
-	}
-
-	private void ResetSphere() {
-		sphere.transform.position = currentBoard.allPatterns.First.Value.transform.position; 
-		StartCoroutine(MoveSphere());
-	}
-	
 	public void SetBoard (Board board) {
 		currentBoard = board;
 		ResetSphere();
 	}
 	
+	private void ResetSphere() {
+		StartCoroutine(MoveSphere());
+	}
+	
 	private IEnumerator MoveSphere() {
-		
 		EventManager.TriggerEvent("startmove");
 		float speed = 1.0f / (float) MainMenuButtons.speed;
 		foreach (GameObject currentBoardAllPattern in currentBoard.allPatterns) {
