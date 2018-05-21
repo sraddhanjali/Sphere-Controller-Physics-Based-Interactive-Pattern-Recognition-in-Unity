@@ -35,12 +35,12 @@ public class SphereController : MonoBehaviour {
 	}
 	
 	private IEnumerator MoveSphere() {
-		EventManager.TriggerEvent("startmove");
+		//EventManager.TriggerEvent("startmove");
 		float speed = 1.0f / (float) MainMenuButtons.speed;
 		foreach (GameObject currentBoardAllPattern in currentBoard.allPatterns) {
 			sphere.transform.position = currentBoardAllPattern.transform.position;
 			yield return new WaitForSeconds(speed);
 		}
-		EventManager.TriggerEvent("endmove");
+		//EventManager.TriggerEvent("endmove");
 	} 
 }

@@ -161,9 +161,7 @@ public class Main : MonoBehaviour {
 
 	void Update(){
 		if (level < totalRepetition) {
-			if (!moveFlag) {
-				gl.TouchLogic (GetBoard());	
-			}
+			gl.TouchLogic (GetBoard());	
 		}
 		else {
 			Debug.Log("gameover triggered in Main");
