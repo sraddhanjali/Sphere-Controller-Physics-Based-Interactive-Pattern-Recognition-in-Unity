@@ -25,11 +25,10 @@ public class GameLogic {
 					if (previousGO != go) {
 						b.MatchPatterns(go, pos);
 						previousGO = go;
+						EventManager.TriggerEvent("matches");
+						go.GetComponent<SpriteRenderer> ().material.color = Color.black;
+						UnityEngine.Debug.Log("object found : " + go.name);
 					}
-					EventManager.TriggerEvent("matches");
-					go.GetComponent<SpriteRenderer> ().material.color = Color.black;
-					UnityEngine.Debug.Log("object found : " + go.name);
-					
 					/*if (b.match){
 						b.StartMatching(go, pos);
 					}

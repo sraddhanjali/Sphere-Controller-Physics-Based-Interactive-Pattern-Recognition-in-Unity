@@ -3,21 +3,18 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour {
 	
-	public Shader shader1;
-	public static Sprite[] sprites;
-	public AudioClip moveSound;
-	public static int repetition = 20;
-	public int totalRepetition = 0;
+	public static int repetition = 2;
 	public static int level = 0;
 	public static int patternIndex = 0;
-	public bool moveFlag = false;
 
 	GridDecorate gd = new GridDecorate();
 	GameLogic gl = new GameLogic();
@@ -32,6 +29,11 @@ public class Main : MonoBehaviour {
 	public static int playerPoints = 0;
 	public static string statusText;
 	public static bool right = false;
+	public Shader shader1;
+	public static Sprite[] sprites;
+	public AudioClip moveSound;
+	public int totalRepetition = 0;
+	public int rep = 1;
 	private List<string> labels = new List<string>();
 	
 	protected void OnGUI(){
@@ -41,7 +43,7 @@ public class Main : MonoBehaviour {
 		boxStyle.normal.textColor = Color.green;
 		boxStyle1.fontSize = 70;
 		boxStyle1.normal.textColor = Color.red;
-		GUILayout.Label ("\n level: " + level + "          points:" + playerPoints, guiStyle);
+		GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
 		if (right) {
 			GUI.Box(new Rect(250, 400, 500, 100), statusText, boxStyle);	
 		}
@@ -105,14 +107,6 @@ public class Main : MonoBehaviour {
 		audio.Play();
 	}
 
-	void SetMoveFlag() {
-		moveFlag = true;
-	}
-
-	void UnsetMoveFlag() {
-		moveFlag = false;
-	}
-	
 	void ListenersInit() {
 		EventManager.StartListening("success", NextBoard);
 		EventManager.StartListening("fail", ReloadLevel);
@@ -133,10 +127,17 @@ public class Main : MonoBehaviour {
 		gd.Clear();
 		GetBoard().ClearVariableState();
 	}
-	
-	void SetBoardLevel(){
-		if (level % repetition == 0 && level != 0) {
+
+	void SetBoardLevel() {
+		/*if (level % repetition == 0 && level != 0) {
 			patternIndex += 1;
+		}*/
+		if (level < labels.Count / 2 && level != 0) {
+			patternIndex += 1;
+		} else {
+			rep += 1;
+			level = 0;
+			patternIndex = 0;
 		}
 	}
 
@@ -165,7 +166,7 @@ public class Main : MonoBehaviour {
 	}
 
 	void Update(){
-		if (level < totalRepetition) {
+		if (rep <= totalRepetition) {
 			gl.TouchLogic (GetBoard());	
 		}
 		else {
