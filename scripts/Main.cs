@@ -13,7 +13,7 @@ public class Main : MonoBehaviour {
 	public Shader shader1;
 	public static Sprite[] sprites;
 	public AudioClip moveSound;
-	public static int repetition = 2;
+	public static int repetition = 20;
 	public int totalRepetition = 0;
 	public static int level = 0;
 	public static int patternIndex = 0;
@@ -28,6 +28,7 @@ public class Main : MonoBehaviour {
 	Loader loader = new Loader();
 	
 	public static string touchDataPath;
+	public static string wrongDataPath;
 	public static int playerPoints = 0;
 	public static string statusText;
 	public static bool right = false;
@@ -36,16 +37,19 @@ public class Main : MonoBehaviour {
 	protected void OnGUI(){
 		guiStyle.fontSize = 50;
 		guiStyle.normal.textColor = Color.black;
-		boxStyle.fontSize = 100;
+		boxStyle.fontSize = 70;
 		boxStyle.normal.textColor = Color.green;
-		boxStyle1.fontSize = 100;
+		boxStyle1.fontSize = 70;
 		boxStyle1.normal.textColor = Color.red;
-		GUILayout.Label ("\n level: " + level + " points:" + playerPoints, guiStyle);
+		GUILayout.Label ("\n level: " + level + "          points:" + playerPoints, guiStyle);
 		if (right) {
-			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle);	
+			GUI.Box(new Rect(250, 400, 500, 100), statusText, boxStyle);	
+		}
+		else if(!right) {
+			GUI.Box(new Rect(250, 400, 500, 100), statusText, boxStyle1);
 		}
 		else {
-			GUI.Box(new Rect(350, 100, 500, 100), statusText, boxStyle1);
+			GUI.Box(new Rect(250, 400, 500, 100), statusText, boxStyle1);
 		}
 	}
 
@@ -56,9 +60,12 @@ public class Main : MonoBehaviour {
 
 	void SaveFile(){
 		string filePath = Application.persistentDataPath;
-		string f1 =  string.Format(@"{0}.csv", Guid.NewGuid());
+		string f1 =  string.Format(@"RIGHT{0}.csv", Guid.NewGuid());
+		string f2 =  string.Format(@"WRONG{0}.csv", Guid.NewGuid());
 		touchDataPath = filePath + "/" + f1;
+		wrongDataPath = filePath + "/" + f2;
 		File.Create(touchDataPath);
+		File.Create(wrongDataPath);
 	}
 
 	void Awake(){
@@ -80,14 +87,14 @@ public class Main : MonoBehaviour {
 		EventManager.StopListening("success", NextBoard);
 		EventManager.StopListening("fail", ReloadLevel);
 		EventManager.StopListening("gameover", GameOver);
-		EventManager.StopListening("matches", Vibrate);
+		EventManager.StopListening("matches", Vibration);
 	}
 	
 	Board GetBoard(){
 		return boardList[patternIndex];
 	}
 
-	void Vibrate() {
+	void Vibration() {
 		Handheld.Vibrate();
 	}
 
@@ -110,9 +117,7 @@ public class Main : MonoBehaviour {
 		EventManager.StartListening("success", NextBoard);
 		EventManager.StartListening("fail", ReloadLevel);
 		EventManager.StartListening("gameover", GameOver);
-		EventManager.StartListening("matches", Vibrate);
-		EventManager.StartListening("startmove", SetMoveFlag);
-		EventManager.StartListening("endmove", UnsetMoveFlag);
+		EventManager.StartListening("matches", Vibration);
 	}
 	
 	void Start(){
@@ -125,7 +130,7 @@ public class Main : MonoBehaviour {
 	
 	void ClearBoard() {
 		Debug.Log("clearing " + level.ToString() + "in main.cs");
-		gd.Clear(GetBoard());
+		gd.Clear();
 		GetBoard().ClearVariableState();
 	}
 	
@@ -142,7 +147,7 @@ public class Main : MonoBehaviour {
 	}
 
 	void NextBoard() {
-		statusText = "Great Job!";
+		statusText = "Correct Pattern!";
 		right = true;
 		playerPoints += 100;
 		ClearBoard ();
@@ -152,7 +157,7 @@ public class Main : MonoBehaviour {
 
 	void ReloadLevel() {
 		PlayWrongMoveSound();
-		statusText = "Try again!";
+		statusText = "Wrong Pattern!";
 		right = false;
 		ClearBoard();
 		GetBoard().LoadLinkedList();

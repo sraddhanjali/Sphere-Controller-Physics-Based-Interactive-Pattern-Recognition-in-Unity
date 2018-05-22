@@ -1,8 +1,13 @@
 using UnityEngine; // vector3
-using System; // string
+using System;
+using System.CodeDom.Compiler;
+// string
 using System.IO;
 using System.Text;
-using System.Collections.Generic; // list, dictionary
+using System.Linq;
+using System.Collections.Generic;
+
+// list, dictionary
 
 public class Board{
 	List<Pattern> patterns = new List<Pattern>();
@@ -14,7 +19,9 @@ public class Board{
 	private int matchedCount = 0;
 	public List<string> labels = new List<string>();
 	public LinkedList<GameObject> allPatterns = new LinkedList<GameObject>();
-	
+	public List<string> swipedPatterns = new List<string>();
+	public List<string> actualPatterns = new List<string>();
+		
 	public Board(){
 		matchingIndex = 0;
 		LoadLinkedList();
@@ -79,12 +86,16 @@ public class Board{
 					allPatterns.AddAfter(tipNode, g);
 				}
 				tipNode = allPatterns.Last;
+				actualPatterns.Add(g.name);
 			}
 		}
 	}
 
 	public void ClearAllPatterns() {
-		allPatterns = new LinkedList<GameObject>();
+		//allPatterns = new LinkedList<GameObject>();
+		allPatterns.Clear();
+		swipedPatterns.Clear();
+		actualPatterns.Clear();
 	}
 	
 	public string ChunkToSave(GameObject go, Vector3 pos) {
@@ -111,7 +122,7 @@ public class Board{
 				Debug.Log("Last endpoint matched");
 				if (AllMatched()) {
 					Debug.Log("success triggered in B 0");
-					GameData.instance.SaveToFile();
+					//GameData.instance.SaveToFile();
 					EventManager.TriggerEvent("success");
 				}
 				else {
@@ -151,5 +162,25 @@ public class Board{
 			}
 		}
 		return false;
+	}
+
+	public void MatchPatterns(GameObject go, Vector3 pos) {
+		int number = Int32.Parse(go.name);
+		if (number > 9) {
+			if (matchingIndex == 0) {
+				matchingIndex += 1;	
+			}
+		}
+		else {
+			matchingIndex = 0;
+		}
+		GameData.instance.LoadToTemp(ChunkToSave(go, pos));
+		swipedPatterns.Add(go.name);
+	}
+
+	public bool PatternsMatch() {
+		List<string> distinct = swipedPatterns.ToList();
+		bool equal = distinct.SequenceEqual(actualPatterns);
+		return equal;
 	}
 }
