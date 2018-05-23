@@ -7,7 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public class GameLogic{
+public class GameLogic {
+
+	public static GameObject previousGO = null;
 		
 	public void TouchLogic(Board b) {
 		if (Input.touchCount > 0) {
@@ -20,24 +22,24 @@ public class GameLogic{
 				foreach (Collider2D c2 in currentFrame)
 				{
 					GameObject go = c2.gameObject;
-					UnityEngine.Debug.Log("object found : " + go.name);
-					if (b.match){
-						b.StartMatching(go, pos);
-					}
-					else {
-						if (b.SetPatternToMatchInBoard(go, pos)) {
-							UnityEngine.Debug.Log("first matching tip of first pattern");
-						}
+					if (previousGO != go) {
+						b.MatchPatterns(go, pos);
+						previousGO = go;
+						EventManager.TriggerEvent("matches");
+						go.GetComponent<SpriteRenderer> ().material.color = Color.black;
+						UnityEngine.Debug.Log("object found : " + go.name);
 					}
 				}
 			}else if(touch.phase == TouchPhase.Ended){
 				UnityEngine.Debug.Log("handlifted");
-				if (b.AllMatched()) {
+				if (b.PatternsMatch()) {
 					UnityEngine.Debug.Log("success triggered in GL");
+					GameData.instance.SaveToFile(Main.touchDataPath);
 					EventManager.TriggerEvent("success");
 				}
 				else {
 					UnityEngine.Debug.LogWarning("fail triggered in GL");
+					GameData.instance.SaveToFile(Main.wrongDataPath);
 					EventManager.TriggerEvent("fail");
 				}
 			}

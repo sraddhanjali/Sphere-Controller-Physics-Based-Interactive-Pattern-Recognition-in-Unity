@@ -8,7 +8,7 @@ public class GameData : MonoBehaviour {
 
     public static GameData instance = null;
     
-    public static List<string> tempData = new List<String>();
+    public static List<string> tempData = new List<string>();
 
     void Awake() {
         if (instance == null)
@@ -18,17 +18,17 @@ public class GameData : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start() {
+    /*private void Start() {
         EventManager.StartListening("save", SaveToFile);
-    }
+    }*/
 
     public void LoadToTemp(string data) {
         tempData.Add(data);
     }
 
-    public void SaveToFile() {
+    public void SaveToFile(string Location) {
         for (int i = 0; i < tempData.Count; i++) {
-            File.AppendAllText(Main.touchDataPath, tempData[i] + Environment.NewLine);    
+            File.AppendAllText(Location, tempData[i] + Environment.NewLine);    
         }
         tempData.Clear();
     }
