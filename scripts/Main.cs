@@ -31,7 +31,8 @@ public class Main : MonoBehaviour {
 	public static bool right = false;
 	public Shader shader1;
 	public static Sprite[] sprites;
-	public AudioClip moveSound;
+	public AudioClip wrongSound;
+	public AudioClip rightSound;
 	public int totalRepetition = 0;
 	public int rep = 1;
 	private List<string> labels = new List<string>();
@@ -100,11 +101,14 @@ public class Main : MonoBehaviour {
 		Handheld.Vibrate();
 	}
 
-	void PlayWrongMoveSound() {
+	IEnumerator PlaySound(AudioClip sound, string message) {
 		AudioSource audio = GetComponent<AudioSource>();
 		audio.pitch = 0.95f;
-		audio.clip = moveSound;
+		audio.clip = sound;
 		audio.Play();
+		statusText = message;
+		yield return new WaitForSeconds(0.3f);
+		statusText = " ";
 	}
 
 	void ListenersInit() {
@@ -129,9 +133,6 @@ public class Main : MonoBehaviour {
 	}
 
 	void SetBoardLevel() {
-		/*if (level % repetition == 0 && level != 0) {
-			patternIndex += 1;
-		}*/
 		if (level < labels.Count / 2 && level != 0) {
 			patternIndex += 1;
 		} else {
@@ -148,7 +149,7 @@ public class Main : MonoBehaviour {
 	}
 
 	void NextBoard() {
-		statusText = "Correct Pattern!";
+		StartCoroutine(PlaySound(rightSound, "Correct Pattern!"));
 		right = true;
 		playerPoints += 100;
 		ClearBoard ();
@@ -157,8 +158,7 @@ public class Main : MonoBehaviour {
 	}
 
 	void ReloadLevel() {
-		PlayWrongMoveSound();
-		statusText = "Wrong Pattern!";
+		StartCoroutine(PlaySound(wrongSound, "Wrong Pattern"));
 		right = false;
 		ClearBoard();
 		GetBoard().LoadLinkedList();

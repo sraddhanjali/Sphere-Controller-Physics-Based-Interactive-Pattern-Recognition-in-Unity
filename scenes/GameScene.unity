@@ -483,9 +483,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader1: {fileID: 0}
-  moveSound: {fileID: 0}
+  wrongSound: {fileID: 8300000, guid: e963f7d2115404b83b6ff6d483dee5fa, type: 3}
+  rightSound: {fileID: 8300000, guid: 2030301a3b0764d0d996646ee6a07087, type: 3}
   totalRepetition: 0
-  moveFlag: 0
+  rep: 1
 --- !u!82 &1414527999
 AudioSource:
   m_ObjectHideFlags: 0

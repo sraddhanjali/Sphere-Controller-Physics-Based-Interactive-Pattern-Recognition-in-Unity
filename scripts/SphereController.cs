@@ -40,5 +40,5 @@ public class SphereController : MonoBehaviour {
 			sphere.transform.position = currentBoardAllPattern.transform.position;
 			yield return new WaitForSeconds(speed);
 		}
-	} 
+	}
 }

@@ -29,22 +29,9 @@ public class GameLogic {
 						go.GetComponent<SpriteRenderer> ().material.color = Color.black;
 						UnityEngine.Debug.Log("object found : " + go.name);
 					}
-					/*if (b.match){
-						b.StartMatching(go, pos);
-					}
-					else {
-						if (b.SetPatternToMatchInBoard(go, pos)) {
-							UnityEngine.Debug.Log("first matching tip of first pattern");
-						}
-					}*/
-					
 				}
 			}else if(touch.phase == TouchPhase.Ended){
 				UnityEngine.Debug.Log("handlifted");
-				/*if (b.AllMatched()) {
-					UnityEngine.Debug.Log("success triggered in GL");
-					EventManager.TriggerEvent("success");
-				}*/
 				if (b.PatternsMatch()) {
 					UnityEngine.Debug.Log("success triggered in GL");
 					GameData.instance.SaveToFile(Main.touchDataPath);
