@@ -61,13 +61,6 @@ public class SphereController : MonoBehaviour {
 		StartCoroutine(MoveSphere());
 	}
 	
-	/*private IEnumerator MoveSphere() {
-		foreach (GameObject currentBoardAllPattern in currentBoard.allPatterns) {
-			sphere.transform.position = currentBoardAllPattern.transform.position;
-			yield return new WaitForSeconds(speed);
-		}
-	}*/
-
 	private IEnumerator MoveSphere() {
 		for (int i = 0; i < interPoints.Count; i++) {
 			sphere.transform.position = interPoints[i];
