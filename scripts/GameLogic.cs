@@ -17,7 +17,6 @@ public class GameLogic {
 			if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled) {
 				Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
 				pos.z = -1;
-				
 				Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 				foreach (Collider2D c2 in currentFrame)
 				{
