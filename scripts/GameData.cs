@@ -18,10 +18,6 @@ public class GameData : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    /*private void Start() {
-        EventManager.StartListening("save", SaveToFile);
-    }*/
-
     public void LoadToTemp(string data) {
         tempData.Add(data);
     }
