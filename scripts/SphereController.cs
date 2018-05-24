@@ -60,7 +60,7 @@ public class SphereController : MonoBehaviour {
 	private IEnumerator MoveSphere() {
 		int i = 0;
 		foreach (Vector3 points in interPoints) {
-			if (i >= 20) {
+			if (i >= 10) {
 				Main.enableTouch = true;
 			}
 			else {

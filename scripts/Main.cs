@@ -177,12 +177,12 @@ public class Main : MonoBehaviour {
 	void Update(){
 		if (rep <= totalRepetition) {
 			if (enableTouch == true) {
-				waitText = " ";
+				waitText = "Start";
 				PlaySound();
 				gl.TouchLogic (GetBoard());
 			}
 			else {
-				waitText = "Wait Until You Hear The Sound!";
+				waitText = "Wait";
 				StopSound();
 			}
 		}
