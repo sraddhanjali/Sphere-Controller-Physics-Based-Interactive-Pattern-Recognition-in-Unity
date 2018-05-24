@@ -90,24 +90,15 @@ public class Main : MonoBehaviour {
 		EventManager.StopListening("success", NextBoard);
 		EventManager.StopListening("fail", ReloadLevel);
 		EventManager.StopListening("gameover", GameOver);
-		EventManager.StopListening("matches", Vibration);
 	}
 	
 	Board GetBoard(){
 		return boardList[patternIndex];
 	}
 
-	void Vibration() {
-		Handheld.Vibrate();
-	}
-
-	IEnumerator PlaySound(AudioClip sound, string message) {
-		AudioSource audio = GetComponent<AudioSource>();
-		audio.pitch = 0.95f;
-		audio.clip = sound;
-		audio.Play();
+	IEnumerator ShowMessEnumerator(string message) {
 		statusText = message;
-		yield return new WaitForSeconds(0.3f);
+		yield return new WaitForSeconds(0.1f);
 		statusText = " ";
 	}
 
@@ -115,7 +106,6 @@ public class Main : MonoBehaviour {
 		EventManager.StartListening("success", NextBoard);
 		EventManager.StartListening("fail", ReloadLevel);
 		EventManager.StartListening("gameover", GameOver);
-		EventManager.StartListening("matches", Vibration);
 	}
 	
 	void Start(){
@@ -149,7 +139,7 @@ public class Main : MonoBehaviour {
 	}
 
 	void NextBoard() {
-		StartCoroutine(PlaySound(rightSound, "Correct Pattern!"));
+		StartCoroutine(ShowMessEnumerator("Correct Pattern!"));
 		right = true;
 		playerPoints += 100;
 		ClearBoard ();
@@ -157,8 +147,8 @@ public class Main : MonoBehaviour {
 		InitBoard();
 	}
 
-	void ReloadLevel() {
-		StartCoroutine(PlaySound(wrongSound, "Wrong Pattern"));
+	public void ReloadLevel() {
+		StartCoroutine(ShowMessEnumerator("Wrong Pattern"));
 		right = false;
 		ClearBoard();
 		GetBoard().LoadLinkedList();
