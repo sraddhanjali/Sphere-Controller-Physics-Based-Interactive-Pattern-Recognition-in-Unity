@@ -58,8 +58,16 @@ public class SphereController : MonoBehaviour {
 	}
 	
 	private IEnumerator MoveSphere() {
+		int i = 0;
 		foreach (Vector3 points in interPoints) {
+			if (i >= 20) {
+				Main.enableTouch = true;
+			}
+			else {
+				Main.enableTouch = false;
+			}
 			sphere.transform.position = points;
+			i++;
 			yield return new WaitForSeconds(speed);
 		}
 	}

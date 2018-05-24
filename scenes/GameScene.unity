@@ -468,7 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sphere: {fileID: 1803808600654374, guid: 119229d62dd2a417bae4b97fd39b2f39, type: 2}
   interPoints: []
-  StopFlagBoolean: 0
+  speed: 0
 --- !u!82 &1414527999
 AudioSource:
   m_ObjectHideFlags: 0
@@ -566,6 +566,7 @@ MonoBehaviour:
   rightSound: {fileID: 8300000, guid: 2030301a3b0764d0d996646ee6a07087, type: 3}
   totalRepetition: 0
   rep: 1
+  moveSound: {fileID: 8300000, guid: 2030301a3b0764d0d996646ee6a07087, type: 3}
 --- !u!114 &1414528001
 MonoBehaviour:
   m_ObjectHideFlags: 0

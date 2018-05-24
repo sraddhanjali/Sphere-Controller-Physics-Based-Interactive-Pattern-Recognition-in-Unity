@@ -28,6 +28,7 @@ public class Main : MonoBehaviour {
 	public static string wrongDataPath;
 	public static int playerPoints = 0;
 	public static string statusText;
+	public static string waitText;
 	public static bool right = false;
 	public Shader shader1;
 	public static Sprite[] sprites;
@@ -36,6 +37,9 @@ public class Main : MonoBehaviour {
 	public int totalRepetition = 0;
 	public int rep = 1;
 	private List<string> labels = new List<string>();
+	public static bool enableTouch = false;
+	public AudioClip moveSound;
+	AudioSource audio;
 	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50;
@@ -46,13 +50,16 @@ public class Main : MonoBehaviour {
 		boxStyle1.normal.textColor = Color.red;
 		GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
 		if (right) {
-			GUI.Box(new Rect(250, 400, 500, 100), statusText, boxStyle);	
+			GUI.Box(new Rect(400, 700, 500, 100), statusText, boxStyle);	
 		}
-		else if(!right) {
-			GUI.Box(new Rect(250, 400, 500, 100), statusText, boxStyle1);
+		else{
+			GUI.Box(new Rect(400, 700, 500, 100), statusText, boxStyle1);
+		}
+		if(enableTouch){
+			GUI.Box(new Rect(400, 400, 500, 100), waitText, boxStyle);
 		}
 		else {
-			GUI.Box(new Rect(250, 400, 500, 100), statusText, boxStyle1);
+			GUI.Box(new Rect(400, 400, 500, 100), waitText, boxStyle);
 		}
 	}
 
@@ -74,6 +81,7 @@ public class Main : MonoBehaviour {
 	void Awake(){
 		LoadSprites();
 		SaveFile();
+		audio = GetComponent<AudioSource>();
 	}
 
 	void SetTotalRepetition(){
@@ -96,9 +104,9 @@ public class Main : MonoBehaviour {
 		return boardList[patternIndex];
 	}
 
-	IEnumerator ShowMessEnumerator(string message) {
+	static IEnumerator ShowMessEnumerator(string message) {
 		statusText = message;
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.5f);
 		statusText = " ";
 	}
 
@@ -115,10 +123,11 @@ public class Main : MonoBehaviour {
 		ListenersInit();
 		InitBoard();
 	}
-	
+
 	void ClearBoard() {
 		Debug.Log("clearing " + level.ToString() + "in main.cs");
 		gd.Clear();
+		enableTouch = false;
 		GetBoard().ClearVariableState();
 	}
 
@@ -155,9 +164,27 @@ public class Main : MonoBehaviour {
 		SphereController.instance.SetBoard(GetBoard());
 	}
 
+	void PlaySound() {
+		audio.pitch = 0.95f;
+		audio.clip = moveSound;
+		audio.Play();
+	}
+
+	void StopSound() {
+		audio.Stop();
+	}
+
 	void Update(){
 		if (rep <= totalRepetition) {
-			gl.TouchLogic (GetBoard());	
+			if (enableTouch == true) {
+				waitText = " ";
+				PlaySound();
+				gl.TouchLogic (GetBoard());
+			}
+			else {
+				waitText = "Wait Until You Hear The Sound!";
+				StopSound();
+			}
 		}
 		else {
 			Debug.Log("gameover triggered in Main");
