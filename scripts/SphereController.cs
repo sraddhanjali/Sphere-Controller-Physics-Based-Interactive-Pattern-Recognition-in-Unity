@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
+using System.Diagnostics;
 using UnityEngine;
+using System;
 using UnityEngine.EventSystems;
 
 public class SphereController : MonoBehaviour {
@@ -11,6 +12,7 @@ public class SphereController : MonoBehaviour {
 	public Board currentBoard = null;
 	public List<Vector3> interPoints = new List<Vector3>();
 	public float speed;
+	public DateTime before, after;
 	
 	void Awake ()
 	{
@@ -31,7 +33,10 @@ public class SphereController : MonoBehaviour {
 	public void SetBoard (Board board) {
 		currentBoard = board;
 		InterpolateDataPoints();
+		before = DateTime.UtcNow;
 		ResetSphere();
+		after = DateTime.Now;
+		Main.sphereAnimationTs = ((TimeSpan)(after - before)).TotalMilliseconds;
 	}
 
 	void InterpolateDataPoints() {
@@ -54,7 +59,7 @@ public class SphereController : MonoBehaviour {
 	}
 
 	void ResetSphere() {
-		StartCoroutine(MoveSphere());	
+		StartCoroutine(MoveSphere());
 	}
 	
 	private IEnumerator MoveSphere() {

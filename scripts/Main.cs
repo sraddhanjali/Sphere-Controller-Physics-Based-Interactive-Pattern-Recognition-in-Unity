@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -40,6 +41,7 @@ public class Main : MonoBehaviour {
 	public static bool enableTouch = false;
 	public AudioClip moveSound;
 	AudioSource audio;
+	public static Double sphereAnimationTs;
 	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50;
