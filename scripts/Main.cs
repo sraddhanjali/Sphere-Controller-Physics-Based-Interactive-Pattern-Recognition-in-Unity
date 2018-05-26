@@ -13,7 +13,7 @@ using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour {
 	
-	public static int repetition = 2;
+	public static int repetition = 20;
 	public static int level = 0;
 	public static int patternIndex = 0;
 
@@ -41,7 +41,6 @@ public class Main : MonoBehaviour {
 	public static bool enableTouch = false;
 	public AudioClip moveSound;
 	AudioSource audio;
-	public static Double sphereAnimationTs;
 	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50;
@@ -180,12 +179,12 @@ public class Main : MonoBehaviour {
 		if (rep <= totalRepetition) {
 			if (enableTouch == true) {
 				waitText = "Start";
-				PlaySound();
+				//PlaySound();
 				gl.TouchLogic (GetBoard());
 			}
 			else {
 				waitText = "Wait";
-				StopSound();
+				//StopSound();
 			}
 		}
 		else {

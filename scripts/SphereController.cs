@@ -12,7 +12,6 @@ public class SphereController : MonoBehaviour {
 	public Board currentBoard = null;
 	public List<Vector3> interPoints = new List<Vector3>();
 	public float speed;
-	public DateTime before, after;
 	
 	void Awake ()
 	{
@@ -25,7 +24,7 @@ public class SphereController : MonoBehaviour {
 	}
 
 	void Start () {
-		speed = 1.0f / (float) MainMenuButtons.speed;
+		speed = (float) MainMenuButtons.speed;
 		sphere = Instantiate (sphere, sphere.transform.position, sphere.transform.rotation);
 		sphere.GetComponent<MeshRenderer>().material.color = Color.red;
 	}
@@ -33,10 +32,7 @@ public class SphereController : MonoBehaviour {
 	public void SetBoard (Board board) {
 		currentBoard = board;
 		InterpolateDataPoints();
-		before = DateTime.UtcNow;
 		ResetSphere();
-		after = DateTime.Now;
-		Main.sphereAnimationTs = ((TimeSpan)(after - before)).TotalMilliseconds;
 	}
 
 	void InterpolateDataPoints() {

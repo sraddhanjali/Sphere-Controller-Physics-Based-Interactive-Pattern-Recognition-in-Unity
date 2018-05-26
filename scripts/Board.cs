@@ -76,7 +76,7 @@ public class Board{
 		string y = n.y.ToString ();
 		string z = n.z.ToString ();
 		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-		string csvstring = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", Main.level.ToString(), label, cn, x, y, z, ts, MainMenuButtons.speed, Main.sphereAnimationTs);
+		string csvstring = string.Format("{0},{1},{2},{3},{4},{5},{6},{7}", Main.level.ToString(), label, cn, x, y, z, ts, MainMenuButtons.speed);
 		return csvstring;
 	}
 	
