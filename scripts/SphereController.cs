@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
+using System.Diagnostics;
 using UnityEngine;
+using System;
 using UnityEngine.EventSystems;
 
 public class SphereController : MonoBehaviour {
@@ -23,7 +24,7 @@ public class SphereController : MonoBehaviour {
 	}
 
 	void Start () {
-		speed = 1.0f / (float) MainMenuButtons.speed;
+		speed = (float) MainMenuButtons.speed;
 		sphere = Instantiate (sphere, sphere.transform.position, sphere.transform.rotation);
 		sphere.GetComponent<MeshRenderer>().material.color = Color.red;
 	}
@@ -54,7 +55,7 @@ public class SphereController : MonoBehaviour {
 	}
 
 	void ResetSphere() {
-		StartCoroutine(MoveSphere());	
+		StartCoroutine(MoveSphere());
 	}
 	
 	private IEnumerator MoveSphere() {

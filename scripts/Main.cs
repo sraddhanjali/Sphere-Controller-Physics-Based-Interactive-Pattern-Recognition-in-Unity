@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -12,7 +13,7 @@ using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour {
 	
-	public static int repetition = 2;
+	public static int repetition = 20;
 	public static int level = 0;
 	public static int patternIndex = 0;
 
@@ -178,12 +179,12 @@ public class Main : MonoBehaviour {
 		if (rep <= totalRepetition) {
 			if (enableTouch == true) {
 				waitText = "Start";
-				PlaySound();
+				//PlaySound();
 				gl.TouchLogic (GetBoard());
 			}
 			else {
 				waitText = "Wait";
-				StopSound();
+				//StopSound();
 			}
 		}
 		else {

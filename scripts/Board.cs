@@ -1,6 +1,5 @@
-using UnityEngine; // vector3
+using UnityEngine;
 using System;
-using System.CodeDom.Compiler;
 // string
 using System.IO;
 using System.Text;

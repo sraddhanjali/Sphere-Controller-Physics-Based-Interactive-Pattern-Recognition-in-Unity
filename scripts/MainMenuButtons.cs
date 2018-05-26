@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
+using System.Globalization;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
 public class MainMenuButtons: MonoBehaviour {
-	static public int speed = 2;
+	static public float speed = 0f;
 	
 	public void PlayGame () {	
 		SceneManager.LoadScene("GameScene");
@@ -19,7 +20,7 @@ public class MainMenuButtons: MonoBehaviour {
 	}
 	
 	public void GetInput(string userInput) {
-		speed = Int32.Parse(userInput);
+		speed = float.Parse(userInput, CultureInfo.InvariantCulture.NumberFormat);
 		Debug.Log("You entered " + userInput);
 	}
 	
