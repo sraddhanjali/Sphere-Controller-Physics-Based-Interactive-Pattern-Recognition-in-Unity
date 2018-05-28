@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using System;
+using System.ComponentModel;
 using UnityEngine.EventSystems;
 
 public class SphereController : MonoBehaviour {
@@ -41,6 +42,9 @@ public class SphereController : MonoBehaviour {
 		int i = 0;
 		foreach (GameObject go in currentBoard.allPatterns) {
 			Vector3 current = go.transform.position;
+			if (i == 0) {
+				go.GetComponent<SpriteRenderer>().material.color = Color.red;	
+			}
 			if (i != 0) {
 				interPoints.Add(Vector3.Lerp(temp, current, 0f));
 				interPoints.Add(Vector3.Lerp(temp, current, 0.20f));
@@ -59,6 +63,7 @@ public class SphereController : MonoBehaviour {
 	}
 	
 	private IEnumerator MoveSphere() {
+		yield return new WaitForSeconds(1f);
 		int i = 0;
 		foreach (Vector3 points in interPoints) {
 			if (i >= 10) {
