@@ -13,6 +13,10 @@ using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour {
 	
+	[SerializeField]
+	public static GameObject trailPrefab;
+	public static GameObject thisTrail;
+	
 	public static int repetition = 20;
 	public static int level = 0;
 	public static int patternIndex = 0;
@@ -45,7 +49,7 @@ public class Main : MonoBehaviour {
 	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50;
-		guiStyle.normal.textColor = Color.black;
+		guiStyle.normal.textColor = Color.white;
 		boxStyle.fontSize = 70;
 		boxStyle.normal.textColor = Color.green;
 		boxStyle1.fontSize = 70;
@@ -132,6 +136,10 @@ public class Main : MonoBehaviour {
 		GetBoard().ClearVariableState();
 	}
 
+	public static void InstantiateTrail(GameObject g) {
+		thisTrail = Instantiate(trailPrefab, g.transform.position, Quaternion.identity);
+	}
+
 	void SetBoardLevel() {
 		if (level < labels.Count / 2 && level != 0) {
 			patternIndex += 1;
@@ -155,7 +163,7 @@ public class Main : MonoBehaviour {
 	void NextBoard() {
 		StartCoroutine(ShowMessEnumerator("Correct Pattern!"));
 		right = true;
-		playerPoints += 10;
+		playerPoints += 5;
 		ClearBoard ();
 		level += 1;
 		InitBoard();	
@@ -169,26 +177,14 @@ public class Main : MonoBehaviour {
 		SphereController.instance.SetBoard(GetBoard());
 	}
 
-	void PlaySound() {
-		audio.pitch = 0.95f;
-		audio.clip = moveSound;
-		audio.Play();
-	}
-
-	void StopSound() {
-		audio.Stop();
-	}
-
 	void Update(){
 		if (rep <= totalRepetition) {
 			if (enableTouch == true) {
 				waitText = "Start";
-				//PlaySound();
 				gl.TouchLogic (GetBoard());
 			}
 			else {
 				waitText = "Wait";
-				//StopSound();
 			}
 		} else {
 			Debug.Log("gameover triggered in Main");
