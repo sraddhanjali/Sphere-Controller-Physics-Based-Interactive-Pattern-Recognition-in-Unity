@@ -42,16 +42,15 @@ public class Main : MonoBehaviour {
 	public bool clearing = false;
 	public AudioClip moveSound;
 	AudioSource audio;
+
 	public GameObject trailPrefab;
-	public static GameObject thisTrail;
-	public static Vector3 trailPosition;
 	
 	protected void OnGUI(){
-		guiStyle.fontSize = 50;
+		guiStyle.fontSize = 40;
 		guiStyle.normal.textColor = Color.white;
-		boxStyle.fontSize = 70;
+		boxStyle.fontSize = 65;
 		boxStyle.normal.textColor = Color.green;
-		boxStyle1.fontSize = 70;
+		boxStyle1.fontSize = 65;
 		boxStyle1.normal.textColor = Color.red;
 		GUILayout.Label ("\n Level: " + level + "\n Points: " + playerPoints + "\n Repetition: " + rep, guiStyle);
 		if (right) {
@@ -121,10 +120,6 @@ public class Main : MonoBehaviour {
 		EventManager.StartListening("gameover", GameOver);
 	}
 
-	public void InstantiateTrail() {
-		thisTrail = Instantiate(trailPrefab, gl.currentTouchPos, Quaternion.identity);
-	}
-	
 	void Start(){
 		boardList = loader.ReadFileTest();
 		labels = loader.GetLabels();
@@ -181,9 +176,6 @@ public class Main : MonoBehaviour {
 			if (enableTouch == true) {
 				waitText = "Start";
 				gl.TouchLogic (GetBoard());
-				if (gl.touchStart) {
-					InstantiateTrail();
-				}
 			}
 			else {
 				waitText = "Wait";

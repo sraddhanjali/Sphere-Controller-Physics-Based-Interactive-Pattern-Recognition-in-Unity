@@ -9,19 +9,18 @@ using UnityEngine.EventSystems;
 
 public class GameLogic {
 
-	public Vector3 currentTouchPos;
-	public bool touchStart = false;
-	
 	public static GameObject previousGO = null;
+
+	public GameObject trail;
 		
 	public void TouchLogic(Board b) {
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch(0);
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
-			touchStart = true;
-			currentTouchPos = pos;
 			if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled) {
-				pos.z = -1;
+				//pos.z = -1;
+				pos.z = 0;
+				trail = SpecialEffectsScript.MakeTrail(pos);
 				Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 				foreach (Collider2D c2 in currentFrame)
 				{
@@ -46,6 +45,7 @@ public class GameLogic {
 					GameData.instance.SaveToFile(Main.wrongDataPath);
 					EventManager.TriggerEvent("fail");
 				}
+				SpecialEffectsScript.Destroy(trail, trail.GetComponent<TrailRenderer>().time);
 			}
 		}
 	}

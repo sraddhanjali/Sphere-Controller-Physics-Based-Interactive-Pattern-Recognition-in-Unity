@@ -63,7 +63,7 @@ public class SphereController : MonoBehaviour {
 	}
 	
 	private IEnumerator MoveSphere() {
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(2f);
 		int i = 0;
 		foreach (Vector3 points in interPoints) {
 			if (i >= 10) {
