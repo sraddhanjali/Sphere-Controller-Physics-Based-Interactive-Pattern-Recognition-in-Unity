@@ -13,10 +13,6 @@ using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour {
 	
-	[SerializeField]
-	public static GameObject trailPrefab;
-	public static GameObject thisTrail;
-	
 	public static int repetition = 20;
 	public static int level = 0;
 	public static int patternIndex = 0;
@@ -46,6 +42,9 @@ public class Main : MonoBehaviour {
 	public bool clearing = false;
 	public AudioClip moveSound;
 	AudioSource audio;
+	public GameObject trailPrefab;
+	public static GameObject thisTrail;
+	public static Vector3 trailPosition;
 	
 	protected void OnGUI(){
 		guiStyle.fontSize = 50;
@@ -121,6 +120,10 @@ public class Main : MonoBehaviour {
 		EventManager.StartListening("fail", ReloadLevel);
 		EventManager.StartListening("gameover", GameOver);
 	}
+
+	public void InstantiateTrail() {
+		thisTrail = Instantiate(trailPrefab, gl.currentTouchPos, Quaternion.identity);
+	}
 	
 	void Start(){
 		boardList = loader.ReadFileTest();
@@ -134,10 +137,6 @@ public class Main : MonoBehaviour {
 		gd.Clear();
 		enableTouch = false;
 		GetBoard().ClearVariableState();
-	}
-
-	public static void InstantiateTrail(GameObject g) {
-		thisTrail = Instantiate(trailPrefab, g.transform.position, Quaternion.identity);
 	}
 
 	void SetBoardLevel() {
@@ -182,6 +181,9 @@ public class Main : MonoBehaviour {
 			if (enableTouch == true) {
 				waitText = "Start";
 				gl.TouchLogic (GetBoard());
+				if (gl.touchStart) {
+					InstantiateTrail();
+				}
 			}
 			else {
 				waitText = "Wait";

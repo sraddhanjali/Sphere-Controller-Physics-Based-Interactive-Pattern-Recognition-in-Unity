@@ -8,19 +8,24 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 public class GameLogic {
+
+	public Vector3 currentTouchPos;
+	public bool touchStart = false;
+	
 	public static GameObject previousGO = null;
 		
 	public void TouchLogic(Board b) {
 		if (Input.touchCount > 0) {
 			Touch touch = Input.GetTouch(0);
 			Vector3 pos = Camera.main.ScreenToWorldPoint (touch.position);
+			touchStart = true;
+			currentTouchPos = pos;
 			if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled) {
 				pos.z = -1;
 				Collider2D[] currentFrame = Physics2D.OverlapPointAll (new Vector2 (pos.x, pos.y), LayerMask.GetMask ("Cube"));
 				foreach (Collider2D c2 in currentFrame)
 				{
 					GameObject go = c2.gameObject;
-					//Main.InstantiateTrail(go);
 					if (previousGO != go) {
 						b.MatchPatterns(go, pos);
 						previousGO = go;
