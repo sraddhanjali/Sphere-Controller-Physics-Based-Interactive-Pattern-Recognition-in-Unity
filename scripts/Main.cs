@@ -13,7 +13,7 @@ using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour {
 	
-	public static int repetition = 20;
+	public static int repetition = 10;
 	public static int level = 0;
 	public static int patternIndex = 0;
 

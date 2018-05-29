@@ -25,8 +25,9 @@ public class GameLogic {
 				foreach (Collider2D c2 in currentFrame)
 				{
 					GameObject go = c2.gameObject;
+					b.SaveChunk(go, pos);
 					if (previousGO != go) {
-						b.MatchPatterns(go, pos);
+						b.MatchPatterns(go);
 						previousGO = go;
 						EventManager.TriggerEvent("matches");
 						go.GetComponent<SpriteRenderer> ().material.color = Color.red;
