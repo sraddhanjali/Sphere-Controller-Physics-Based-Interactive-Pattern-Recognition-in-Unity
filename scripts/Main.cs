@@ -76,8 +76,8 @@ public class Main : MonoBehaviour {
 		string filePath = Application.persistentDataPath;
 		DateTime d = DateTime.Now;
 		string d1 = d.ToString("yyyyMMddHHmmss");
-		string f1 =  string.Format(@"RIGHT{0}{1}.csv", Guid.NewGuid(), d1);
-		string f2 =  string.Format(@"WRONG{0}{1}.csv", Guid.NewGuid(), d1);
+		string f1 =  string.Format(@"RIGHT{0}-{1}.csv", d1, Guid.NewGuid());
+		string f2 =  string.Format(@"WRONG{0}-{1}.csv", d1, Guid.NewGuid());
 		touchDataPath = filePath + "/" + f1;
 		wrongDataPath = filePath + "/" + f2;
 		File.Create(touchDataPath);
