@@ -36,20 +36,23 @@ public class Main : MonoBehaviour {
 	public AudioClip wrongSound;
 	public AudioClip rightSound;
 	public int totalRepetition = 0;
-	public int rep = 1;
+	public static int rep = 1;
 	private List<string> labels = new List<string>();
 	public static bool enableTouch = false;
+	public bool clearing = false;
 	public AudioClip moveSound;
 	AudioSource audio;
+
+	public GameObject trailPrefab;
 	
 	protected void OnGUI(){
-		guiStyle.fontSize = 50;
-		guiStyle.normal.textColor = Color.black;
-		boxStyle.fontSize = 70;
+		guiStyle.fontSize = 40;
+		guiStyle.normal.textColor = Color.white;
+		boxStyle.fontSize = 65;
 		boxStyle.normal.textColor = Color.green;
-		boxStyle1.fontSize = 70;
+		boxStyle1.fontSize = 65;
 		boxStyle1.normal.textColor = Color.red;
-		GUILayout.Label ("\n Level: " + level + "\n Points:" + playerPoints, guiStyle);
+		GUILayout.Label ("\n Level: " + level + "\n Points: " + playerPoints + "\n Repetition: " + rep, guiStyle);
 		if (right) {
 			GUI.Box(new Rect(400, 700, 500, 100), statusText, boxStyle);	
 		}
@@ -71,8 +74,10 @@ public class Main : MonoBehaviour {
 
 	void SaveFile(){
 		string filePath = Application.persistentDataPath;
-		string f1 =  string.Format(@"RIGHT{0}.csv", Guid.NewGuid());
-		string f2 =  string.Format(@"WRONG{0}.csv", Guid.NewGuid());
+		DateTime d = DateTime.Now;
+		string d1 = d.ToString("yyyyMMddHHmmss");
+		string f1 =  string.Format(@"RIGHT{0}-{1}.csv", d1, Guid.NewGuid());
+		string f2 =  string.Format(@"WRONG{0}-{1}.csv", d1, Guid.NewGuid());
 		touchDataPath = filePath + "/" + f1;
 		wrongDataPath = filePath + "/" + f2;
 		File.Create(touchDataPath);
@@ -105,7 +110,7 @@ public class Main : MonoBehaviour {
 		return boardList[patternIndex];
 	}
 
-	static IEnumerator ShowMessEnumerator(string message) {
+	IEnumerator ShowMessEnumerator(string message) {
 		statusText = message;
 		yield return new WaitForSeconds(0.5f);
 		statusText = " ";
@@ -116,7 +121,7 @@ public class Main : MonoBehaviour {
 		EventManager.StartListening("fail", ReloadLevel);
 		EventManager.StartListening("gameover", GameOver);
 	}
-	
+
 	void Start(){
 		boardList = loader.ReadFileTest();
 		labels = loader.GetLabels();
@@ -124,9 +129,8 @@ public class Main : MonoBehaviour {
 		ListenersInit();
 		InitBoard();
 	}
-
+	
 	void ClearBoard() {
-		Debug.Log("clearing " + level.ToString() + "in main.cs");
 		gd.Clear();
 		enableTouch = false;
 		GetBoard().ClearVariableState();
@@ -136,7 +140,11 @@ public class Main : MonoBehaviour {
 		if (level < labels.Count / 2 && level != 0) {
 			patternIndex += 1;
 		} else {
-			rep += 1;
+			if (level == 0) {
+				rep = 1;
+			}else {
+				rep += 1;
+			}
 			level = 0;
 			patternIndex = 0;
 		}
@@ -151,10 +159,10 @@ public class Main : MonoBehaviour {
 	void NextBoard() {
 		StartCoroutine(ShowMessEnumerator("Correct Pattern!"));
 		right = true;
-		playerPoints += 100;
+		playerPoints += 5;
 		ClearBoard ();
 		level += 1;
-		InitBoard();
+		InitBoard();	
 	}
 
 	public void ReloadLevel() {
@@ -165,29 +173,16 @@ public class Main : MonoBehaviour {
 		SphereController.instance.SetBoard(GetBoard());
 	}
 
-	void PlaySound() {
-		audio.pitch = 0.95f;
-		audio.clip = moveSound;
-		audio.Play();
-	}
-
-	void StopSound() {
-		audio.Stop();
-	}
-
 	void Update(){
 		if (rep <= totalRepetition) {
 			if (enableTouch == true) {
 				waitText = "Start";
-				//PlaySound();
 				gl.TouchLogic (GetBoard());
 			}
 			else {
 				waitText = "Wait";
-				//StopSound();
 			}
-		}
-		else {
+		} else {
 			Debug.Log("gameover triggered in Main");
 			EventManager.TriggerEvent("gameover");
 		}

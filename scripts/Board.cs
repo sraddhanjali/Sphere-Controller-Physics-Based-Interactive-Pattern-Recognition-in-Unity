@@ -6,7 +6,6 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
-// list, dictionary
 
 public class Board{
 	List<Pattern> patterns = new List<Pattern>();
@@ -51,7 +50,7 @@ public class Board{
 		foreach (Pattern p in patterns) {
 			foreach (GameObject g in p.sequence) {
 				if (tipNode == null) {
-					allPatterns.AddFirst(g);	
+					allPatterns.AddFirst(g);
 				}
 				else {
 					allPatterns.AddAfter(tipNode, g);
