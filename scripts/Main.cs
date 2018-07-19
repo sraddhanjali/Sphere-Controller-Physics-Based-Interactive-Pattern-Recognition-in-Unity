@@ -13,7 +13,9 @@ using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour {
 	
-	public static int repetition = 10;
+	public static int repetition = 2;
+	public int totalRepetition = 0;
+	public static int rep = 0;
 	public static int level = 0;
 	public static int patternIndex = 0;
 
@@ -35,8 +37,7 @@ public class Main : MonoBehaviour {
 	public static Sprite[] sprites;
 	public AudioClip wrongSound;
 	public AudioClip rightSound;
-	public int totalRepetition = 0;
-	public static int rep = 1;
+	
 	private List<string> labels = new List<string>();
 	public static bool enableTouch = false;
 	public bool clearing = false;
@@ -135,7 +136,7 @@ public class Main : MonoBehaviour {
 		GetBoard().ClearVariableState();
 	}
 
-	void SetBoardLevel() {
+	void levelBylevel() {
 		if (level < labels.Count / 2 && level != 0) {
 			patternIndex += 1;
 		} else {
@@ -149,6 +150,21 @@ public class Main : MonoBehaviour {
 		}
 	}
 
+	void levelRepetition() {
+		if (rep == repetition) {
+			patternIndex += 1;
+			rep = 1;
+			level += 1;
+		} else {
+			rep += 1;
+		}
+	}
+
+	void SetBoardLevel() {
+		//levelBylevel();
+		levelRepetition();
+	}
+
 	void InitBoard(){
 		SetBoardLevel ();
 		GetBoard().LoadLinkedList();
@@ -160,7 +176,7 @@ public class Main : MonoBehaviour {
 		right = true;
 		playerPoints += 5;
 		ClearBoard ();
-		level += 1;
+		//level += 1;
 		InitBoard();	
 	}
 
@@ -173,7 +189,8 @@ public class Main : MonoBehaviour {
 	}
 
 	void Update(){
-		if (rep <= repetition) {
+		//if (rep <= repetition) {
+		if(rep <= totalRepetition){
 			if (enableTouch == true) {
 				waitText = "Start";
 				gl.TouchLogic (GetBoard());
