@@ -42,7 +42,6 @@ public class Main : MonoBehaviour {
 	public bool clearing = false;
 	public AudioClip moveSound;
 	AudioSource audio;
-
 	public GameObject trailPrefab;
 	
 	protected void OnGUI(){
@@ -174,7 +173,7 @@ public class Main : MonoBehaviour {
 	}
 
 	void Update(){
-		if (rep <= totalRepetition) {
+		if (rep <= repetition) {
 			if (enableTouch == true) {
 				waitText = "Start";
 				gl.TouchLogic (GetBoard());

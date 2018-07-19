@@ -79,7 +79,7 @@ public class Board{
 		return csvstring;
 	}
 	
-	public void MatchPatterns(GameObject go) {
+	public void MatchPatterns(GameObject go, Vector3 pos) {
 		int number = Int32.Parse(go.name);
 		if (number > 9) {
 			if (matchingIndex == 0) {
@@ -88,6 +88,7 @@ public class Board{
 		}else {
 			matchingIndex = 0;
 		}
+		GameData.instance.LoadToTemp(ChunkToSave(go, pos));	
 		swipedPatterns.Add(go.name);
 	}
 
