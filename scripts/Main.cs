@@ -13,7 +13,7 @@ using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour {
 	
-	public static int repetition = 2;
+	public static int repetition = 10;
 	public int totalRepetition = 0;
 	public static int rep = 0;
 	public static int level = 0;
