@@ -53,6 +53,39 @@ public class Loader{
 		}
 		return boardList;
 	}
+	
+	public List<Board> ReadFileTextBottom(){
+		int lenSplit1;
+		int lenSplit2;
+		string cubeNumber;
+		TextAsset ft = Resources.Load("bottomonly") as TextAsset;
+		string ftstring = ft.text.Trim();
+		List<Board> boardList = new List<Board>();
+		string[] fLines = Regex.Split(ftstring, "\n|\r|\r\n");
+
+		for (int i = 0; i < fLines.Length; i++)
+		{
+			Board board = new Board();
+			string[] allPatterns = fLines[i].Split(new char[] {','});
+			lenSplit1 = allPatterns.Length;
+			for (int j = 0; j < lenSplit1-1; j++){
+				string[] pattern = allPatterns[j].Trim().Split(new char[] {' '});
+				List<GameObject> p = new List<GameObject>();
+				lenSplit2 = pattern.Length;
+				for (int k = 0; k < lenSplit2; k++){
+					cubeNumber = pattern[k];
+					p.Add(GameObject.Find(String.Format("{0}", cubeNumber)));
+				}
+				if (lenSplit2 != 1){
+					LabelsStore(allPatterns[lenSplit1 - 1]);
+					Pattern pat = new Pattern(p, labels[labels.Count-1]);
+					board.AddPattern(pat);
+				}
+			}
+			boardList.Add(board);
+		}
+		return boardList;
+	}
 
 	public List<string> GetLabels(){
 		return labels;

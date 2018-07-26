@@ -20,7 +20,7 @@ public class AddButtons : MonoBehaviour {
 	}
 
 	void CreateWorld () {
-		for(int y = 0; y < worldWidth; y++) {
+		for(int y = 3; y < worldWidth; y++) {
 			for(int x = 0; x < worldHeight; x++) {
 				GameObject c1 = Instantiate (cube, cube.transform.position + new Vector3(x*xoffset, -y*yoffset), cube.transform.rotation);
 				cubeNum += 1;

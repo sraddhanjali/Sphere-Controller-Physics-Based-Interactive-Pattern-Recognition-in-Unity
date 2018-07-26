@@ -81,14 +81,15 @@ public class Board{
 	
 	public void MatchPatterns(GameObject go, Vector3 pos) {
 		int number = Int32.Parse(go.name);
-		if (number > 9) {
+		/*if (number > 9) {
 			if (matchingIndex == 0) {
 				matchingIndex += 1;	
 			}
 		}else {
 			matchingIndex = 0;
-		}
-		GameData.instance.LoadToTemp(ChunkToSave(go, pos));	
+		}*/
+		matchingIndex = 0;
+		SaveChunk(go, pos);
 		swipedPatterns.Add(go.name);
 	}
 

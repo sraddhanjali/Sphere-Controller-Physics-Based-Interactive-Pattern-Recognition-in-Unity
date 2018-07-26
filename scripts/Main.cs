@@ -91,7 +91,7 @@ public class Main : MonoBehaviour {
 	}
 
 	void SetTotalRepetition(){
-		totalRepetition = (repetition * labels.Count)/2; // Labels are 14*2 but occur in pair so divide by 2 
+		totalRepetition = repetition * labels.Count; // Labels are 14*2 but occur in pair so divide by 2 
 	}
 
 	void GameOver() {
@@ -123,7 +123,8 @@ public class Main : MonoBehaviour {
 	}
 
 	void Start(){
-		boardList = loader.ReadFileTest();
+		//boardList = loader.ReadFileTest();
+		boardList = loader.ReadFileTextBottom();
 		labels = loader.GetLabels();
 		SetTotalRepetition ();
 		ListenersInit();
