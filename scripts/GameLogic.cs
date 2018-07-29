@@ -39,6 +39,7 @@ public class GameLogic {
 				if (b.PatternsMatch()) {
 					UnityEngine.Debug.Log("success triggered in GL");
 					GameData.instance.SaveToFile(Main.touchDataPath);
+					GameData.instance.SaveSensorToFile(Main.sensorDataPath);
 					EventManager.TriggerEvent("success");
 				}
 				else {

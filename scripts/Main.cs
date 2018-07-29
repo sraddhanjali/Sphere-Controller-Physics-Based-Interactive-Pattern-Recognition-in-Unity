@@ -27,8 +27,11 @@ public class Main : MonoBehaviour {
 	List<Board> boardList = new List<Board>();
 	Loader loader = new Loader();
 	
+	// file paths
 	public static string touchDataPath;
 	public static string wrongDataPath;
+	public static string sensorDataPath;
+	
 	public static int playerPoints = 0;
 	public static string statusText;
 	public static string waitText;
@@ -78,10 +81,13 @@ public class Main : MonoBehaviour {
 		string d1 = d.ToString("yyyyMMddHHmmss");
 		string f1 =  string.Format(@"RIGHT{0}-{1}.csv", d1, Guid.NewGuid());
 		string f2 =  string.Format(@"WRONG{0}-{1}.csv", d1, Guid.NewGuid());
+		string f3 = string.Format(@"Sensor{0}-{1}.csv", d1, Guid.NewGuid());
 		touchDataPath = filePath + "/" + f1;
 		wrongDataPath = filePath + "/" + f2;
+		sensorDataPath = filePate + "/" + f3;
 		File.Create(touchDataPath);
 		File.Create(wrongDataPath);
+		File.Create(sensorDataPath);
 	}
 
 	void Awake(){
