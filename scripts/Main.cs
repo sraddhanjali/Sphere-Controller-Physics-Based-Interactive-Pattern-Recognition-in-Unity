@@ -87,7 +87,7 @@ public class Main : MonoBehaviour {
 		string f3 = string.Format(@"Sensor{0}-{1}.csv", d1, Guid.NewGuid());
 		touchDataPath = filePath + "/" + f1;
 		wrongDataPath = filePath + "/" + f2;
-		sensorDataPath = filePate + "/" + f3;
+		sensorDataPath = filePath + "/" + f3;
 		File.Create(touchDataPath);
 		File.Create(wrongDataPath);
 		File.Create(sensorDataPath);
