@@ -30,6 +30,7 @@ public class GameLogic {
 						b.MatchPatterns(go, pos);
 						previousGO = go;
 						EventManager.TriggerEvent("matches");
+						EventManager.TriggerEvent("record");
 						go.GetComponent<SpriteRenderer> ().material.color = Color.red;
 						UnityEngine.Debug.Log("object found : " + go.name);
 					}
@@ -39,7 +40,7 @@ public class GameLogic {
 				if (b.PatternsMatch()) {
 					UnityEngine.Debug.Log("success triggered in GL");
 					GameData.instance.SaveToFile(Main.touchDataPath);
-					GameData.instance.SaveSensorToFile(Main.sensorDataPath);
+					EventManager.TriggerEvent("saverecord");
 					EventManager.TriggerEvent("success");
 				}
 				else {

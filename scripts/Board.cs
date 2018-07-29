@@ -93,24 +93,11 @@ public class Board{
 		swipedPatterns.Add(go.name);
 	}
 
-	public string SensorDataCollect() {
-		Vector3 acc = Vector3.zero;
-		acc.x = Input.acceleration.x;
-		acc.y = Input.acceleration.y;
-		acc.z = Input.acceleration.z;
-		string x = acc.x.ToString();
-		string y = acc.y.ToString();
-		string z = acc.z.ToString();
-		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-		string csvstring = string.Format("{0},{1},{2},{3},{4}", Main.level.ToString(), x, y, z, ts);
-		return csvstring;
-	}
+	
 
 	public void SaveChunk(GameObject go, Vector3 pos) {
 		GameData.instance.LoadToTemp(ChunkToSave(go, pos));
 		// save sensor data
-		GameData.instance.LoadToSensor(SensorDataCollect());
-
 	}
 
 	public bool PatternsMatch() {

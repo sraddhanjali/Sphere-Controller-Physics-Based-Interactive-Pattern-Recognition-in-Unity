@@ -48,6 +48,9 @@ public class Main : MonoBehaviour {
 	AudioSource audio;
 	public GameObject trailPrefab;
 	
+	// sensor data
+	public static List<string> sensorData = new List<string>();
+	
 	protected void OnGUI(){
 		guiStyle.fontSize = 40;
 		guiStyle.normal.textColor = Color.white;
@@ -110,6 +113,8 @@ public class Main : MonoBehaviour {
 		EventManager.StopListening("success", NextBoard);
 		EventManager.StopListening("fail", ReloadLevel);
 		EventManager.StopListening("gameover", GameOver);
+		EventManager.StopListening("record", RecordSensor);
+		EventManager.StopListening("saverecord", SaveSensorToFile);
 	}
 	
 	Board GetBoard(){
@@ -126,6 +131,8 @@ public class Main : MonoBehaviour {
 		EventManager.StartListening("success", NextBoard);
 		EventManager.StartListening("fail", ReloadLevel);
 		EventManager.StartListening("gameover", GameOver);
+		EventManager.StartListening("record", RecordSensor);
+		EventManager.StartListening("saverecord", SaveSensorToFile);
 	}
 
 	void Start(){
@@ -141,6 +148,30 @@ public class Main : MonoBehaviour {
 		gd.Clear();
 		enableTouch = false;
 		GetBoard().ClearVariableState();
+	}
+	
+	public string SensorDataCollect() {
+		Vector3 acc = Vector3.zero;
+		acc.x = Input.acceleration.x;
+		acc.y = Input.acceleration.y;
+		acc.z = Input.acceleration.z;
+		string x = acc.x.ToString();
+		string y = acc.y.ToString();
+		string z = acc.z.ToString();
+		string ts = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+		string csvstring = string.Format("{0},{1},{2},{3},{4}", Main.level.ToString(), x, y, z, ts);
+		return csvstring;
+	}
+	
+	public void RecordSensor() {
+		sensorData.Add(SensorDataCollect());
+	}
+    
+	public void SaveSensorToFile() {
+		for (int i = 0; i < sensorData.Count; i++) {
+			File.AppendAllText(sensorDataPath, sensorData[i] + Environment.NewLine);    
+		}
+		sensorData.Clear();
 	}
 
 	void levelBylevel() {
