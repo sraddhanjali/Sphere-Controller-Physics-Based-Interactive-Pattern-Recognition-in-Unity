@@ -45,12 +45,6 @@ The core system consists of the following steps:
 - Logs gameplay interactions and pattern recognition results.
 - Saves data in CSV format for post-game analysis.
 
-<aside>
-👩🏽‍💻
-
-**Project Link**: https://github.com/sraddhanjali/flowfreeproto
-
-</aside>
 
 ## **Implementation Details**
 
