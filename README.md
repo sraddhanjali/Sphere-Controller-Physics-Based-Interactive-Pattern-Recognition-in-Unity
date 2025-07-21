@@ -582,13 +582,3 @@ public class GameData : MonoBehaviour {
 }
 ```
 
-1. **Stores interactions for analysis**
-2. **Supports debugging and future AI training**
-
-## **Next Steps:**
-
-🚀 **Expand with:**
-
-- [ ]  **Multiplayer Mode & AI Opponents**
-- [ ]  **Advanced Obstacle Avoidance System**
-- [ ]  **Augmented Reality (AR) Integration**
