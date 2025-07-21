@@ -1,7 +1,5 @@
 # Sphere Controller: Physics-Based Interactive Pattern Recognition in Unity
 
-Status: Done
-
 ### **Overview**
 
 The **Sphere Controller Project** is a **physics-driven interaction system** in Unity designed to run on Android Phone that integrates **pattern matching, movement tracking, and physics-based gameplay mechanics**. The system enables a sphere to follow a predefined pattern of objects while ensuring **realistic physics-based movement, user interaction, and event-driven logic**.
@@ -415,14 +413,6 @@ To maintain **realistic motion**, the sphere's **Rigidbody component** is adj
 | `drag` | `0.5` | Prevents excessive acceleration. |
 | `angularDrag` | `0.1` | Controls rotational speed. |
 | `freezeRotation` | `false` | Allows natural rolling behavior. |
-
-### **3.3 Future Expansions for Movement System**
-
-🚀 **Enhancements include:**
-
-1. **AI-controlled sphere navigation**
-2. **Obstacle-based physics interactions**
-3. **Gravity-based terrain effects (ramps, slopes, and jumps)**
 
 ## **4. Event-Driven Gameplay (Dynamic Game Flow Management)**
 
